@@ -2,7 +2,7 @@
 
 int main(void) {
     printf("Hello, World!\n");
-    //nasil comment almiyor
+    //nasil
     printf("change");
     return 0;
 }
