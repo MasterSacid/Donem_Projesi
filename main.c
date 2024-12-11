@@ -2,7 +2,7 @@
 
 int main(void) {
     printf("Hello, World!\n");
-    //nasil
-    printf("change");
+    //nasil olmus
+    printf("change is always good");
     return 0;
 }
