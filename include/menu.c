@@ -4,9 +4,7 @@
 #include "menu.h"
 #include "console.h"
 
-#ifndef _WIN32
-#include <windows.h>
-#else
+#ifdef _WIN32
 #include <windows.h>
 #endif
 
