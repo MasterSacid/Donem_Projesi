@@ -1,0 +1,3 @@
+C:/Users/akin/Desktop/Donem_Projesi/build/CMakeFiles/Donem_Projesi.dir
+C:/Users/akin/Desktop/Donem_Projesi/build/CMakeFiles/edit_cache.dir
+C:/Users/akin/Desktop/Donem_Projesi/build/CMakeFiles/rebuild_cache.dir
