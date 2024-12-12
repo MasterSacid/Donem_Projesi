@@ -71,24 +71,10 @@ include CMakeFiles/Donem_Projesi.dir/flags.make
 CMakeFiles/Donem_Projesi.dir/codegen:
 .PHONY : CMakeFiles/Donem_Projesi.dir/codegen
 
-CMakeFiles/Donem_Projesi.dir/include/menu.c.obj: CMakeFiles/Donem_Projesi.dir/flags.make
-CMakeFiles/Donem_Projesi.dir/include/menu.c.obj: C:/Users/akin/Desktop/Donem_Projesi/include/menu.c
-CMakeFiles/Donem_Projesi.dir/include/menu.c.obj: CMakeFiles/Donem_Projesi.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\akin\Desktop\Donem_Projesi\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/Donem_Projesi.dir/include/menu.c.obj"
-	C:\CC\llvm-mingw-20241001-ucrt-x86_64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/Donem_Projesi.dir/include/menu.c.obj -MF CMakeFiles\Donem_Projesi.dir\include\menu.c.obj.d -o CMakeFiles\Donem_Projesi.dir\include\menu.c.obj -c C:\Users\akin\Desktop\Donem_Projesi\include\menu.c
-
-CMakeFiles/Donem_Projesi.dir/include/menu.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/Donem_Projesi.dir/include/menu.c.i"
-	C:\CC\llvm-mingw-20241001-ucrt-x86_64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\akin\Desktop\Donem_Projesi\include\menu.c > CMakeFiles\Donem_Projesi.dir\include\menu.c.i
-
-CMakeFiles/Donem_Projesi.dir/include/menu.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/Donem_Projesi.dir/include/menu.c.s"
-	C:\CC\llvm-mingw-20241001-ucrt-x86_64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\akin\Desktop\Donem_Projesi\include\menu.c -o CMakeFiles\Donem_Projesi.dir\include\menu.c.s
-
 CMakeFiles/Donem_Projesi.dir/include/console.c.obj: CMakeFiles/Donem_Projesi.dir/flags.make
 CMakeFiles/Donem_Projesi.dir/include/console.c.obj: C:/Users/akin/Desktop/Donem_Projesi/include/console.c
 CMakeFiles/Donem_Projesi.dir/include/console.c.obj: CMakeFiles/Donem_Projesi.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\akin\Desktop\Donem_Projesi\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/Donem_Projesi.dir/include/console.c.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\akin\Desktop\Donem_Projesi\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/Donem_Projesi.dir/include/console.c.obj"
 	C:\CC\llvm-mingw-20241001-ucrt-x86_64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/Donem_Projesi.dir/include/console.c.obj -MF CMakeFiles\Donem_Projesi.dir\include\console.c.obj.d -o CMakeFiles\Donem_Projesi.dir\include\console.c.obj -c C:\Users\akin\Desktop\Donem_Projesi\include\console.c
 
 CMakeFiles/Donem_Projesi.dir/include/console.c.i: cmake_force
@@ -98,6 +84,20 @@ CMakeFiles/Donem_Projesi.dir/include/console.c.i: cmake_force
 CMakeFiles/Donem_Projesi.dir/include/console.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/Donem_Projesi.dir/include/console.c.s"
 	C:\CC\llvm-mingw-20241001-ucrt-x86_64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\akin\Desktop\Donem_Projesi\include\console.c -o CMakeFiles\Donem_Projesi.dir\include\console.c.s
+
+CMakeFiles/Donem_Projesi.dir/include/menu.c.obj: CMakeFiles/Donem_Projesi.dir/flags.make
+CMakeFiles/Donem_Projesi.dir/include/menu.c.obj: C:/Users/akin/Desktop/Donem_Projesi/include/menu.c
+CMakeFiles/Donem_Projesi.dir/include/menu.c.obj: CMakeFiles/Donem_Projesi.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\akin\Desktop\Donem_Projesi\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/Donem_Projesi.dir/include/menu.c.obj"
+	C:\CC\llvm-mingw-20241001-ucrt-x86_64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/Donem_Projesi.dir/include/menu.c.obj -MF CMakeFiles\Donem_Projesi.dir\include\menu.c.obj.d -o CMakeFiles\Donem_Projesi.dir\include\menu.c.obj -c C:\Users\akin\Desktop\Donem_Projesi\include\menu.c
+
+CMakeFiles/Donem_Projesi.dir/include/menu.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/Donem_Projesi.dir/include/menu.c.i"
+	C:\CC\llvm-mingw-20241001-ucrt-x86_64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\akin\Desktop\Donem_Projesi\include\menu.c > CMakeFiles\Donem_Projesi.dir\include\menu.c.i
+
+CMakeFiles/Donem_Projesi.dir/include/menu.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/Donem_Projesi.dir/include/menu.c.s"
+	C:\CC\llvm-mingw-20241001-ucrt-x86_64\bin\cc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\akin\Desktop\Donem_Projesi\include\menu.c -o CMakeFiles\Donem_Projesi.dir\include\menu.c.s
 
 CMakeFiles/Donem_Projesi.dir/main.c.obj: CMakeFiles/Donem_Projesi.dir/flags.make
 CMakeFiles/Donem_Projesi.dir/main.c.obj: C:/Users/akin/Desktop/Donem_Projesi/main.c
@@ -115,15 +115,15 @@ CMakeFiles/Donem_Projesi.dir/main.c.s: cmake_force
 
 # Object files for target Donem_Projesi
 Donem_Projesi_OBJECTS = \
-"CMakeFiles/Donem_Projesi.dir/include/menu.c.obj" \
 "CMakeFiles/Donem_Projesi.dir/include/console.c.obj" \
+"CMakeFiles/Donem_Projesi.dir/include/menu.c.obj" \
 "CMakeFiles/Donem_Projesi.dir/main.c.obj"
 
 # External object files for target Donem_Projesi
 Donem_Projesi_EXTERNAL_OBJECTS =
 
-Donem_Projesi.exe: CMakeFiles/Donem_Projesi.dir/include/menu.c.obj
 Donem_Projesi.exe: CMakeFiles/Donem_Projesi.dir/include/console.c.obj
+Donem_Projesi.exe: CMakeFiles/Donem_Projesi.dir/include/menu.c.obj
 Donem_Projesi.exe: CMakeFiles/Donem_Projesi.dir/main.c.obj
 Donem_Projesi.exe: CMakeFiles/Donem_Projesi.dir/build.make
 Donem_Projesi.exe: CMakeFiles/Donem_Projesi.dir/linkLibs.rsp
