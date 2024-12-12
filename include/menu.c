@@ -3,11 +3,12 @@
 #include <stdio.h>
 #include "menu.h"
 #include "console.h"
+#include <string.h>
 
-#ifndef _WIN32
+#ifdef _WIN32
 #include <windows.h>
 #else
-#include <windows.h>
+#include <sys/stat.h>
 #endif
 
 
