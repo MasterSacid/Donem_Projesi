@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
-#include "menu.h"
-#include "console.h"
+#include "include\menu.h"
+#include "include\console.h"
+
+COORD coord;
 
 int main(void) {
     HANDLE stdOut=GetStdHandle(STD_OUTPUT_HANDLE);
@@ -17,7 +19,7 @@ int main(void) {
         NULL,
         NULL
     );
+    displayMenu(stdOut,&main_menu,0,&coord);
     return 0;
-    displayMenu(stdOut,&main_menu,0);
 }
 

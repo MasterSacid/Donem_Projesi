@@ -34,13 +34,13 @@ void initMenu(pmenu menu,char name[64],char description[128],char menuItems[16][
 }
 
 //Menüyü ekrana yazdıran fonksiyon
-void displayMenu(HANDLE stdOut,pmenu menu,int itemIndex){
+void displayMenu(HANDLE stdOut,pmenu menu,int itemIndex,PCOORD coord){
 
     if(itemIndex>menu->itemCount){
         itemIndex=menu->itemCount;
     }
     printf("================================");
-    CONSOLE_SCREEN_BUFFER_INFO buffer=refreshSize(stdOut);
+    CONSOLE_SCREEN_BUFFER_INFO buffer=refreshSize(stdOut,coord);
     buffer.dwCursorPosition.X=16-strlen(menu->name)/2;
     SetConsoleCursorPosition(stdOut,buffer.dwCursorPosition);
     printf("%s\n\n",menu->name);
