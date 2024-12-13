@@ -41,43 +41,45 @@ int main(void) {
         displayVertLine(stdOut,&coord,(COORD){33,0},(COORD){33,60},'|');
         displayHorLine(stdOut,&coord,(COORD){0,15},(COORD){33,15},'-');
 
+        offset_prints(stdOut,"TEST\nTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST",(COORD){35,0});
+
         //Klavyeden geçerli tuş alınması
         int key=-1;
         while(key==-1){
             key=waitKeys(stdIn,(WORD[]){VK_UP,VK_DOWN,VK_RETURN},3);
-        }
-        //Klavyeden alınan tuşa göre işlem yapılması
-        int totalCount=selectedMenu->childrenCount+selectedMenu->itemCount;
-        switch(key){
-            case -1:
-                continue;
-            case 0:
-                //Menü en yukarıdayken yukarı tuşuna basıldığında en aşağı inme
-                if(itemIndex<=0){
-                    itemIndex=totalCount;
-                }else{
-                    itemIndex--;
-                }
-                break;
-            case 1:
-                //Menü en aşağıdayken aşağı tuşuna basıldığında en yukarı çıkma
-                if(itemIndex>=totalCount){
-                    itemIndex=0;
-                }else{
-                    itemIndex++;
-                }
-                break;
-            case 2:
-                if(itemIndex>=totalCount){
-                    if(selectedMenu==&main_menu){
-                        return 0;
+            //Klavyeden alınan tuşa göre işlem yapılması
+            int totalCount=selectedMenu->childrenCount+selectedMenu->itemCount;
+            switch(key){
+                case -1:
+                    continue;
+                case 0:
+                    //Menü en yukarıdayken yukarı tuşuna basıldığında en aşağı inme
+                    if(itemIndex<=0){
+                        itemIndex=totalCount;
                     }else{
-                        selectedMenu=selectedMenu->parent;
+                        itemIndex--;
                     }
-                }else if(itemIndex<selectedMenu->childrenCount){
-                    selectedMenu=selectedMenu->children[itemIndex];
+                    break;
+                case 1:
+                    //Menü en aşağıdayken aşağı tuşuna basıldığında en yukarı çıkma
+                    if(itemIndex>=totalCount){
+                        itemIndex=0;
+                    }else{
+                        itemIndex++;
+                    }
+                    break;
+                case 2:
+                    if(itemIndex>=totalCount){
+                        if(selectedMenu==&main_menu){
+                            return 0;
+                        }else{
+                            selectedMenu=selectedMenu->parent;
+                        }
+                    }else if(itemIndex<selectedMenu->childrenCount){
+                        selectedMenu=selectedMenu->children[itemIndex];
+                    }
+                    break;
                 }
-                break;
             }
         clear(stdOut,&coord);
         }

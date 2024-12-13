@@ -29,13 +29,11 @@ void clearScreen() {
     system("cls");
 }
 
-int randomNumber = (rand() % 20) + 1;
-
 int rollDice() {
     srand(time(NULL));
     int randomNumberScreenTime = 0;
 
-
+    int randomNumber = (rand() % 20) + 1;
 
     PlaySound(TEXT("./sounds/effects/dice/dice.wav"), NULL, SND_FILENAME | SND_ASYNC);
 
