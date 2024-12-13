@@ -9,31 +9,30 @@
 
 
 //Menünün değerlerini ayarlamak için kullanılacak fonksiyon
-void initMenu(pmenu menu,wchar_t name[64],wchar_t description[128],wchar_t menuItems[16][64],int itemCount,pmenu children[16],pmenu parent){
+void initMenu(pmenu menu,wchar_t name[64],wchar_t description[128],wchar_t menuItems[][64],int itemCount,pmenu children[16],int childrenCount,pmenu parent){
     wcscpy(menu->name,name);
     wcscpy(menu->description,description);
     menu->itemCount=itemCount;
-    //0'dan 15'e kadar ilerleyerek menuItems'ları kopyalar.
-    for(int i=0;i<16;i++){
-        if(menuItems!=NULL){
-            wcscpy(menu->menuItems[i],menuItems[i]);
-        }
-    }
+    menu->childrenCount=childrenCount;
     //itemCount'a göre ilerleyerek menuItems'a children'ların isimlerini çeker.
+    for(int i=0;i<childrenCount;i++){
+        menu->children[i]=children[i];
+        wcscpy(menu->menuItems[i],menu->children[i]->name);
+    }
+    //menuItems'ları kopyalar.
     for(int i=0;i<itemCount;i++){
-        if(children!=NULL){
-            menu->children[i]=children[i];
-            wcscpy(menu->menuItems[i],menu->children[i]->name);
-        }
+        wcscpy(menu->menuItems[i+childrenCount],menuItems[i]);
     }
     menu->parent=parent;
 }
 
 //Menüyü ekrana yazdıran fonksiyon
 void displayMenu(HANDLE stdOut,pmenu menu,int itemIndex,PCOORD coord){
+    
+    int totalCount=menu->childrenCount+menu->itemCount;
 
-    if(itemIndex>menu->itemCount){
-        itemIndex=menu->itemCount;
+    if(itemIndex>totalCount){
+        itemIndex=totalCount;
     }
     printf("================================");
     CONSOLE_SCREEN_BUFFER_INFO buffer=refreshSize(stdOut,coord);
@@ -47,15 +46,14 @@ void displayMenu(HANDLE stdOut,pmenu menu,int itemIndex,PCOORD coord){
         printf("================================\n\n");
         wprintf(L"%ls\n",menu->description);
     }
-
-    for(int i=0;i<menu->itemCount;i++){
+    for(int i=0;i<totalCount;i++){
         if(i==itemIndex){
             SetConsoleTextAttribute(stdOut,styleHiglight);
         }
         wprintf(L"> %ls\n",menu->menuItems[i]);
         SetConsoleTextAttribute(stdOut,styleDefault);
     }
-    if(itemIndex>menu->itemCount-1){
+    if(itemIndex>=totalCount){
         SetConsoleTextAttribute(stdOut,styleHiglight);
     }
     if(menu->parent!=NULL){
