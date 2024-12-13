@@ -9,5 +9,6 @@ add_executable(Donem_Projesi
         include/menu.c
         include/menu.h
         include/arthandler.c
-        include/arthandler.h
+        include/arthandler.c
+        main.c
 )
