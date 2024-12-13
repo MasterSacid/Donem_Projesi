@@ -6,35 +6,66 @@
 #include <wchar.h>
 #include <locale.h>
 
+// Ekran boyutunu saklamak için açılan COORD yapısı
 COORD coord;
+
 int main(void) {
     setlocale(LC_ALL, "");
     HANDLE stdOut=GetStdHandle(STD_OUTPUT_HANDLE);
     HANDLE stdIn=GetStdHandle(STD_INPUT_HANDLE);
+
+    //Ana menü
     menu main_menu;
     initMenu(
         &main_menu,
         L"Ana Menü",
         L"Ne yapmak istediğini seç",
         (wchar_t[][64]){L"Yola çık",L"Yemek ye",L"Uyu",L"Kamp kur"},
-        5,
+        4,
         NULL,
         NULL
     );
 
+    CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
+
     //Başlangıç Seçenekleri
     pmenu selectedMenu=&main_menu;
     int itemIndex=0;
+    clear(stdOut,&coord);
 
     while(1){
         //Görüntüleme
         displayMenu(stdOut,selectedMenu,itemIndex,&coord);
-
-        //Kullanıcı İnteraksiyonu
+        displayVertLine(stdOut,&coord,(COORD){33,0},(COORD){33,60},'|');
+        displayHorLine(stdOut,&coord,(COORD){0,15},(COORD){33,15},'-');
+        //Klavyeden geçerli tuş alınması
         int key=-1;
         while(key==-1){
             key=waitKeys(stdIn,(WORD[]){VK_UP,VK_DOWN,VK_RETURN},3);
-            // Klavye kontrolü
+        }
+        //Klavyeden alınan tuşa göre işlem yapılması
+        switch(key){
+            case -1:
+                continue;
+            case 0:
+                //Menü en yukarıdayken yukarı tuşuna basıldığında en aşağı inme
+                if(itemIndex<=0){
+                    itemIndex=selectedMenu->itemCount;
+                }else{
+                    itemIndex--;
+                }
+                break;
+            case 1:
+                //Menü en aşağıdayken aşağı tuşuna basıldığında en yukarı çıkma
+                if(itemIndex>=selectedMenu->itemCount){
+                    itemIndex=0;
+                }else{
+                    itemIndex++;
+                }
+                break;
+            case 2:
+                return 0;
+                break;
         }
         clear(stdOut,&coord);
     }

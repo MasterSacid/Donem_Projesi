@@ -2,6 +2,8 @@
 #include <windows.h>
 #include "console.h"
 #include <wchar.h>
+#include <string.h>
+#include <stdio.h>
 
 
 CONSOLE_SCREEN_BUFFER_INFO refreshSize(HANDLE stdOut,PCOORD coord){
@@ -31,6 +33,7 @@ int waitKeys(HANDLE stdIn,WORD keys[],int keyAmount){
     return j;
 }
 
+//Ekranı temizler
 void clear(HANDLE stdOut,PCOORD coord){
     refreshSize(stdOut,coord);
     COORD start={0,0};
@@ -38,4 +41,44 @@ void clear(HANDLE stdOut,PCOORD coord){
     FillConsoleOutputAttribute(stdOut,styleDefault,coord->X*coord->Y,start,&nChars);
     FillConsoleOutputCharacter(stdOut,' ',coord->X*coord->Y,start,&nChars);
     SetConsoleCursorPosition(stdOut,start);
+}
+
+// Dikey çizgi çizer
+void displayVertLine(HANDLE stdOut,PCOORD coord,COORD start,COORD end,char displaychar){
+    CONSOLE_SCREEN_BUFFER_INFO savePos;
+    GetConsoleScreenBufferInfo(stdOut,&savePos);
+    int temp=start.Y;
+    refreshSize(stdOut,coord);
+    SetConsoleCursorPosition(stdOut,start);
+    for(int i=0;i<=end.X-start.X;i++){
+        for(int j=0;j<end.Y-start.Y;j++){
+            //SetConsoleTextAttribute(stdOut,styleHiglight);
+            printf("%c",displaychar);
+            start.Y++;
+            SetConsoleCursorPosition(stdOut,(COORD){start.X,start.Y});
+        }
+        start.Y=temp;
+        start.X++;
+        SetConsoleCursorPosition(stdOut,(COORD){start.X,start.Y});
+    }
+    SetConsoleTextAttribute(stdOut,styleDefault);
+    SetConsoleCursorPosition(stdOut,savePos.dwCursorPosition);
+}
+
+// Yatay Çizgi çizer
+void displayHorLine(HANDLE stdOut,PCOORD coord,COORD start,COORD end,char displaychar){
+    CONSOLE_SCREEN_BUFFER_INFO savePos;
+    GetConsoleScreenBufferInfo(stdOut,&savePos);
+    int temp=start.X;
+    refreshSize(stdOut,coord);
+    SetConsoleCursorPosition(stdOut,start);
+    for(int i=0;i<=end.Y-start.Y;i++){
+        for(int j=0;j<end.X-start.X;j++){
+            //SetConsoleTextAttribute(stdOut,styleHiglight);
+            SetConsoleCursorPosition(stdOut,(COORD){start.X+j,start.Y+i});
+            printf("%c",displaychar);
+        }
+    }
+    SetConsoleTextAttribute(stdOut,styleDefault);
+    SetConsoleCursorPosition(stdOut,savePos.dwCursorPosition);
 }

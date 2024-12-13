@@ -9,6 +9,10 @@ CONSOLE_SCREEN_BUFFER_INFO refreshSize(HANDLE stdOut,PCOORD coord);
 int waitKeys(HANDLE stdIn,WORD keys[],int keyAmount);
 void clear(HANDLE stdOut,PCOORD coord);
 
+void displayVertLine(HANDLE stdOut, PCOORD coord, COORD start, COORD end, char displaychar);
+
+void displayHorLine(HANDLE stdOut,PCOORD coord,COORD start,COORD end,char displaychar);
+
 #endif
 
 
