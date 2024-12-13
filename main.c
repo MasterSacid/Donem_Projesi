@@ -57,7 +57,7 @@ int main(void) {
    );
     initMenu(
         &eatFood,
-        L"Satın almak istediğin yemeği seç",
+        L"Yemek ye",
         L"Hangi yemeği alacaksın",
         (wchar_t[][64]){L"Yemek1",L"Yemek2",L"Yemek3",L"Yemek4",L"Yemek5"},
         5,
