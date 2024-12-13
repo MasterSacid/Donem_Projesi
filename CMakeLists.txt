@@ -12,3 +12,5 @@ add_executable(Donem_Projesi
         include/arthandler.c
         main.c
 )
+
+target_link_libraries(Donem_Projesi winmm)
