@@ -4,30 +4,26 @@
 #include "menu.h"
 #include "console.h"
 #include <string.h>
-
-#ifdef _WIN32
+#include <wchar.h>
 #include <windows.h>
-#else
-#include <sys/stat.h>
-#endif
 
 
 //Menünün değerlerini ayarlamak için kullanılacak fonksiyon
-void initMenu(pmenu menu,char name[64],char description[128],char menuItems[16][64],int itemCount,pmenu children[16],pmenu parent){
-    strcpy(menu->name,name);
-    strcpy(menu->description,description);
+void initMenu(pmenu menu,wchar_t name[64],wchar_t description[128],wchar_t menuItems[16][64],int itemCount,pmenu children[16],pmenu parent){
+    wcscpy(menu->name,name);
+    wcscpy(menu->description,description);
     menu->itemCount=itemCount;
     //0'dan 15'e kadar ilerleyerek menuItems'ları kopyalar.
     for(int i=0;i<16;i++){
         if(menuItems!=NULL){
-            strcpy(menu->menuItems[i],menuItems[i]);
+            wcscpy(menu->menuItems[i],menuItems[i]);
         }
     }
     //itemCount'a göre ilerleyerek menuItems'a children'ların isimlerini çeker.
     for(int i=0;i<itemCount;i++){
         if(children!=NULL){
             menu->children[i]=children[i];
-            strcpy(menu->menuItems[i],menu->children[i]->name);
+            wcscpy(menu->menuItems[i],menu->children[i]->name);
         }
     }
     menu->parent=parent;
@@ -41,32 +37,32 @@ void displayMenu(HANDLE stdOut,pmenu menu,int itemIndex,PCOORD coord){
     }
     printf("================================");
     CONSOLE_SCREEN_BUFFER_INFO buffer=refreshSize(stdOut,coord);
-    buffer.dwCursorPosition.X=16-strlen(menu->name)/2;
+    buffer.dwCursorPosition.X=16-wcslen(menu->name)/2;
     SetConsoleCursorPosition(stdOut,buffer.dwCursorPosition);
-    printf("%s\n\n",menu->name);
+    wprintf(L"%s\n\n",menu->name);
     if(menu->description[0]!='\n'){
-        printf("%s\n",menu->description);
+        wprintf(L"%ls\n",menu->description);
         printf("================================\n\n");
     }else{
         printf("================================\n\n");
-        printf("%s\n",menu->description);
+        wprintf(L"%ls\n",menu->description);
     }
 
     for(int i=0;i<menu->itemCount;i++){
         if(i==itemIndex){
             SetConsoleTextAttribute(stdOut,styleHiglight);
         }
-        printf("> %s\n",menu->menuItems[i]);
+        wprintf(L"> %ls\n",menu->menuItems[i]);
         SetConsoleTextAttribute(stdOut,styleDefault);
     }
     if(itemIndex>menu->itemCount-1){
         SetConsoleTextAttribute(stdOut,styleHiglight);
     }
     if(menu->parent!=NULL){
-        printf("< %s",menu->parent->name);
+        wprintf(L"< %ls",menu->parent->name);
         SetConsoleTextAttribute(stdOut,styleDefault);
     }else{
-        printf("< Exit");
+        wprintf(L"< Oyundan Çık");
         SetConsoleTextAttribute(stdOut,styleDefault);
     }
 }
