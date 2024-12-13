@@ -11,6 +11,8 @@ add_executable(Donem_Projesi
         include/arthandler.c
         include/arthandler.c
         main.c
+        include/rolldice.c
+        include/rolldice.h
 )
 
 target_link_libraries(Donem_Projesi winmm)
