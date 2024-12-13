@@ -3,11 +3,15 @@
 #include <windows.h>
 #include "include\menu.h"
 #include "include\console.h"
+#include "include/arthandler.h"
 #include <wchar.h>
 #include <locale.h>
 
+int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
+
 // Ekran boyutunu saklamak için açılan COORD yapısı
 COORD coord;
+char artBuffer [4096]; //Ascii tablolarının maks karakter sayısı
 
 int main(void) {
     setlocale(LC_ALL, "");
@@ -41,7 +45,15 @@ int main(void) {
         displayVertLine(stdOut,&coord,(COORD){33,0},(COORD){33,60},'|');
         displayHorLine(stdOut,&coord,(COORD){0,15},(COORD){33,15},'-');
 
-        offset_prints(stdOut,"TEST\nTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST",(COORD){35,0});
+
+        //COORD artCoord = {35,2}; //Resim konumu kesin bir konum olabildiği gibi
+        COORD artCoord = {centerArtX(),0}; //Ortalanabilir de
+        getArtWidth("../arts/mushroom.txt"); //ortalamak için maks genişlikteki karakter bulunur
+
+        chooseArtFile("../arts/woman.txt",artBuffer,sizeof(artBuffer));
+
+        //offset_prints(stdOut,"TEST\nTESTTESTTESTTESTTESTTESTTESTTESTTESTTESTTEST",(COORD){35,0});
+        offset_prints(stdOut,artBuffer,artCoord); //art buffer = maks karakter sayısını içeren string
 
         //Klavyeden geçerli tuş alınması
         int key=-1;
@@ -84,4 +96,14 @@ int main(void) {
         clear(stdOut,&coord);
         }
     return 0;
+}
+
+
+int centerArtX() {
+    int rightSectionWidth = coord.X - 33;  //33 yatay çizginin başladığı nokta
+    int artWidth = getArtWidth(artBuffer);
+
+    //hesapla
+    int centeredX = 33 + ((rightSectionWidth - artWidth) / 2);
+    return centeredX;
 }
