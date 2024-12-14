@@ -3,16 +3,22 @@
 #include <windows.h>
 #include "include\menu.h"
 #include "include\console.h"
+#include "include/arthandler.h"
 #include <wchar.h>
 #include <locale.h>
 
+int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
+
 // Ekran boyutunu saklamak için açılan COORD yapısı
 COORD coord;
+char artBuffer [4096]; //Ascii tablolarının maks karakter sayısı
 
 int main(void) {
     setlocale(LC_ALL, "");
     HANDLE stdOut=GetStdHandle(STD_OUTPUT_HANDLE);
     HANDLE stdIn=GetStdHandle(STD_INPUT_HANDLE);
+
+    hide_cursor(stdOut);
 
     menu main_menu,confirm_exit,startAdventure,talkToSomeone,sing,eatFood;
 
@@ -157,4 +163,14 @@ int main(void) {
             clear(stdOut,&coord);
         }
     return 0;
+}
+
+
+int centerArtX() {
+    int rightSectionWidth = coord.X - 33;  //33 yatay çizginin başladığı nokta
+    int artWidth = getArtWidth(artBuffer);
+
+    //hesapla
+    int centeredX = 33 + ((rightSectionWidth - artWidth) / 2);
+    return centeredX;
 }

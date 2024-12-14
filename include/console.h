@@ -15,6 +15,6 @@ void displayHorLine(HANDLE stdOut,PCOORD coord,COORD start,COORD end,char displa
 
 void offset_prints(HANDLE stdOut, wchar_t string[], COORD start);
 
-void clearArea(HANDLE stdOut, COORD start, COORD end);
+void hide_cursor(HANDLE stdOut);
 
 #endif

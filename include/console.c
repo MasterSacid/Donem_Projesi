@@ -95,3 +95,10 @@ void offset_prints(HANDLE stdOut,wchar_t string[],COORD start){
         }
     }
 }
+
+void hide_cursor(HANDLE stdOut){
+    CONSOLE_CURSOR_INFO cursor;
+    GetConsoleCursorInfo(stdOut,&cursor);
+    cursor.bVisible=FALSE;
+    SetConsoleCursorInfo(stdOut,&cursor);
+}
