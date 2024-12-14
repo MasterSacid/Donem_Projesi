@@ -5,8 +5,10 @@
 #include "include\console.h"
 #include "include/arthandler.h"
 #include "include/rolldice.h"
+#include "include/effects.h"
 #include <wchar.h>
 #include <locale.h>
+
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
 
@@ -162,7 +164,16 @@ int main(void) {
                                     .animationSpeed = 100,
                                     .rolls = 8
                                 };
-                                rollDiceAnimated(stdOut, config);
+                                //rollDiceAnimated(stdOut, config);
+                                HANDLE stdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
+                                ScreenEffect effect = {
+                                    .stdOut = stdOut,
+                                    .color = BACKGROUND_RED | BACKGROUND_INTENSITY,
+                                    .duration = 200
+                                    };
+
+                                flashScreen(effect); //and then call it like this
                                 break;
                             }
                         }
