@@ -84,14 +84,14 @@ void displayHorLine(HANDLE stdOut,PCOORD coord,COORD start,COORD end,char displa
 }
 
 //Kayık yazdırma fonksiyonu
-void offset_prints(HANDLE stdOut,char string[],COORD start){
+void offset_prints(HANDLE stdOut,wchar_t string[],COORD start){
     SetConsoleCursorPosition(stdOut,start);
-    for(int i=0;i<strlen(string);i++){
-        if(string[i]=='\n'){
+    for(int i=0;i<wcslen(string);i++){
+        if(string[i]==L'\n'){
             start.Y++;
             SetConsoleCursorPosition(stdOut,(COORD){start.X,start.Y});
         }else{
-            printf("%c",string[i]);
+            wprintf(L"%lc",string[i]);
         }
     }
 }

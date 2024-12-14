@@ -13,6 +13,8 @@ void displayVertLine(HANDLE stdOut, PCOORD coord, COORD start, COORD end, char d
 
 void displayHorLine(HANDLE stdOut,PCOORD coord,COORD start,COORD end,char displaychar);
 
-void offset_prints(HANDLE stdOut, char string[], COORD start);
+void offset_prints(HANDLE stdOut, wchar_t string[], COORD start);
+
+void clearArea(HANDLE stdOut, COORD start, COORD end);
 
 #endif
