@@ -38,21 +38,22 @@ void flashScreen(ScreenEffect effect) {
 
     // ----------------Fill entire screen with color ------
     DWORD write;
-    //At microsofts page it tells that this function:
-    //Sets the character attributes for a specified number of character cells,
-    //beginning at the specified coordinates in a screen buffer.
+    /*At microsofts page it tells that this function:
+    Sets the character attributes for a specified number of character cells,
+    beginning at the specified coordinates in a screen buffer.
+    */
     FillConsoleOutputAttribute(effect.stdOut, effect.color, totalSize, (COORD){0, 0}, &write);
 
-    //for this one
-    //Writes a character to the console screen buffer a specified number of times,
-    //beginning at the specified coordinates.
+    /*for this one
+    Writes a character to the console screen buffer a specified number of times,
+    beginning at the specified coordinates. */
     FillConsoleOutputCharacter(effect.stdOut, ' ', totalSize, (COORD){0, 0}, &write);
 
     Sleep(effect.duration);
 
-    // Restore the original screen content by
-    // writing character and color attribute data to a specified rectangular
-    // block of character cells in a console screen buffer.
+    /* Restore the original screen content by
+     writing character and color attribute data to a specified rectangular
+     block of character cells in a console screen buffer. */
     WriteConsoleOutput(effect.stdOut,
                        screenBuffer,
                        (COORD){width, height},
