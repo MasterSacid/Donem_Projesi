@@ -23,9 +23,6 @@ int main(void) {
 
     hide_cursor(stdOut);
 
-    //GarbageCollector Array
-
-
     /*
         MENÜLER
     */
@@ -83,20 +80,10 @@ int main(void) {
        (wchar_t[][64]){L"Şarkı1",L"Şarkı2"},
        2,
        NULL,
-       1,
+       0,
        &main_menu
     );
 
-    initMenu(
-        &food_menu,
-        L"Yemek ye",
-        L"Hangi yemeği alacaksın",
-        (wchar_t[][64]){L"Yemek1",L"Yemek2",L"Yemek3",L"Yemek4",L"Yemek5"},
-        5,
-        NULL,
-        0,
-        &main_menu
-    );
     // Önemli not : Yemek menüsü seçildikten sonra yanda ascii resimler gösterilebilir. Bu bir fikir sadece
 
 

@@ -59,7 +59,7 @@ void initStats(pStats stats, int con, int cha, int dex, int inl, int str, int wi
 
 pItem createItem(wchar_t name[], wchar_t description[], wchar_t type[], int value,int itemValues[]);
 
-pCharacter createNPC(void *garbageCollector, int *tracker, wchar_t name[]);
+pCharacter createNPC(wchar_t name[]);
 
 void updatePlayer(pPlayer Player);
 

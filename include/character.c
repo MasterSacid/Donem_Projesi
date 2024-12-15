@@ -22,7 +22,7 @@ pItem createItem(wchar_t name[],wchar_t description[],wchar_t type[],int value,i
     return itemAdress;
 }
 
-pCharacter createNPC(void* garbageCollector,int* tracker,wchar_t name[]){
+pCharacter createNPC(wchar_t name[]){
     pCharacter characterAdress=(pCharacter)malloc(sizeof(character));
     wcscpy(characterAdress->name,name);
     initStats(&(characterAdress->stat),0,0,0,0,0,0);
