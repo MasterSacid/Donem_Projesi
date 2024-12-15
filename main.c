@@ -4,8 +4,11 @@
 #include "include\menu.h"
 #include "include\console.h"
 #include "include/arthandler.h"
+#include "include/rolldice.h"
+#include "include/effects.h"
 #include <wchar.h>
 #include <locale.h>
+
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
 
@@ -20,51 +23,65 @@ int main(void) {
 
     hide_cursor(stdOut);
 
-    menu main_menu,confirm_exit,startAdventure,talkToSomeone,sing,eatFood;
+    menu main_menu,confirm_exit,startAdventure,talkToSomeone,sing,eatFood,diceTestMenu;
 
+    // BUNU UNUTMA BU BİR DEBUG
     initMenu(
-      &confirm_exit,
-      L"Çık",
-      L"Oyundan çıkmak istediğine\nemin misin ?",
-      (wchar_t[][64]){L"Evet"},
-      1,
-      NULL,
-      0,
-      &main_menu
+        &diceTestMenu,
+        L"Zar Test",
+        L"Test için zar at",
+        (wchar_t[][64]){L"20 At", L"6 At", L"Özel Zar"},
+        3,
+        NULL,
+        0,
+        &talkToSomeone
     );
 
     initMenu(
-      &startAdventure,
-      L"Maceraya Atıl",
-      L"Bu Maceraya atılmak istediğinden\nemin misin ?",
-      (wchar_t[][64]){L"Evet",L"Hayır"},
-      2,
-      NULL,
-      0,
-      &main_menu
+        &confirm_exit,
+        L"Çık",
+        L"Oyundan çıkmak istediğine\nemin misin ?",
+        (wchar_t[][64]){L"Evet"},
+        1,
+        NULL,
+        0,
+        &main_menu
     );
 
     initMenu(
-      &talkToSomeone,
-      L"Biriyle konuş",
-      L"Kiminle konuşacaksın ?",
-      (wchar_t[][64]){L"Ayyaş",L"Barmen",L"Gezgin",L"Evsiz"}, //Bu kişileri seçtikten sonra yanda resimler olabilir
-      4,
-      NULL,
-      0,
-      &main_menu
+        &startAdventure,
+        L"Maceraya Atıl",
+        L"Bu Maceraya atılmak istediğinden\nemin misin ?",
+        (wchar_t[][64]){L"Evet",L"Hayır"},
+        2,
+        NULL,
+        0,
+        &main_menu
+    );
+
+    //burayı unutma kaldırıcan
+    initMenu(
+        &talkToSomeone,
+        L"Biriyle konuş",
+        L"Kiminle konuşacaksın ?",
+        (wchar_t[][64]){L"Ayyaş",L"Barmen",L"Gezgin",L"Evsiz"},
+        4,
+        (pmenu[]){&diceTestMenu},  // Add diceTestMenu as child
+        1,  // Set childrenCount to 1
+        &main_menu
     );
 
     initMenu(
-       &sing,
-       L"Şarkı söyle",
-       L"İstdeğin şarkıyı seç",
-       (wchar_t[][64]){L"Şarkı1",L"Şarkı2"},
-       2,
-       NULL,
-       0,
-       &main_menu
+        &sing,
+        L"Şarkı söyle",
+        L"İstdeğin şarkıyı seç",
+        (wchar_t[][64]){L"Şarkı1",L"Şarkı2"},
+        2,
+        NULL,
+        0,
+        &main_menu
     );
+
     initMenu(
         &eatFood,
         L"Yemek ye",
@@ -75,10 +92,8 @@ int main(void) {
         0,
         &main_menu
     );
-    // Önemli not : Yemek menüsü seçildikten sonra yanda ascii resimler gösterilebilir. Bu bir fikir sadece
 
 
-    //Ana menü
     initMenu(
         &main_menu,
         L"Ana Menü",
@@ -90,40 +105,27 @@ int main(void) {
         NULL
     );
 
-    CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-
-    //Başlangıç Seçenekleri
-
     pmenu selectedMenu=&main_menu;
     int itemIndex=0;
     clear(stdOut,&coord);
     wchar_t output[10][128]={
-        L"TEST\n",
-        L"TEST2\n",
-        L"TEST3\n"
+
     };
+    int showOutput = 0;
 
     while(1){
-        //Görüntüleme
         displayMenu(stdOut,selectedMenu,itemIndex,&coord);
         displayVertLine(stdOut,&coord,(COORD){33,0},(COORD){33,60},'|');
         displayHorLine(stdOut,&coord,(COORD){0,15},(COORD){33,15},'-');
 
-        for(int i=0;i<10;i++){
-            offset_prints(stdOut,output[i],(COORD){35,0+2*i});
-        }
-
-        //Klavyeden geçerli tuş alınması
         int key=-1;
         while(key==-1){
             key=waitKeys(stdIn,(WORD[]){VK_UP,VK_DOWN,VK_RETURN},3);
-            //Klavyeden alınan tuşa göre işlem yapılması
             int totalCount=selectedMenu->childrenCount+selectedMenu->itemCount;
             switch(key){
                 case -1:
                     continue;
                 case 0:
-                    //Menü en yukarıdayken yukarı tuşuna basıldığında en aşağı inme
                     if(itemIndex<=0){
                         itemIndex=totalCount;
                     }else if(itemIndex>=totalCount){
@@ -133,7 +135,6 @@ int main(void) {
                     }
                     break;
                 case 1:
-                    //Menü en aşağıdayken aşağı tuşuna basıldığında en yukarı çıkma
                     if(itemIndex>=totalCount){
                         itemIndex=0;
                     }else{
@@ -149,28 +150,22 @@ int main(void) {
                         }
                     }else if(itemIndex<=selectedMenu->childrenCount-1){
                         selectedMenu=selectedMenu->children[itemIndex];
-                    }else{
-                        if(selectedMenu==&confirm_exit){
-                            if(itemIndex==0){
-                                clear(stdOut,&coord);
-                                return 0;
-                            }
-                        }
+                    }else if(selectedMenu==&confirm_exit && itemIndex==0){
+                        clear(stdOut,&coord);
+                        return 0;
                     }
                     break;
-                }
             }
             clear(stdOut,&coord);
         }
+    }
     return 0;
 }
 
 
 int centerArtX() {
-    int rightSectionWidth = coord.X - 33;  //33 yatay çizginin başladığı nokta
+    int rightSectionWidth = coord.X - 33;
     int artWidth = getArtWidth(artBuffer);
-
-    //hesapla
     int centeredX = 33 + ((rightSectionWidth - artWidth) / 2);
     return centeredX;
 }

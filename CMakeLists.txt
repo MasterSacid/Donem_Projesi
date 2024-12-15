@@ -13,6 +13,8 @@ add_executable(Donem_Projesi
         main.c
         include/rolldice.c
         include/rolldice.h
+        include/effects.c
+        include/effects.h
 )
 
 target_link_libraries(Donem_Projesi winmm)
