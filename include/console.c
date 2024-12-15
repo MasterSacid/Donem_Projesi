@@ -4,6 +4,7 @@
 #include <wchar.h>
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
 
 
 CONSOLE_SCREEN_BUFFER_INFO refreshSize(HANDLE stdOut,PCOORD coord){
@@ -38,8 +39,8 @@ void clear(HANDLE stdOut,PCOORD coord){
     refreshSize(stdOut,coord);
     COORD start={0,0};
     DWORD nChars;
-    FillConsoleOutputAttribute(stdOut,styleDefault,coord->X*coord->Y,start,&nChars);
-    FillConsoleOutputCharacter(stdOut,' ',coord->X*coord->Y,start,&nChars);
+    FillConsoleOutputAttribute(stdOut,styleDefault,(coord->X+1)*(coord->Y+1),start,&nChars);
+    FillConsoleOutputCharacter(stdOut,' ',(coord->X+1)*(coord->Y+1),start,&nChars);
     SetConsoleCursorPosition(stdOut,start);
 }
 
@@ -126,10 +127,19 @@ void unhide_cursor(HANDLE stdOut){
 }
 
 void printsAnimated(HANDLE stdOut,pMessage msg,COORD start,int ms,char stopAt[]){
+    COORD temp=start;
+    COORD size;
+    refreshSize(stdOut,&size);
+    fitToLine(size.X-start.X,msg->string);
+    int nCounter=0;
     if(strcmp(stopAt,"letter")==0){
         for(int i=0;i<wcslen(msg->string);i++){
+            if(msg->string[i]==L'\n'){
+                nCounter++;
+                start.X=temp.X;
+            }
             wchar_t currentChar[2]={msg->string[i],L'\0'};
-            offset_prints(stdOut,currentChar,start);
+            offset_prints(stdOut,currentChar,(COORD){start.X,start.Y+nCounter});
             start.X++;
             Sleep(ms);
         }
@@ -150,13 +160,22 @@ void printsAnimated(HANDLE stdOut,pMessage msg,COORD start,int ms,char stopAt[])
         }
         array[counter]=L'\0';
         offset_prints(stdOut,array,start);
+    }else if(strcmp(stopAt,"uneven")==0){
+        srand(time(NULL));
+            for(int i=0;i<wcslen(msg->string);i++){
+                int y=rand()%3;
+                wchar_t currentChar[2]={msg->string[i],L'\0'};
+                offset_prints(stdOut,currentChar,(COORD){start.X,start.Y});
+                start.X++;
+                Sleep(ms);
+        }
     }
 }
 
-void printMessages(HANDLE stdOut,message msgs[],COORD start){
+void printMessages(HANDLE stdOut,message msgs[],COORD start,int ms,char style[]){
         for(int i=0;i<10;i++){
             if(msgs[i].shown==0){
-                printsAnimated(stdOut,&msgs[i],(COORD){start.X,start.Y+2*i},400,"word");
+                printsAnimated(stdOut,&msgs[i],(COORD){start.X,start.Y+2*i},ms,style);
                 msgs[i].shown=1;
             }else{
                 offset_prints(stdOut,msgs[i].string,(COORD){start.X,start.Y+2*i});
@@ -165,4 +184,25 @@ void printMessages(HANDLE stdOut,message msgs[],COORD start){
                 break;
             }
         }
+}
+
+void fitToLine(int lineSize,wchar_t string[]){
+    int stringSize=wcslen(string);
+    int currentChar=0;
+    while(stringSize>lineSize){
+        for(int i=lineSize-1;i>=0;i--){
+            if(string[currentChar+i]==L' ' || string[currentChar+i]==L'\n'){
+                string[currentChar+i]=L'\n';
+                currentChar+=i;
+                stringSize-=lineSize;
+                break;
+            }
+            if(i<=-1){
+                string[currentChar+i]=L'\n';
+                currentChar+=lineSize;
+                stringSize-=lineSize;
+                break;
+            }
+        }
+    }
 }
