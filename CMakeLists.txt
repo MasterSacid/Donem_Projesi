@@ -17,6 +17,8 @@ add_executable(Donem_Projesi
         include/locationtime.h
         include/character.c
         include/character.h
+        include/eventHandler.c
+        include/eventHandler.h
 )
 
 target_link_libraries(Donem_Projesi winmm)
