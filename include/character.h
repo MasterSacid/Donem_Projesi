@@ -35,7 +35,6 @@ typedef struct character{
     int level;
     int health;
     int maxHealth;
-
 }character,*pCharacter;
 
 typedef struct player{

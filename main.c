@@ -12,9 +12,14 @@
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
 
+int exitProgram(void **collectionAdress);
+
 // Ekran boyutunu saklamak için açılan COORD yapısı
 COORD coord;
 char artBuffer [4096]; //Ascii tablolarının maks karakter sayısı
+
+int collectionSize=0;
+
 
 int main(void) {
     setlocale(LC_ALL, "");
@@ -22,6 +27,10 @@ int main(void) {
     HANDLE stdIn=GetStdHandle(STD_INPUT_HANDLE);
 
     hide_cursor(stdOut);
+
+    //Garbage collection
+
+    void* collection=malloc(sizeof(void*));
 
     /*
         MENÜLER
@@ -195,20 +204,17 @@ int main(void) {
                     }else{
                         if(selectedMenu==&confirm_exit){
                             if(itemIndex==0){
-                                clear(stdOut,&coord);
-                                unhide_cursor(stdOut);
-                                return 0;
+                                return exitProgram(&collection);
                             }
                         }
                     }
                     break;
-                }
             }
-            // Yapılan işlemler sonrası değişimleri güncelleme
-            updatePlayer(&Player);
-            clear(stdOut,&coord);
         }
-    return 0;
+        // Yapılan işlemler sonrası değişimleri güncelleme
+        updatePlayer(&Player);
+        clear(stdOut,&coord);
+    }
 }
 
 
@@ -219,4 +225,18 @@ int centerArtX() {
     //hesapla
     int centeredX = 33 + ((rightSectionWidth - artWidth) / 2);
     return centeredX;
+}
+
+void garbageCollector(void **collectorAdress,void *toBeCollected){
+    collectionSize++;
+    *collectorAdress=realloc(collectorAdress,(sizeof(void*))*collectionSize);
+    collectorAdress[collectionSize-1]=toBeCollected;
+}
+
+int exitProgram(void **collectionAdress){
+    for(int i;i<collectionSize;i++){
+        free(collectionAdress[i]);
+        printf("Succesfully deleted");
+    }
+    return 0;
 }

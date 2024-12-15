@@ -13,10 +13,10 @@ add_executable(Donem_Projesi
         main.c
         include/rolldice.c
         include/rolldice.h
-        include/locationtime.c
-        include/locationtime.h
         include/character.c
         include/character.h
+        include/locationtime.c
+        include/locationtime.h
 )
 
 target_link_libraries(Donem_Projesi winmm)
