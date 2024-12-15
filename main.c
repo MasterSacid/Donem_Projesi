@@ -109,9 +109,7 @@ int main(void) {
     int itemIndex=0;
     clear(stdOut,&coord);
     wchar_t output[10][128]={
-        L"TEST\n",
-        L"TEST2\n",
-        L"TEST3\n"
+
     };
     int showOutput = 0;
 
@@ -119,15 +117,7 @@ int main(void) {
         displayMenu(stdOut,selectedMenu,itemIndex,&coord);
         displayVertLine(stdOut,&coord,(COORD){33,0},(COORD){33,60},'|');
         displayHorLine(stdOut,&coord,(COORD){0,15},(COORD){33,15},'-');
-        /*
-        if (showOutput == 1) {
-            for(int i=0;i<10;i++){
-                offset_prints(stdOut,output[i],(COORD){35,0+2*i});
-            }
 
-        } */
-
-        writeOneByOne(stdOut,output[1],(COORD){35,2},50);
         int key=-1;
         while(key==-1){
             key=waitKeys(stdIn,(WORD[]){VK_UP,VK_DOWN,VK_RETURN},3);
@@ -152,49 +142,6 @@ int main(void) {
                     }
                     break;
                 case 2:
-                    // Handle dice rolling first
-
-                    if(selectedMenu == &diceTestMenu && itemIndex < selectedMenu->itemCount) {
-                        switch(itemIndex) {
-                            case 0:
-                                showOutput = 1;
-                                quickRollDice(stdOut, (COORD){35, 5}, 20);
-                                break;
-                            case 1:
-                                showOutput = 1;
-                                quickRollDice(stdOut, (COORD){35, 5}, 6);
-                                break;
-                            case 2: {
-                                /* DiceRollConfig config = {
-                                    .result = 0,
-                                    .position = {60, 10},
-                                    .diceType = 20,
-                                    .animationSpeed = 100,
-                                    .rolls = 8
-                                };
-                                rollDiceAnimated(stdOut, config); */
-
-                                /*HANDLE stdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-
-                                ScreenEffect effect = {
-                                    .stdOut = stdOut,
-                                    .color = BACKGROUND_RED | BACKGROUND_INTENSITY,
-                                    .duration = 200
-                                    };
-
-                                flashScreen(effect); //and then call it like this
-                                */
-                                showOutput = 0;
-                                // clearChosenArea(stdOut, &coord, (COORD){35, 0}, (COORD){35, 2});
-
-                                break;
-                            }
-                        }
-                        //Sleep(1000); //Zar atılasın diye bekliyoruz
-                        break;
-                    }
-
-                    // Handle regular menu navigation
                     if(itemIndex>=totalCount){
                         if(selectedMenu==&main_menu){
                             selectedMenu=&confirm_exit;

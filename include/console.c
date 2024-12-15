@@ -127,3 +127,12 @@ void hide_cursor(HANDLE stdOut){
     cursor.bVisible=FALSE;
     SetConsoleCursorInfo(stdOut,&cursor);
 }
+
+
+/*
+      if (showOutput == 1) {
+          for(int i=0;i<10;i++){
+              offset_prints(stdOut,output[i],(COORD){35,0+2*i});
+          }
+
+      } */
