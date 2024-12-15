@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
-#include "include\menu.h"
-#include "include\console.h"
+#include "include/menu.h"
+#include "include/console.h"
 #include "include/arthandler.h"
 #include "include/rolldice.h"
 #include "include/effects.h"
 #include <wchar.h>
 #include <locale.h>
-#include "include\character.h"
-#include "include\locationtime.h"
+#include "include/character.h"
+#include "include/locationtime.h"
 #include "include/eventHandler.h"
 #include <stdlib.h>
 
@@ -22,6 +22,16 @@ COORD coord;
 char artBuffer [4096]; //Ascii tablolarının maks karakter sayısı
 
 int collectionSize=0;
+
+typedef struct message{
+    wchar_t string[128];
+    char shown;
+    int highlight[8][2];
+    char color[8][16];
+}message,*pMessage;
+
+
+
 
 
 int main(void) {
@@ -152,6 +162,10 @@ int main(void) {
             offset_prints(stdOut,output[i],(COORD){35,0+2*i});
         }
 
+        for(int i=0;i<10;i++) {
+            offset_prints(stdOut,msg[i],(COORD){35,0+2*i});
+        }
+
         //Klavyeden geçerli tuş alınması
         int key=-1;
         while(key==-1){
@@ -227,3 +241,5 @@ int exitProgram(void **collectionAdress){
     }
     return 0;
 }
+
+wchar_t output[10][128]={};
