@@ -6,7 +6,7 @@
 #define styleDefault FOREGROUND_BLUE|FOREGROUND_GREEN|FOREGROUND_RED
 
 typedef struct message{
-    wchar_t string[128];
+    wchar_t string[256];
     char shown;
     int highlight[8][2];
     char color[8][16];
@@ -30,6 +30,8 @@ void unhide_cursor(HANDLE stdOut);
 
 void printsAnimated(HANDLE stdOut, pMessage msg, COORD start, int ms, char stopAt[]);
 
-void printMessages(HANDLE stdOut, message msgs[], COORD start);
+void printMessages(HANDLE stdOut, message msgs[], COORD start,int ms,char style[]);
+
+void fitToLine(int lineSize, wchar_t string[]);
 
 #endif
