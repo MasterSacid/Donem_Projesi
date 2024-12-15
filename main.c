@@ -4,6 +4,8 @@
 #include "include\menu.h"
 #include "include\console.h"
 #include "include/arthandler.h"
+#include "include/rolldice.h"
+#include "include/effects.h"
 #include <wchar.h>
 #include <locale.h>
 #include "include\character.h"
@@ -40,38 +42,39 @@ int main(void) {
     menu main_menu,confirm_exit,startAdventure,talkToSomeone,sing,eatFood,food_menu;
 
     initMenu(
-      &confirm_exit,
-      L"Çık",
-      L"Oyundan çıkmak istediğine\nemin misin ?",
-      (wchar_t[][64]){L"Evet"},
-      1,
-      NULL,
-      0,
-      &main_menu
+        &confirm_exit,
+        L"Çık",
+        L"Oyundan çıkmak istediğine\nemin misin ?",
+        (wchar_t[][64]){L"Evet"},
+        1,
+        NULL,
+        0,
+        &main_menu
     );
 
     initMenu(
-      &startAdventure,
-      L"Maceraya Atıl",
-      L"Bu Maceraya atılmak istediğinden\nemin misin ?",
-      (wchar_t[][64]){L"Evet",L"Hayır"},
-      2,
-      NULL,
-      0,
-      &main_menu
+        &startAdventure,
+        L"Maceraya Atıl",
+        L"Bu Maceraya atılmak istediğinden\nemin misin ?",
+        (wchar_t[][64]){L"Evet",L"Hayır"},
+        2,
+        NULL,
+        0,
+        &main_menu
     );
 
 
     initMenu(
-       &sing,
-       L"Şarkı söyle",
-       L"İstdeğin şarkıyı seç",
-       (wchar_t[][64]){L"Şarkı1",L"Şarkı2"},
-       2,
-       NULL,
-       0,
-       &main_menu
+        &sing,
+        L"Şarkı söyle",
+        L"İstdeğin şarkıyı seç",
+        (wchar_t[][64]){L"Şarkı1",L"Şarkı2"},
+        2,
+        NULL,
+        0,
+        &main_menu
     );
+
 
     initMenu(
        &eatFood,
@@ -87,7 +90,6 @@ int main(void) {
     // Önemli not : Yemek menüsü seçildikten sonra yanda ascii resimler gösterilebilir. Bu bir fikir sadece
 
 
-    //Ana menü
     initMenu(
         &main_menu,
         L"Ana Menü",
@@ -141,7 +143,6 @@ int main(void) {
     wchar_t output[10][128]={};
 
     while(1){
-        //Görüntüleme
         displayMenu(stdOut,selectedMenu,itemIndex,&coord);
         displayVertLine(stdOut,&coord,(COORD){33,0},(COORD){33,60},'|');
         displayHorLine(stdOut,&coord,(COORD){0,15},(COORD){33,15},'-');
@@ -155,13 +156,11 @@ int main(void) {
         int key=-1;
         while(key==-1){
             key=waitKeys(stdIn,(WORD[]){VK_UP,VK_DOWN,VK_RETURN},3);
-            //Klavyeden alınan tuşa göre işlem yapılması
             int totalCount=selectedMenu->childrenCount+selectedMenu->itemCount;
             switch(key){
                 case -1:
                     continue;
                 case 0:
-                    //Menü en yukarıdayken yukarı tuşuna basıldığında en aşağı inme
                     if(itemIndex<=0){
                         itemIndex=totalCount;
                     }else if(itemIndex>=totalCount){
@@ -171,7 +170,6 @@ int main(void) {
                     }
                     break;
                 case 1:
-                    //Menü en aşağıdayken aşağı tuşuna basıldığında en yukarı çıkma
                     if(itemIndex>=totalCount){
                         itemIndex=0;
                     }else{
@@ -210,10 +208,8 @@ int main(void) {
 
 
 int centerArtX() {
-    int rightSectionWidth = coord.X - 33;  //33 yatay çizginin başladığı nokta
+    int rightSectionWidth = coord.X - 33;
     int artWidth = getArtWidth(artBuffer);
-
-    //hesapla
     int centeredX = 33 + ((rightSectionWidth - artWidth) / 2);
     return centeredX;
 }
