@@ -11,6 +11,7 @@
 #include "include\character.h"
 #include "include\locationtime.h"
 #include "include/eventHandler.h"
+#include "include/beginning.h"
 #include <stdlib.h>
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
@@ -153,13 +154,14 @@ int main(void) {
         {L"Ah anladım peki öyle olsun"},
         {L""}
     };
+    beginning();
 
     while(1){
         displayMenu(stdOut,selectedMenu,itemIndex,&coord);
         displayVertLine(stdOut,&coord,(COORD){33,0},(COORD){33,60},'|');
         displayHorLine(stdOut,&coord,(COORD){0,15},(COORD){33,15},'-');
         displayHUD(stdOut,&Player,(COORD){0,17},&time);
-        printMessages(stdOut,output,(COORD){35,0});
+        //printMessages(stdOut,output,(COORD){35,0});
 
         //Klavyeden geçerli tuş alınması
         int key=-1;
