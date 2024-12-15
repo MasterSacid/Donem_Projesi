@@ -1,7 +1,6 @@
 #ifndef LOCATIONTIME
 #define LOCATIONTIME
 #include <wchar.h>
-#include "character.h"
 #define MAX_TIME 86400
 
 struct character;

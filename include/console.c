@@ -6,7 +6,6 @@
 #include <stdio.h>
 
 
-
 CONSOLE_SCREEN_BUFFER_INFO refreshSize(HANDLE stdOut,PCOORD coord){
     CONSOLE_SCREEN_BUFFER_INFO buffer;
     GetConsoleScreenBufferInfo(stdOut,&buffer);
@@ -111,15 +110,6 @@ void offset_prints(HANDLE stdOut,wchar_t string[],COORD start){
         }
     }
 }
-//Bir Bir Yazdırma Fonksiyonu
-void writeOneByOne(HANDLE stdOut, const wchar_t* inputText, COORD position,int waitMiliSeconds) {
-    for (size_t i = 0; i < wcslen(inputText); i++) {
-        wchar_t currentChar[2] = {inputText[i], L'\0'};  // Passes the current char in input text to the current char string array
-        offset_prints(stdOut, currentChar, position);
-        position.X++;  // Move to next position
-        Sleep(waitMiliSeconds);     // Add delay between characters
-    }
-}
 
 void hide_cursor(HANDLE stdOut){
     CONSOLE_CURSOR_INFO cursor;
@@ -133,4 +123,46 @@ void unhide_cursor(HANDLE stdOut){
     GetConsoleCursorInfo(stdOut,&cursor);
     cursor.bVisible=TRUE;
     SetConsoleCursorInfo(stdOut,&cursor);
+}
+
+void printsAnimated(HANDLE stdOut,pMessage msg,COORD start,int ms,char stopAt[]){
+    if(strcmp(stopAt,"letter")==0){
+        for(int i=0;i<wcslen(msg->string);i++){
+            wchar_t currentChar[2]={msg->string[i],L'\0'};
+            offset_prints(stdOut,currentChar,start);
+            start.X++;
+            Sleep(ms);
+        }
+    }else if(strcmp(stopAt,"word")==0){
+        wchar_t array[32];
+        int counter=0;
+        for(int i=0;i<wcslen(msg->string);i++){
+            if(msg->string[i]==L' '){
+                array[counter]=L'\0';
+                offset_prints(stdOut,array,start);
+                start.X+=counter;
+                wcscpy(array,L"\0");
+                counter=0;
+                Sleep(ms);
+            }
+            array[counter]=msg->string[i];
+            counter++;
+        }
+        array[counter]=L'\0';
+        offset_prints(stdOut,array,start);
+    }
+}
+
+void printMessages(HANDLE stdOut,message msgs[],COORD start){
+        for(int i=0;i<10;i++){
+            if(msgs[i].shown==0){
+                printsAnimated(stdOut,&msgs[i],(COORD){start.X,start.Y+2*i},400,"word");
+                msgs[i].shown=1;
+            }else{
+                offset_prints(stdOut,msgs[i].string,(COORD){start.X,start.Y+2*i});
+            }
+            if(msgs[i+1].string[0]==L'\0'){
+                break;
+            }
+        }
 }

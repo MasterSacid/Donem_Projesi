@@ -15,7 +15,7 @@
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
 
-int exitProgram(void **collectionAdress);
+int exitProgram(HANDLE stdOut, PCOORD coord, void **collectionAdress);
 
 // Ekran boyutunu saklamak için açılan COORD yapısı
 COORD coord;
@@ -61,6 +61,17 @@ int main(void) {
         NULL,
         0,
         &main_menu
+    );
+
+    initMenu(
+       &talkToSomeone,
+       L"Yemek ye",
+       L"Ne yiyeceksin?",
+       (wchar_t[][64]){L"Şarkı1",L"Şarkı2"},
+       2,
+       NULL,
+       0,
+       &main_menu
     );
 
 
@@ -115,9 +126,6 @@ int main(void) {
 
     CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
 
-    //Garbage Collection
-
-
 
     //Başlangıç Seçenekleri
 
@@ -140,17 +148,18 @@ int main(void) {
     pmenu selectedMenu=&main_menu;
     int itemIndex=0;
     clear(stdOut,&coord);
-    wchar_t output[10][128]={};
+    message output[10]={
+        {L"Hey sen! Evet sana diyorum! İsmin nedir yabancı test test te"},
+        {L"Ah anladım peki öyle olsun"},
+        {L""}
+    };
 
     while(1){
         displayMenu(stdOut,selectedMenu,itemIndex,&coord);
         displayVertLine(stdOut,&coord,(COORD){33,0},(COORD){33,60},'|');
         displayHorLine(stdOut,&coord,(COORD){0,15},(COORD){33,15},'-');
         displayHUD(stdOut,&Player,(COORD){0,17},&time);
-
-        for(int i=0;i<10;i++){
-            offset_prints(stdOut,output[i],(COORD){35,0+2*i});
-        }
+        printMessages(stdOut,output,(COORD){35,0});
 
         //Klavyeden geçerli tuş alınması
         int key=-1;
@@ -193,7 +202,7 @@ int main(void) {
                     }else{
                         if(selectedMenu==&confirm_exit){
                             if(itemIndex==0){
-                                return exitProgram(&collection);
+                                return exitProgram(stdOut,&coord,&collection);
                             }
                         }
                     }
@@ -220,7 +229,9 @@ void garbageCollector(void **collectorAdress,void *toBeCollected){
     collectorAdress[collectionSize-1]=toBeCollected;
 }
 
-int exitProgram(void **collectionAdress){
+int exitProgram(HANDLE stdOut,PCOORD coord,void **collectionAdress){
+    clear(stdOut,coord);
+    unhide_cursor(stdOut);
     for(int i;i<collectionSize;i++){
         free(collectionAdress[i]);
         printf("Succesfully deleted");
