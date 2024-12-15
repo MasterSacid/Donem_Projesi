@@ -6,6 +6,9 @@
 #include "include/arthandler.h"
 #include <wchar.h>
 #include <locale.h>
+#include "include\character.h"
+#include "include\locationtime.h"
+#include <stdlib.h>
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
 
@@ -20,7 +23,14 @@ int main(void) {
 
     hide_cursor(stdOut);
 
-    menu main_menu,confirm_exit,startAdventure,talkToSomeone,sing,eatFood;
+    //GarbageCollector Array
+
+
+    /*
+        MENÜLER
+    */
+
+    menu main_menu,confirm_exit,startAdventure,talkToSomeone,sing,eatFood,food_menu;
 
     initMenu(
       &confirm_exit,
@@ -65,8 +75,20 @@ int main(void) {
        0,
        &main_menu
     );
+
     initMenu(
-        &eatFood,
+       &eatFood,
+       L"Yemek ye",
+       L"Ne yiyeceksin?",
+       (wchar_t[][64]){L"Şarkı1",L"Şarkı2"},
+       2,
+       NULL,
+       1,
+       &main_menu
+    );
+
+    initMenu(
+        &food_menu,
         L"Yemek ye",
         L"Hangi yemeği alacaksın",
         (wchar_t[][64]){L"Yemek1",L"Yemek2",L"Yemek3",L"Yemek4",L"Yemek5"},
@@ -90,24 +112,53 @@ int main(void) {
         NULL
     );
 
+
+    /*
+        KONUMLAR
+    */
+
+   location tavern={
+    .name=L"Han",
+    .description=L"Han Description Placeholder",
+    .path=NULL,
+    .pathLength=0
+   };
+
     CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
 
+    //Garbage Collection
+
+
+
     //Başlangıç Seçenekleri
+
+    int time=8*3600;
+
+    player Player;
+    wcscpy(Player.name,L"Player");
+    Player.locationAdress=&tavern;
+    initStats(&Player.stat,10,10,10,10,10,10);
+    Player.level=1;
+    Player.maxHealth=5*Player.stat.constition+(5*Player.stat.constition*(Player.level-1)/25);
+    Player.health=Player.maxHealth;
+    Player.currency=20;
+    Player.mental=100;
+    Player.saturation=100;
+    Player.exhaustion=0;
+    Player.abilityPoints=0;
+    updatePlayer(&Player);
 
     pmenu selectedMenu=&main_menu;
     int itemIndex=0;
     clear(stdOut,&coord);
-    wchar_t output[10][128]={
-        L"TEST\n",
-        L"TEST2\n",
-        L"TEST3\n"
-    };
+    wchar_t output[10][128]={};
 
     while(1){
         //Görüntüleme
         displayMenu(stdOut,selectedMenu,itemIndex,&coord);
         displayVertLine(stdOut,&coord,(COORD){33,0},(COORD){33,60},'|');
         displayHorLine(stdOut,&coord,(COORD){0,15},(COORD){33,15},'-');
+        displayHUD(stdOut,&Player,(COORD){0,17},&time);
 
         for(int i=0;i<10;i++){
             offset_prints(stdOut,output[i],(COORD){35,0+2*i});
@@ -141,18 +192,24 @@ int main(void) {
                     }
                     break;
                 case 2:
+                    //Enter tuşuna basıldığında yapılacaklar
+
+                    //Bir menüdeyken en son seçenek seçiliyse yapılacak
                     if(itemIndex>=totalCount){
                         if(selectedMenu==&main_menu){
                             selectedMenu=&confirm_exit;
                         }else{
                             selectedMenu=selectedMenu->parent;
                         }
+                    //Bir menüdeyken alt menüler seçiliyken yapılacaklar
                     }else if(itemIndex<=selectedMenu->childrenCount-1){
                         selectedMenu=selectedMenu->children[itemIndex];
+                    //Alt menü olmayan seçenekler seçiliyken yapılacaklar
                     }else{
                         if(selectedMenu==&confirm_exit){
                             if(itemIndex==0){
                                 clear(stdOut,&coord);
+                                unhide_cursor(stdOut);
                                 return 0;
                             }
                         }
@@ -160,6 +217,8 @@ int main(void) {
                     break;
                 }
             }
+            // Yapılan işlemler sonrası değişimleri güncelleme
+            updatePlayer(&Player);
             clear(stdOut,&coord);
         }
     return 0;

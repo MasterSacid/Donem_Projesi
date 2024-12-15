@@ -102,3 +102,10 @@ void hide_cursor(HANDLE stdOut){
     cursor.bVisible=FALSE;
     SetConsoleCursorInfo(stdOut,&cursor);
 }
+
+void unhide_cursor(HANDLE stdOut){
+    CONSOLE_CURSOR_INFO cursor;
+    GetConsoleCursorInfo(stdOut,&cursor);
+    cursor.bVisible=TRUE;
+    SetConsoleCursorInfo(stdOut,&cursor);
+}

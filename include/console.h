@@ -17,4 +17,6 @@ void offset_prints(HANDLE stdOut, wchar_t string[], COORD start);
 
 void hide_cursor(HANDLE stdOut);
 
+void unhide_cursor(HANDLE stdOut);
+
 #endif

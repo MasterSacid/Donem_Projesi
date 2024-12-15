@@ -6,6 +6,8 @@
 #include <string.h>
 #include <wchar.h>
 #include <windows.h>
+#include "character.h"
+#include "locationtime.h"
 
 
 //Menünün değerlerini ayarlamak için kullanılacak fonksiyon
@@ -63,4 +65,33 @@ void displayMenu(HANDLE stdOut,pmenu menu,int itemIndex,PCOORD coord){
         wprintf(L"< Oyundan Çık");
         SetConsoleTextAttribute(stdOut,styleDefault);
     }
+}
+
+void displayHUD(HANDLE stdOut,pPlayer player,COORD hudPos,int* time){
+    int savedTime=*time;
+    int hour=0,minute=0;
+    if(savedTime>=MAX_TIME){
+        savedTime=0;
+        hour=0;
+        minute=0;
+    }
+    while(savedTime>=3600){
+        savedTime-=3600;
+        hour++;
+    }
+    while(savedTime>=60){
+        savedTime-=60;
+        minute++;
+    }
+    SetConsoleCursorPosition(stdOut,hudPos);
+    wprintf(L"%ls\n",player->name);
+    wprintf(L"%ls konumundasın.\n\n",player->locationName);
+    wprintf(L"Altın         : %*d\n",5,player->currency);
+    wprintf(L"Seviye        : %*d\n",5,player->level);
+    wprintf(L"Tecrübe puanı : %*d/100\n",5,player->xpPoint);
+    wprintf(L"Can           : %*d/%d\n",5,player->health,player->maxHealth);
+    wprintf(L"Yorgunluk     : %*d/100\n",5,player->exhaustion);
+    wprintf(L"Tokluk        : %*d/100\n",5,player->saturation);
+    wprintf(L"Akıl Sağlığı  : %*d/100\n",5,player->mental);
+    printf("\n\nSaat %02d:%02d",hour,minute);
 }
