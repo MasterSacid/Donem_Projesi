@@ -15,8 +15,13 @@ add_executable(Donem_Projesi
         include/rolldice.h
         include/character.c
         include/character.h
+<<<<<<< HEAD
         include/locationtime.c
         include/locationtime.h
+=======
+        include/eventHandler.c
+        include/eventHandler.h
+>>>>>>> 43cf947cb7eb5bf412c1c35b5eeed1e4def3e9eb
 )
 
 target_link_libraries(Donem_Projesi winmm)

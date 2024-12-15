@@ -8,6 +8,7 @@
 #include <locale.h>
 #include "include\character.h"
 #include "include\locationtime.h"
+#include "include/eventHandler.h"
 #include <stdlib.h>
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
@@ -60,16 +61,6 @@ int main(void) {
       &main_menu
     );
 
-    initMenu(
-      &talkToSomeone,
-      L"Biriyle konuş",
-      L"Kiminle konuşacaksın ?",
-      (wchar_t[][64]){L"Ayyaş",L"Barmen",L"Gezgin",L"Evsiz"}, //Bu kişileri seçtikten sonra yanda resimler olabilir
-      4,
-      NULL,
-      0,
-      &main_menu
-    );
 
     initMenu(
        &sing,
