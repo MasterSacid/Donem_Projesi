@@ -28,6 +28,7 @@ typedef struct item{
 typedef struct character{
     wchar_t name[32];
     wchar_t locationName[32];
+    wchar_t characterClass[32];
     pLocation locationAdress;
     pItem items[16];
     stats stat;
@@ -35,6 +36,7 @@ typedef struct character{
     int level;
     int health;
     int maxHealth;
+    int turn;
 }character,*pCharacter;
 
 typedef struct player{
@@ -52,6 +54,7 @@ typedef struct player{
     int exhaustion;
     int mental;
     int abilityPoints;
+    int turn;
 }player,*pPlayer;
 
 void initStats(pStats stats, int con, int cha, int dex, int inl, int str, int wis);

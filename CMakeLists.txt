@@ -19,6 +19,8 @@ add_executable(Donem_Projesi
         include/locationtime.h
         include/narrative.h
         include/narrative.c
+        include/combat.h
+        include/combat.c
 )
 
 target_link_libraries(Donem_Projesi winmm)

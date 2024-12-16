@@ -12,6 +12,7 @@
 #include "include\locationtime.h"
 #include "include/eventHandler.h"
 #include "include/narrative.h"
+#include "include/combat.h"
 #include <stdlib.h>
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
@@ -151,14 +152,13 @@ int main(void) {
     clear(stdOut,&coord);
     message output[10]={};
 
-    dialog array[]={
-        {{L"\nOmzundaki deri çantanı sıkıca tutarak taş yoldan ilerliyorsun."},1000,1},
-        {{L"\nOmzundaki deri çantanı sıkıca tutarak taş yoldan ilerliyorsun."},1000,1},
-        {{L"\nOmzundaki deri çantanı sıkıca tutarak taş yoldan ilerliyorsun."},1000,1},
-        {{L"\0"},10,1}
-    };
+    character ally,enemy;
+    ally.stat.wisdom=11;
+    ally.stat.dexterity=12;
+    enemy.stat.wisdom=12;
+    enemy.stat.dexterity=11;
 
-    printSequence(stdOut,array);
+    initCombat(&Player,(pCharacter[]){&ally},1,(pCharacter[]){&enemy},1);
 
     while(1){
         displayMenu(stdOut,selectedMenu,itemIndex,&coord);
@@ -240,7 +240,6 @@ int exitProgram(HANDLE stdOut,PCOORD coord,void **collectionAdress){
     unhide_cursor(stdOut);
     for(int i;i<collectionSize;i++){
         free(collectionAdress[i]);
-        printf("Succesfully deleted");
     }
     return 0;
 }
