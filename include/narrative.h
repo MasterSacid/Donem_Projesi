@@ -10,6 +10,6 @@ typedef struct dialog{
 
 void printSequence(HANDLE stdOut, dialog sequence[]);
 
-int dialogChoice(HANDLE stdOut, HANDLE stdIn, wchar_t string[], wchar_t opts[][64], int optCount);
+int dialogChoice(HANDLE stdOut, HANDLE stdIn, wchar_t string[], wchar_t opts[][300], int optCount);
 
 #endif

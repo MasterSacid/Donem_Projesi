@@ -13,6 +13,7 @@
 #include "include/eventHandler.h"
 #include "include/narrative.h"
 #include <stdlib.h>
+#include "story/beginning.h"
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
 
@@ -151,14 +152,7 @@ int main(void) {
     clear(stdOut,&coord);
     message output[10]={};
 
-    dialog array[]={
-        {{L"\nOmzundaki deri çantanı sıkıca tutarak taş yoldan ilerliyorsun."},1000,1},
-        {{L"\nOmzundaki deri çantanı sıkıca tutarak taş yoldan ilerliyorsun."},1000,1},
-        {{L"\nOmzundaki deri çantanı sıkıca tutarak taş yoldan ilerliyorsun."},1000,1},
-        {{L"\0"},10,1}
-    };
-
-    printSequence(stdOut,array);
+    beginning();
 
     while(1){
         displayMenu(stdOut,selectedMenu,itemIndex,&coord);

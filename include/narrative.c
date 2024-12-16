@@ -15,7 +15,7 @@ void printSequence(HANDLE stdOut,dialog sequence[]){
         }
     }
 }
-
+/*
 int dialogChoice(HANDLE stdOut,HANDLE stdIn,wchar_t string[],wchar_t opts[][64],int optCount){
     int itemIndex=0;
     COORD size;
@@ -87,5 +87,63 @@ int dialogChoice(HANDLE stdOut,HANDLE stdIn,wchar_t string[],wchar_t opts[][64],
                 break;
         }
         clear(stdOut,&size);
+    }
+} */
+
+int dialogChoice(HANDLE stdOut, HANDLE stdIn, wchar_t string[], wchar_t opts[][300], int optCount) {
+    int itemIndex = 0;
+    COORD size;
+    refreshSize(stdOut, &size);
+    CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
+    GetConsoleScreenBufferInfo(stdOut, &bufferInfo);
+    COORD pos = bufferInfo.dwCursorPosition;
+    pos.Y += 2;
+
+    while(1) {
+        // Print the main string
+        wprintf(L"%ls\n", string);
+
+        // Print options vertically
+        for(int i = 0; i < optCount; i++) {
+            SetConsoleCursorPosition(stdOut, (COORD){pos.X, pos.Y + i});
+
+            // Highlight selected option
+            if(itemIndex == i) {
+                SetConsoleTextAttribute(stdOut, styleHiglight);
+                wprintf(L"> %ls", opts[i]);
+            } else {
+                SetConsoleTextAttribute(stdOut, styleDefault);
+                wprintf(L"  %ls", opts[i]);  // Two spaces for alignment
+            }
+
+            SetConsoleTextAttribute(stdOut, styleDefault);
+        }
+
+        // Key input handling
+        int key = -1;
+        while(key == -1) {
+            key = waitKeys(stdIn, (WORD[]){VK_UP, VK_DOWN, VK_RETURN}, 3);
+        }
+
+        switch(key) {
+            case 0:  // Up
+                if(itemIndex <= 0) {
+                    itemIndex = optCount - 1;
+                } else {
+                    itemIndex--;
+                }
+            break;
+            case 1:  // Down
+                if(itemIndex >= optCount - 1) {
+                    itemIndex = 0;
+                } else {
+                    itemIndex++;
+                }
+            break;
+            case 2:  // Return
+                return itemIndex;
+        }
+
+        clear(stdOut, &size);
     }
 }
