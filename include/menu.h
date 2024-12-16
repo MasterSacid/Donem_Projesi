@@ -12,6 +12,7 @@ typedef struct menu{
     struct menu* children[16];
     int childrenCount;
     struct menu* parent;
+    void (*actions[64])(void);
 }menu,*pmenu;
 
 void initMenu(pmenu menu, wchar_t name[64], wchar_t description[128], wchar_t menuItems[][64], int itemCount, pmenu children[16], int childrenCount, pmenu parent);

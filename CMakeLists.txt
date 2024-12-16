@@ -25,7 +25,8 @@ add_executable(Donem_Projesi
         story/part2.h
         include/menuevents.c
         include/menuevents.h
-
+        main.h
+        main.h
 
 )
 
