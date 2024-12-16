@@ -17,8 +17,8 @@ add_executable(Donem_Projesi
         include/character.h
         include/locationtime.c
         include/locationtime.h
-        include/beginning.c
-        include/beginning.h
+        include/narrative.h
+        include/narrative.c
 )
 
 target_link_libraries(Donem_Projesi winmm)

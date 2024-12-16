@@ -11,7 +11,7 @@
 #include "include\character.h"
 #include "include\locationtime.h"
 #include "include/eventHandler.h"
-#include "include/beginning.h"
+#include "include/narrative.h"
 #include <stdlib.h>
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
@@ -151,9 +151,14 @@ int main(void) {
     clear(stdOut,&coord);
     message output[10]={};
 
-    dialogChoice(stdOut,stdIn,L"TEST",(wchar_t[][64]){L"Seçenek 1",L"Seçenek 2"},2);
+    dialog array[]={
+        {{L"\nOmzundaki deri çantanı sıkıca tutarak taş yoldan ilerliyorsun."},1000,1},
+        {{L"\nOmzundaki deri çantanı sıkıca tutarak taş yoldan ilerliyorsun."},1000,1},
+        {{L"\nOmzundaki deri çantanı sıkıca tutarak taş yoldan ilerliyorsun."},1000,1},
+        {{L"\0"},10,1}
+    };
 
-    beginning();
+    printSequence(stdOut,array);
 
     while(1){
         displayMenu(stdOut,selectedMenu,itemIndex,&coord);
