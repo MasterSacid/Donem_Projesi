@@ -6,7 +6,7 @@
 #define styleDefault FOREGROUND_BLUE|FOREGROUND_GREEN|FOREGROUND_RED
 
 typedef struct message{
-    wchar_t string[256];
+    wchar_t string[512];
     char shown;
     int highlight[8][2];
     char color[8][16];
