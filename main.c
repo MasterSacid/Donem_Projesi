@@ -14,6 +14,7 @@
 #include "include/narrative.h"
 #include <stdlib.h>
 #include "story/beginning.h"
+#include "story/part2.h"
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
 
@@ -152,7 +153,8 @@ int main(void) {
     clear(stdOut,&coord);
     message output[10]={};
 
-    beginning();
+    //beginning();
+    bolum_2_savas();
 
     while(1){
         displayMenu(stdOut,selectedMenu,itemIndex,&coord);

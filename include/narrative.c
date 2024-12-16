@@ -93,53 +93,61 @@ int dialogChoice(HANDLE stdOut,HANDLE stdIn,wchar_t string[],wchar_t opts[][64],
 int dialogChoice(HANDLE stdOut, HANDLE stdIn, wchar_t string[], wchar_t opts[][300], int optCount) {
     int itemIndex = 0;
     COORD size;
-    refreshSize(stdOut, &size);
+    refreshSize(stdOut, &size); // Get console dimensions
     CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
     GetConsoleScreenBufferInfo(stdOut, &bufferInfo);
     COORD pos = bufferInfo.dwCursorPosition;
     pos.Y += 2;
 
-    while(1) {
+    int consoleWidth = bufferInfo.dwSize.X; // Width of the console buffer
+
+    while (1) {
         // Print the main string
         wprintf(L"%ls\n", string);
 
         // Print options vertically
-        for(int i = 0; i < optCount; i++) {
-            SetConsoleCursorPosition(stdOut, (COORD){pos.X, pos.Y + i});
+        int currentY = pos.Y; // Track current Y position
+        for (int i = 0; i < optCount; i++) {
+            SetConsoleCursorPosition(stdOut, (COORD){pos.X, currentY});
 
             // Highlight selected option
-            if(itemIndex == i) {
+            if (itemIndex == i) {
                 SetConsoleTextAttribute(stdOut, styleHiglight);
                 wprintf(L"> %ls", opts[i]);
             } else {
                 SetConsoleTextAttribute(stdOut, styleDefault);
-                wprintf(L"  %ls", opts[i]);  // Two spaces for alignment
+                wprintf(L"  %ls", opts[i]); // Two spaces for alignment
             }
 
             SetConsoleTextAttribute(stdOut, styleDefault);
+
+            // Calculate the number of lines this option takes
+            int optionLength = wcslen(opts[i]);
+            int linesRequired = (optionLength + consoleWidth - 1) / consoleWidth; // Round up
+            currentY += linesRequired; // Move to the next option's Y position
         }
 
         // Key input handling
         int key = -1;
-        while(key == -1) {
+        while (key == -1) {
             key = waitKeys(stdIn, (WORD[]){VK_UP, VK_DOWN, VK_RETURN}, 3);
         }
 
-        switch(key) {
+        switch (key) {
             case 0:  // Up
-                if(itemIndex <= 0) {
+                if (itemIndex <= 0) {
                     itemIndex = optCount - 1;
                 } else {
                     itemIndex--;
                 }
-            break;
+                break;
             case 1:  // Down
-                if(itemIndex >= optCount - 1) {
+                if (itemIndex >= optCount - 1) {
                     itemIndex = 0;
                 } else {
                     itemIndex++;
                 }
-            break;
+                break;
             case 2:  // Return
                 return itemIndex;
         }
