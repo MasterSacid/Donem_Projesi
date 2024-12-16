@@ -149,11 +149,10 @@ int main(void) {
     pmenu selectedMenu=&main_menu;
     int itemIndex=0;
     clear(stdOut,&coord);
-    message output[10]={
-        {L"Hey sen! Evet sana diyorum! İsmin nedir yabancı test test te"},
-        {L"Ah anladım peki öyle olsun"},
-        {L""}
-    };
+    message output[10]={};
+
+    dialogChoice(stdOut,stdIn,L"TEST",(wchar_t[][64]){L"Seçenek 1",L"Seçenek 2"},2);
+
     beginning();
 
     while(1){
@@ -172,7 +171,7 @@ int main(void) {
                 case -1:
                     continue;
                 case 0:
-                    if(itemIndex<=0){
+                    if(itemIndex<0){
                         itemIndex=totalCount;
                     }else if(itemIndex>=totalCount){
                         itemIndex=totalCount-1;
@@ -181,7 +180,7 @@ int main(void) {
                     }
                     break;
                 case 1:
-                    if(itemIndex>=totalCount){
+                    if(itemIndex>totalCount){
                         itemIndex=0;
                     }else{
                         itemIndex++;
