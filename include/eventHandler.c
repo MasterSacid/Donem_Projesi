@@ -50,3 +50,6 @@ void deleteAllCharacters(pLocation location) {
 
 
 
+void adventureHandler() {
+
+}

@@ -37,6 +37,7 @@ void bolum_2_savas() {
         L"Bahane1: \"Ah, sonunda bir insan! Çok önemli bir şey sormam gerekiyor. Buradan geçen pembe bir tavşan gördünüz mü? Onu takip ediyordum ama bir anda kayboldu!\"",
         L"Bahane2: \"Dur! Bana zarar verme! Ben… ben ormanda kayboldum ve büyülü bir kazanı arıyorum. Dedem bu kazanın dilekleri yerine getirdiğini söyledi!\""
     };
+    system("cls");
 
     printSequence(stdOut, dialogues1);
     dialogChoice(stdOut, stdIn, sorgu1, secenekler1, 2);

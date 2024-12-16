@@ -23,6 +23,11 @@ add_executable(Donem_Projesi
         story/beginning.h
         story/part2.c
         story/part2.h
+        include/menuevents.c
+        include/menuevents.h
+        main.h
+        main.h
+
 )
 
 target_link_libraries(Donem_Projesi winmm)

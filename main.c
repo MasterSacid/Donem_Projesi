@@ -15,16 +15,19 @@
 #include <stdlib.h>
 #include "story/beginning.h"
 #include "story/part2.h"
-
+#include "include/menuevents.h"
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
 
 int exitProgram(HANDLE stdOut, PCOORD coord, void **collectionAdress);
+
+
 
 // Ekran boyutunu saklamak için açılan COORD yapısı
 COORD coord;
 char artBuffer [4096]; //Ascii tablolarının maks karakter sayısı
 
 int collectionSize=0;
+
 
 
 int main(void) {
@@ -34,6 +37,7 @@ int main(void) {
 
     hide_cursor(stdOut);
 
+
     //Garbage collection
 
     void* collection=malloc(sizeof(void*));
@@ -42,7 +46,7 @@ int main(void) {
         MENÜLER
     */
 
-    menu main_menu,confirm_exit,startAdventure,talkToSomeone,sing,eatFood,food_menu;
+    menu main_menu,confirm_exit,startAdventure,talkToSomeone,sideQuests,eatFood,food_menu;
 
     initMenu(
         &confirm_exit,
@@ -59,31 +63,32 @@ int main(void) {
         &startAdventure,
         L"Maceraya Atıl",
         L"Bu Maceraya atılmak istediğinden\nemin misin ?",
-        (wchar_t[][64]){L"Evet",L"Hayır"},
-        2,
+        (wchar_t[][64]){L"Evet"},
+        1,
         NULL,
         0,
         &main_menu
     );
+    startAdventure.actions[0] = startAdventureEvent;
 
     initMenu(
        &talkToSomeone,
-       L"Yemek ye",
-       L"Ne yiyeceksin?",
-       (wchar_t[][64]){L"Şarkı1",L"Şarkı2"},
+       L"Birileriyle Konuş",
+       L"Etrafındakiler",
+       (wchar_t[][64]){L"",L""},
        2,
        NULL,
        0,
        &main_menu
     );
-
+    talkToSomeoneMenuChange(&talkToSomeone);
 
     initMenu(
-        &sing,
-        L"Şarkı söyle",
-        L"İstdeğin şarkıyı seç",
-        (wchar_t[][64]){L"Şarkı1",L"Şarkı2"},
-        2,
+        &sideQuests,
+        L"Yan görev",
+        L"Bu göreve çıkmak ister misin=",
+        (wchar_t[][64]){L"Evet"},
+        1,
         NULL,
         0,
         &main_menu
@@ -110,7 +115,7 @@ int main(void) {
         L"Ne yapmak istediğini seç",
         NULL,
         0,
-        (pmenu[]){&startAdventure, &eatFood, &talkToSomeone, &sing},
+        (pmenu[]){&startAdventure, &eatFood, &talkToSomeone, &sideQuests},
         4,
         NULL
     );
@@ -154,7 +159,7 @@ int main(void) {
     message output[10]={};
 
     //beginning();
-    bolum_2_savas();
+    //bolum_2_savas();
 
     while(1){
         displayMenu(stdOut,selectedMenu,itemIndex,&coord);
@@ -202,6 +207,10 @@ int main(void) {
                         selectedMenu=selectedMenu->children[itemIndex];
                     //Alt menü olmayan seçenekler seçiliyken yapılacaklar
                     }else{
+                        int actionIndex = itemIndex - selectedMenu->childrenCount;
+                        if (selectedMenu->actions[actionIndex]) {
+                            selectedMenu->actions[actionIndex]();
+                        }
                         if(selectedMenu==&confirm_exit){
                             if(itemIndex==0){
                                 return exitProgram(stdOut,&coord,&collection);
@@ -240,3 +249,6 @@ int exitProgram(HANDLE stdOut,PCOORD coord,void **collectionAdress){
     }
     return 0;
 }
+
+
+
