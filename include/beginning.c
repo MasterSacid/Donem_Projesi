@@ -9,7 +9,7 @@ HANDLE stdOut;
 
 // Create a structure to store message and its delay
 typedef struct {
-    message* dialog[];
+    message* dialog;
     int delay;  // delay in milliseconds
     BOOL clearScreen;  // whether to clear screen after message
 } DialogSequence;
