@@ -10,14 +10,15 @@ void initStats(pStats stats,int con,int cha,int dex,int inl,int str,int wis){
     stats->wisdom=wis;
 }
 
-pItem createItem(wchar_t name[],wchar_t description[],wchar_t type[],int value,int itemValues[]){
+pItem createItem(wchar_t name[],wchar_t description[],wchar_t type[],int value,dictValue itemValues[]){
     pItem itemAdress=(pItem)malloc(sizeof(item));
     wcscpy(itemAdress->name,name);
     wcscpy(itemAdress->description,description);
     wcscpy(itemAdress->type,type);
     itemAdress->value=value;
     for(int i=0;i<8;i++){
-        itemAdress->itemValues[i]=itemValues[i];
+        wcscpy(itemAdress->itemValues[i].name,itemValues[i].name);
+        itemAdress->itemValues[i].value=itemValues[i].value;
     }
     return itemAdress;
 }

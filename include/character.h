@@ -22,12 +22,13 @@ typedef struct item{
     wchar_t description[128];
     wchar_t type[16];
     int value;
-    int itemValues[8];
+    dictValue itemValues[8];
 }item,*pItem;
 
 typedef struct character{
     wchar_t name[32];
     wchar_t locationName[32];
+    wchar_t characterClass[32];
     pLocation locationAdress;
     pItem items[16];
     stats stat;
@@ -35,6 +36,7 @@ typedef struct character{
     int level;
     int health;
     int maxHealth;
+    int turn;
 }character,*pCharacter;
 
 typedef struct player{
@@ -52,11 +54,12 @@ typedef struct player{
     int exhaustion;
     int mental;
     int abilityPoints;
+    int turn;
 }player,*pPlayer;
 
 void initStats(pStats stats, int con, int cha, int dex, int inl, int str, int wis);
 
-pItem createItem(wchar_t name[], wchar_t description[], wchar_t type[], int value,int itemValues[]);
+pItem createItem(wchar_t name[], wchar_t description[], wchar_t type[], int value, dictValue itemValues[]);
 
 pCharacter createNPC(wchar_t name[]);
 

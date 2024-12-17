@@ -5,51 +5,38 @@
 #include "locationtime.h"
 #include "menu.h"
 #include "character.h"
+#include "eventhandler.h"
 
-void peopleAtLocation (pLocation loc) {
-
-}
-
-//Konuşma seçeneği seçildiğinde oyuncunun olduğu konumdaki karakterlerin ismini menüye yazan fonksiyon
-void talkToSomeoneAtLocation (pLocation location,pmenu menu) {
-    //wcscpy(menu->menuItems[0],location->character[0]->name);
-
-    if (wcscmp(location->name,"Han")) {
-        location ->charachterCount = 4;
-    }
-
-    menu->itemCount = 0;  // Reset menu item count
-
-    // Iterate through all characters at the location
-    for (int i = 0; i < location->charachterCount; i++) {
-            wcscpy(menu->menuItems[menu->itemCount], location->character[i]->name);
-            menu->itemCount++;
-    }
-
-}
-/*  Macereya atıl
- *  1 Kolay
- *  2 Orta
- *  3 Zor
- *  ------
- */
-
-void deleteAllCharacters(pLocation location) {
-
-    // Free each character
-    for (int i = 0; i < location->charachterCount; i++) {
-        if (location->character[i]) {
-            free(location->character[i]);
-            location->character[i] = NULL;
-        }
-    }
-
-    // Reset character count
-    location->charachterCount = 0;
+void updateMission(int* missionC,pmenu talkMenu,void* storyPart){
+    updateCharacters(*missionC, talkMenu);
+    (*missionC)++;
 }
 
 
+void updateCharacters(int missionC,pmenu talkMenu){
 
-void adventureHandler() {
+    wchar_t list[][8][64]={
+        //Mission 0
+        {{L"Person1"},{L"Person2"}},
+        //Mission1
+        {{L"Person2"},{L"Person3"}},
+        //Mission2
+        {{L"Person4"},{L"Person5"},{L"Person6"}},
+    };
+    int listCounts[]={2,2,3};
 
+    talkMenu->itemCount=listCounts[missionC];
+    for(int i=0;i<listCounts[missionC];i++){
+        wcscpy(talkMenu->menuItems[i],list[missionC][i]);
+    }
+}
+
+void moveToTavern(pmenu locationMenu){
+    locationMenu->itemCount=4;
+    for(int i=0;i<4;i++){
+        wcscpy(locationMenu->menuItems[i],L"Şifahane");
+        wcscpy(locationMenu->menuItems[i],L"Silahçı");
+        wcscpy(locationMenu->menuItems[i],L"Erzak dükkanı");
+        wcscpy(locationMenu->menuItems[i],L"Odana çık ve uyu");
+    }
 }

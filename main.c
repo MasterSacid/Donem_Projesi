@@ -10,17 +10,16 @@
 #include <locale.h>
 #include "include\character.h"
 #include "include\locationtime.h"
-#include "include/eventhandler.h"
 #include "include/narrative.h"
+#include "include/combat.h"
 #include <stdlib.h>
-#include "story/beginning.h"
-#include "story/part2.h"
+#include "include/eventhandler.h"
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
 
 int exitProgram(HANDLE stdOut, PCOORD coord, void **collectionAdress);
 
-
+int missionC=0;
 
 // Ekran boyutunu saklamak için açılan COORD yapısı
 COORD coord;
@@ -46,7 +45,7 @@ int main(void) {
         MENÜLER
     */
 
-    menu main_menu,confirm_exit,startAdventure,talkToSomeone,sideQuests,eatFood,food_menu;
+    menu main_menu,confirm_exit,startAdventure,talkToSomeone,locationMenu,sing,eatFood,food_menu;
 
     initMenu(
         &confirm_exit,
@@ -62,8 +61,8 @@ int main(void) {
     initMenu(
         &startAdventure,
         L"Maceraya Atıl",
-        L"Bu Maceraya atılmak istediğinden\nemin misin ?",
-        (wchar_t[][64]){L"Evet"},
+        L"Hangi maceraya atılmak istersin",
+        (wchar_t[][64]){L"Ana Hikaye"},
         1,
         NULL,
         0,
@@ -72,9 +71,9 @@ int main(void) {
 
     initMenu(
        &talkToSomeone,
-       L"Birileriyle Konuş",
-       L"Etrafındakiler",
-       (wchar_t[][64]){L"",L""},
+       L"Birisyle konuş",
+       L"Kimle konuşucaksın",
+       (wchar_t[][64]){L"Şarkı1",L"Şarkı2"},
        2,
        NULL,
        0,
@@ -82,16 +81,15 @@ int main(void) {
     );
 
     initMenu(
-        &sideQuests,
-        L"Yan görev",
-        L"Bu göreve çıkmak ister misin=",
-        (wchar_t[][64]){L"Evet"},
-        1,
-        NULL,
-        0,
-        &main_menu
+       &locationMenu,
+       L"Yolculuk Menüsü",
+       L"Nereye gitmek istersin",
+       (wchar_t[][64]){},
+       0,
+       NULL,
+       0,
+       &main_menu
     );
-
 
     initMenu(
        &eatFood,
@@ -113,8 +111,8 @@ int main(void) {
         L"Ne yapmak istediğini seç",
         NULL,
         0,
-        (pmenu[]){&startAdventure, &eatFood, &talkToSomeone, &sideQuests},
-        4,
+        (pmenu[]){&startAdventure, &eatFood, &talkToSomeone, &sing,&locationMenu},
+        5,
         NULL
     );
 
@@ -124,6 +122,20 @@ int main(void) {
     */
 
    location tavern={
+    .name=L"Han",
+    .description=L"Han Description Placeholder",
+    .path=NULL,
+    .pathLength=0
+   };
+
+    location foodShop={
+    .name=L"Han",
+    .description=L"Han Description Placeholder",
+    .path=NULL,
+    .pathLength=0
+   };
+
+    location healer={
     .name=L"Han",
     .description=L"Han Description Placeholder",
     .path=NULL,
@@ -156,15 +168,21 @@ int main(void) {
     clear(stdOut,&coord);
     message output[10]={};
 
-    //beginning();
-    //bolum_2_savas();
+    character ally,enemy;
+    ally.stat.wisdom=9;
+    ally.stat.dexterity=9;
+    enemy.stat.wisdom=12;
+    enemy.stat.dexterity=8;
 
+    //initCombat(&Player,(pCharacter[]){&ally},1,(pCharacter[]){&enemy},1);
+
+    missionC=0;
     while(1){
         displayMenu(stdOut,selectedMenu,itemIndex,&coord);
         displayVertLine(stdOut,&coord,(COORD){33,0},(COORD){33,60},'|');
         displayHorLine(stdOut,&coord,(COORD){0,15},(COORD){33,15},'-');
         displayHUD(stdOut,&Player,(COORD){0,17},&time);
-        //printMessages(stdOut,output,(COORD){35,0});
+        printMessages(stdOut,output,(COORD){35,0},10,"letter");
 
         //Klavyeden geçerli tuş alınması
         int key=-1;
@@ -175,7 +193,7 @@ int main(void) {
                 case -1:
                     continue;
                 case 0:
-                    if(itemIndex<0){
+                    if(itemIndex<=0){
                         itemIndex=totalCount;
                     }else if(itemIndex>=totalCount){
                         itemIndex=totalCount-1;
@@ -184,7 +202,7 @@ int main(void) {
                     }
                     break;
                 case 1:
-                    if(itemIndex>totalCount){
+                    if(itemIndex>=totalCount){
                         itemIndex=0;
                     }else{
                         itemIndex++;
@@ -208,6 +226,12 @@ int main(void) {
                         if(selectedMenu==&confirm_exit){
                             if(itemIndex==0){
                                 return exitProgram(stdOut,&coord,&collection);
+                            }
+                        }
+                        //Macera menüsü seçiliyken görevi başlat
+                        if(selectedMenu==&startAdventure){
+                            if(itemIndex==0){
+                                updateMission(&missionC,&talkToSomeone);
                             }
                         }
                     }
@@ -239,7 +263,6 @@ int exitProgram(HANDLE stdOut,PCOORD coord,void **collectionAdress){
     unhide_cursor(stdOut);
     for(int i;i<collectionSize;i++){
         free(collectionAdress[i]);
-        printf("Succesfully deleted");
     }
     return 0;
 }

@@ -19,11 +19,10 @@ add_executable(Donem_Projesi
         include/locationtime.h
         include/narrative.h
         include/narrative.c
-        story/beginning.c
-        story/beginning.h
-        story/part2.c
-        story/part2.h
-
+        include/combat.h
+        include/combat.c
+        include/eventhandler.c
+        include/eventhandler.h
 )
 
 target_link_libraries(Donem_Projesi winmm)
