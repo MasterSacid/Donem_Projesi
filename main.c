@@ -59,9 +59,9 @@ int main(void) {
     initMenu(
         &startAdventure,
         L"Maceraya Atıl",
-        L"Bu Maceraya atılmak istediğinden\nemin misin ?",
-        (wchar_t[][64]){L"Evet",L"Hayır"},
-        2,
+        L"Hangi maceraya atılmak istersin",
+        (wchar_t[][64]){L"Ana Hikaye"},
+        1,
         NULL,
         0,
         &main_menu
@@ -186,15 +186,13 @@ int main(void) {
 
     //initCombat(&Player,(pCharacter[]){&ally},1,(pCharacter[]){&enemy},1);
 
-    missionC=2;
-    updateMission(missionC,&talkToSomeone,&locationMenu);
-
+    missionC=0;
     while(1){
         displayMenu(stdOut,selectedMenu,itemIndex,&coord);
         displayVertLine(stdOut,&coord,(COORD){33,0},(COORD){33,60},'|');
         displayHorLine(stdOut,&coord,(COORD){0,15},(COORD){33,15},'-');
         displayHUD(stdOut,&Player,(COORD){0,17},&time);
-        //printMessages(stdOut,output,(COORD){35,0});
+        printMessages(stdOut,output,(COORD){35,0},10,"letter");
 
         //Klavyeden geçerli tuş alınması
         int key=-1;
@@ -205,7 +203,7 @@ int main(void) {
                 case -1:
                     continue;
                 case 0:
-                    if(itemIndex<0){
+                    if(itemIndex<=0){
                         itemIndex=totalCount;
                     }else if(itemIndex>=totalCount){
                         itemIndex=totalCount-1;
@@ -214,7 +212,7 @@ int main(void) {
                     }
                     break;
                 case 1:
-                    if(itemIndex>totalCount){
+                    if(itemIndex>=totalCount){
                         itemIndex=0;
                     }else{
                         itemIndex++;
@@ -238,6 +236,12 @@ int main(void) {
                         if(selectedMenu==&confirm_exit){
                             if(itemIndex==0){
                                 return exitProgram(stdOut,&coord,&collection);
+                            }
+                        }
+                        //Macera menüsü seçiliyken görevi başlat
+                        if(selectedMenu==&startAdventure){
+                            if(itemIndex==0){
+                                updateMission(&missionC,&talkToSomeone);
                             }
                         }
                     }

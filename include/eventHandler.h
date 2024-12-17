@@ -10,7 +10,7 @@
 #include <windows.h>
 #include "locationtime.h"
 
-void updateMission(int missionC, pmenu talkMenu, pmenu locationMenu);
+void updateMission(int *missionC, pmenu talkMenu,void *storyPart);
 
 void updateLocations(int missionC, pmenu locationMenu);
 

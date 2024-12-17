@@ -7,28 +7,11 @@
 #include "character.h"
 #include "eventhandler.h"
 
-void updateMission(int missionC,pmenu talkMenu,pmenu locationMenu){
-    updateLocations(missionC, locationMenu);
-    updateCharacters(missionC, talkMenu);
+void updateMission(int* missionC,pmenu talkMenu,void* storyPart){
+    updateCharacters(*missionC, talkMenu);
+    (*missionC)++;
 }
 
-void updateLocations(int missionC,pmenu locationMenu){
-
-    wchar_t list[][8][64]={
-        //Mission 0
-        {{L"Location1"},{L"Location2"}},
-        //Mission1
-        {{L"Location3"},{L"Location4"}},
-        //Mission2
-        {{L"Location4"},{L"Location"},{L"Location6"}},
-    };
-    int listCounts[]={2,2,3};
-
-    locationMenu->itemCount=listCounts[missionC];
-    for(int i=0;i<listCounts[missionC];i++){
-        wcscpy(locationMenu->menuItems[i],list[missionC][i]);
-    }
-}
 
 void updateCharacters(int missionC,pmenu talkMenu){
 
@@ -45,5 +28,15 @@ void updateCharacters(int missionC,pmenu talkMenu){
     talkMenu->itemCount=listCounts[missionC];
     for(int i=0;i<listCounts[missionC];i++){
         wcscpy(talkMenu->menuItems[i],list[missionC][i]);
+    }
+}
+
+void moveToTavern(pmenu locationMenu){
+    locationMenu->itemCount=4;
+    for(int i=0;i<4;i++){
+        wcscpy(locationMenu->menuItems[i],L"Şifahane");
+        wcscpy(locationMenu->menuItems[i],L"Silahçı");
+        wcscpy(locationMenu->menuItems[i],L"Erzak dükkanı");
+        wcscpy(locationMenu->menuItems[i],L"Odana çık ve uyu");
     }
 }
