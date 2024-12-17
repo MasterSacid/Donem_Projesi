@@ -22,7 +22,7 @@ typedef struct item{
     wchar_t description[128];
     wchar_t type[16];
     int value;
-    int itemValues[8];
+    dictValue itemValues[8];
 }item,*pItem;
 
 typedef struct character{
@@ -59,7 +59,7 @@ typedef struct player{
 
 void initStats(pStats stats, int con, int cha, int dex, int inl, int str, int wis);
 
-pItem createItem(wchar_t name[], wchar_t description[], wchar_t type[], int value,int itemValues[]);
+pItem createItem(wchar_t name[], wchar_t description[], wchar_t type[], int value, dictValue itemValues[]);
 
 pCharacter createNPC(wchar_t name[]);
 

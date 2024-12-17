@@ -10,9 +10,10 @@
 #include <windows.h>
 #include "locationtime.h"
 
-int itemCounts;
+void updateMission(int missionC, pmenu talkMenu, pmenu locationMenu);
 
+void updateLocations(int missionC, pmenu locationMenu);
 
-wchar_t talkToSomeoneAtLocation (pLocation location);
+void updateCharacters(int missionC, pmenu talkMenu);
 
 #endif //EVENTHANDLER_H

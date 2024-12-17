@@ -10,14 +10,16 @@
 #include <locale.h>
 #include "include\character.h"
 #include "include\locationtime.h"
-#include "include/eventHandler.h"
 #include "include/narrative.h"
 #include "include/combat.h"
 #include <stdlib.h>
+#include "include/eventhandler.h"
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
 
 int exitProgram(HANDLE stdOut, PCOORD coord, void **collectionAdress);
+
+int missionC=0;
 
 // Ekran boyutunu saklamak için açılan COORD yapısı
 COORD coord;
@@ -41,7 +43,7 @@ int main(void) {
         MENÜLER
     */
 
-    menu main_menu,confirm_exit,startAdventure,talkToSomeone,sing,eatFood,food_menu;
+    menu main_menu,confirm_exit,startAdventure,talkToSomeone,locationMenu,sing,eatFood,food_menu;
 
     initMenu(
         &confirm_exit,
@@ -67,8 +69,8 @@ int main(void) {
 
     initMenu(
        &talkToSomeone,
-       L"Yemek ye",
-       L"Ne yiyeceksin?",
+       L"Birisyle konuş",
+       L"Kimle konuşucaksın",
        (wchar_t[][64]){L"Şarkı1",L"Şarkı2"},
        2,
        NULL,
@@ -76,6 +78,16 @@ int main(void) {
        &main_menu
     );
 
+    initMenu(
+       &locationMenu,
+       L"Yolculuk Menüsü",
+       L"Nereye gitmek istersin",
+       (wchar_t[][64]){},
+       0,
+       NULL,
+       0,
+       &main_menu
+    );
 
     initMenu(
         &sing,
@@ -109,8 +121,8 @@ int main(void) {
         L"Ne yapmak istediğini seç",
         NULL,
         0,
-        (pmenu[]){&startAdventure, &eatFood, &talkToSomeone, &sing},
-        4,
+        (pmenu[]){&startAdventure, &eatFood, &talkToSomeone, &sing,&locationMenu},
+        5,
         NULL
     );
 
@@ -120,6 +132,20 @@ int main(void) {
     */
 
    location tavern={
+    .name=L"Han",
+    .description=L"Han Description Placeholder",
+    .path=NULL,
+    .pathLength=0
+   };
+
+    location foodShop={
+    .name=L"Han",
+    .description=L"Han Description Placeholder",
+    .path=NULL,
+    .pathLength=0
+   };
+
+    location healer={
     .name=L"Han",
     .description=L"Han Description Placeholder",
     .path=NULL,
@@ -158,7 +184,10 @@ int main(void) {
     enemy.stat.wisdom=12;
     enemy.stat.dexterity=8;
 
-    initCombat(&Player,(pCharacter[]){&ally},1,(pCharacter[]){&enemy},1);
+    //initCombat(&Player,(pCharacter[]){&ally},1,(pCharacter[]){&enemy},1);
+
+    missionC=2;
+    updateMission(missionC,&talkToSomeone,&locationMenu);
 
     while(1){
         displayMenu(stdOut,selectedMenu,itemIndex,&coord);
