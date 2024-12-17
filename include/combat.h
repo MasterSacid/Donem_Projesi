@@ -1,5 +1,4 @@
-#ifndef COMBAT
-#define COMBAT
+#pragma once
 #include "combat.h"
 #include "character.h"
 #include <time.h>
@@ -17,6 +16,3 @@ void playerTurn();
 void playTurnAlly();
 
 void playTurnEnemy();
-
-#endif
-

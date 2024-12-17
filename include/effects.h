@@ -1,6 +1,4 @@
-#ifndef EFFECTS_H
-#define EFFECTS_H
-
+#pragma once
 #include <windows.h>
 
 typedef struct {
@@ -10,4 +8,3 @@ typedef struct {
 } ScreenEffect;
 
 void flashScreen(ScreenEffect effect);
-#endif //EFFECTS_H

@@ -1,6 +1,4 @@
-#ifndef ROLLDICE_H
-#define ROLLDICE_H
-
+#pragma once
 #include <windows.h>
 
 typedef struct {
@@ -16,4 +14,3 @@ void displayDiceFrame(HANDLE stdOut, int number, COORD position);
 int rollDiceAnimated(HANDLE stdOut, DiceRollConfig config);
 int quickRollDice(HANDLE stdOut, COORD position, int diceType);
 
-#endif

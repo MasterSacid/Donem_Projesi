@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include "include/eventhandler.h"
 #include "story/beginning.h"
+#include "UI/ui.h"
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
 
@@ -58,6 +59,7 @@ int main(void) {
         0,
         &main_menu
     );
+    
 
     initMenu(
         &startAdventure,
@@ -69,6 +71,8 @@ int main(void) {
         0,
         &main_menu
     );
+
+
 
     initMenu(
        &talkToSomeone,
@@ -145,7 +149,9 @@ int main(void) {
 
     CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
 
-    //Başlangıç Seçenekleri
+    /*
+        Başlangıç Seçenekleri
+    */
 
     int time=8*3600;
 
@@ -163,82 +169,51 @@ int main(void) {
     Player.abilityPoints=0;
     updatePlayer(&Player);
 
-    pmenu selectedMenu=&main_menu;
-    int itemIndex=0;
-    clear(stdOut,&coord);
-    message output[10]={};
-
     character ally,enemy;
     ally.stat.wisdom=9;
     ally.stat.dexterity=9;
     enemy.stat.wisdom=12;
     enemy.stat.dexterity=8;
 
-    initCombat(&Player,(pCharacter[]){&ally},1,(pCharacter[]){&enemy},1);
+/*
+    ANA DÖNGÜ
+*/
+    pmenu selectedMenu=&main_menu;
+
+    int itemIndex=0;
+
+    clear(stdOut,&coord);
+
+    message output[10]={};
+
+    int uiValue=0;
 
     missionC=0;
+
     while(1){
-        displayMenu(stdOut,selectedMenu,itemIndex,&coord);
-        displayVertLine(stdOut,&coord,(COORD){33,0},(COORD){33,60},'|');
-        displayHorLine(stdOut,&coord,(COORD){0,15},(COORD){33,15},'-');
-        displayHUD(stdOut,&Player,(COORD){0,17},&time);
-        printMessages(stdOut,output,(COORD){35,0},10,"letter");
+        uiValue=0;
+        int totalCount=selectedMenu->childrenCount+selectedMenu->itemCount;
+        uiValue=userInteraction(stdOut,stdIn,selectedMenu,&itemIndex,&coord,&Player,&time,output);
 
-        
-
-        //Klavyeden geçerli tuş alınması
-        int key=-1;
-        while(key==-1){
-            key=waitKeys(stdIn,(WORD[]){VK_UP,VK_DOWN,VK_RETURN},3);
-            int totalCount=selectedMenu->childrenCount+selectedMenu->itemCount;
-            switch(key){
-                case -1:
-                    continue;
-                case 0:
-                    if(itemIndex<=0){
-                        itemIndex=totalCount;
-                    }else if(itemIndex>=totalCount){
-                        itemIndex=totalCount-1;
-                    }else{
-                        itemIndex--;
-                    }
-                    break;
-                case 1:
-                    if(itemIndex>=totalCount){
-                        itemIndex=0;
-                    }else{
-                        itemIndex++;
-                    }
-                    break;
-                case 2:
-                    //Enter tuşuna basıldığında yapılacaklar
-
-                    //Bir menüdeyken en son seçenek seçiliyse yapılacak
-                    if(itemIndex>=totalCount){
-                        if(selectedMenu==&main_menu){
-                            selectedMenu=&confirm_exit;
-                        }else{
-                            selectedMenu=selectedMenu->parent;
-                        }
-                    //Bir menüdeyken alt menüler seçiliyken yapılacaklar
-                    }else if(itemIndex<=selectedMenu->childrenCount-1){
-                        selectedMenu=selectedMenu->children[itemIndex];
-                    //Alt menü olmayan seçenekler seçiliyken yapılacaklar
-                    }else{
-                        if(selectedMenu==&confirm_exit){
-                            if(itemIndex==0){
-                                return exitProgram(stdOut,&coord,&collection);
-                            }
-                        }
-                        //Macera menüsü seçiliyken görevi başlat
-                        if(selectedMenu==&startAdventure){
-                            if(itemIndex==0){
-                                updateMission(&missionC,&talkToSomeone);
-                            }
-                        }
-                    }
-                    break;
+        if(selectedMenu->childrenCount>uiValue){//Children menülerden seçim
+            selectedMenu=selectedMenu->children[uiValue];
+    
+        }else if((selectedMenu->itemCount)>uiValue-(selectedMenu->childrenCount) && (uiValue-(selectedMenu->childrenCount))>=0){
+            //Fonksiyon çağrıları
+            if(selectedMenu==&startAdventure){//Macera Menüsü
+                if(uiValue==0){
+                    updateMission(&missionC,&talkToSomeone);
+                }
             }
+            if(selectedMenu==&talkToSomeone){//Konuşma Menüsü
+                updateNPCDialog(missionC,uiValue);
+            }
+        }else if(selectedMenu!=&main_menu){//Ana haricindeki menülerin çıkışı
+            if(uiValue>=totalCount && selectedMenu->parent!=NULL){
+                selectedMenu=selectedMenu->parent;
+            }
+        }else{//Ana menünün çıkışı
+            return exitProgram(stdOut,&coord,&collection);
         }
         // Yapılan işlemler sonrası değişimleri güncelleme
         updatePlayer(&Player);
@@ -268,6 +243,3 @@ int exitProgram(HANDLE stdOut,PCOORD coord,void **collectionAdress){
     }
     return 0;
 }
-
-
-

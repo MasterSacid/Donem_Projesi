@@ -1,5 +1,4 @@
-#ifndef LOCATIONTIME
-#define LOCATIONTIME
+#pragma once
 #include <wchar.h>
 #define MAX_TIME 86400
 
@@ -14,6 +13,3 @@ typedef struct location{
     pCharacter character[16];
     int charachterCount;
 }location, *pLocation;
-
-
-#endif

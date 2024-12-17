@@ -1,9 +1,6 @@
-#ifndef BEGINNING_H
-#define BEGINNING_H
+#pragma once
 #include <windows.h>
 
 
 
 void beginning(void);
-
-#endif

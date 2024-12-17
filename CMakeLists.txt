@@ -25,6 +25,10 @@ add_executable(Donem_Projesi
         include/eventhandler.h
         story/beginning.c
         story/beginning.h
+        story/part2.h
+        story/part2.c
+        UI/ui.h
+        UI/ui.c
 )
 
 target_link_libraries(Donem_Projesi winmm)

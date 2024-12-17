@@ -2,8 +2,7 @@
 // Created by ahmetak on 12/15/2024.
 //
 
-#ifndef EVENTHANDLER_H
-#define EVENTHANDLER_H
+#pragma once
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,4 +14,4 @@ void updateMission(int *missionC, pmenu talkMenu);
 
 void updateCharacters(int missionC, pmenu talkMenu);
 
-#endif //EVENTHANDLER_H 
+void updateNPCDialog(int missionC, int selectedPerson);

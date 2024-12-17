@@ -1,7 +1,4 @@
-#include <windows.h>
-#include <wchar.h>
-#ifndef CONSOLE
-#define CONSOLE
+#pragma once
 #define styleHiglight BACKGROUND_BLUE|BACKGROUND_GREEN|BACKGROUND_RED
 #define styleDefault FOREGROUND_BLUE|FOREGROUND_GREEN|FOREGROUND_RED
 
@@ -33,5 +30,3 @@ void printsAnimated(HANDLE stdOut, pMessage msg, COORD start, int ms, char stopA
 void printMessages(HANDLE stdOut, message msgs[], COORD start,int ms,char style[]);
 
 void fitToLine(int lineSize, wchar_t string[]);
-
-#endif

@@ -7,10 +7,22 @@
 #include "character.h"
 #include "eventhandler.h"
 #include "../story/beginning.h"
+#include "../story/part2.h"
 
 void updateMission(int* missionC,pmenu talkMenu){
     updateCharacters(*missionC, talkMenu);
     (*missionC)++;
+    switch (*missionC)
+    {
+    case 1:
+        beginning();
+        break;
+    case 2:
+        bolum_2_savas();
+        break;
+    default:
+        break;
+    }
 }
 
 
@@ -39,5 +51,20 @@ void moveToTavern(pmenu locationMenu){
         wcscpy(locationMenu->menuItems[i],L"Silahçı");
         wcscpy(locationMenu->menuItems[i],L"Erzak dükkanı");
         wcscpy(locationMenu->menuItems[i],L"Odana çık ve uyu");
+    }
+}
+
+void updateNPCDialog(int missionC,int selectedPerson){
+    if(missionC==0){
+        if(selectedPerson==0){
+            system("cls");
+            wprintf(L"Konuşma 1");
+            Sleep(1000);
+        }
+        if(selectedPerson==1){
+            system("cls");
+            wprintf(L"Konuşma 2");
+            Sleep(1000);
+        }
     }
 }
