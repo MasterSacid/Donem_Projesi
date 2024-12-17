@@ -12,6 +12,7 @@ void initCombat(pPlayer Player,pCharacter allies[],int allyC,pCharacter enemies[
     emptyArray(playedTurns,16);
     int greatest=0;
     int combatantC=allyC+enemyC+1;
+    int j=0;
     // Savaşa başla
     for(int i=0;;i++){
         if(isInitialTurn){// İlk aşama için
@@ -20,27 +21,30 @@ void initCombat(pPlayer Player,pCharacter allies[],int allyC,pCharacter enemies[
             wprintf(L"\nAşama başladı");
             for(int a=0;a<combatantC;a++){// Tüm savaşçılar için bir kere tur aç
                 // Tüm savaşçıları dön
-                for(int j=0;j<combatantC;j++){
+                    j=0;
                     // Her tur sıfırla
                     turnOwnerIndex=-1;
                     greatest=0;
-                    if(j==0){//Oyuncu
-                        if(Player->stat.wisdom>greatest){
-                            greatest=Player->stat.wisdom;
-                            turnOwnerIndex=j;
-                        }
-                    }else if(j<=allyC && j>0){//Dostlar
-                        if(allies[j-1]->stat.wisdom>greatest){
+                    //Oyuncu
+                    if(Player->stat.wisdom>greatest && !isIn(j,playedTurns,combatantC)){
+                        greatest=Player->stat.wisdom;
+                        turnOwnerIndex=j;
+                    }
+                    j++;
+                    //Dostlar
+                    for(;j<=allyC;j++){
+                        if(allies[j-1]->stat.wisdom>greatest && !isIn(j,playedTurns,combatantC)){
                             greatest=allies[j-1]->stat.wisdom;
                             turnOwnerIndex=j;
                         }
-                    }else{//Düşmanlar
-                        if(enemies[j-allyC-1]->stat.wisdom>greatest){
+                    }
+                    //Düşmanlar
+                    for(;j<=enemyC+allyC;j++){
+                        if(enemies[j-allyC-1]->stat.wisdom>greatest && !isIn(j,playedTurns,combatantC)){
                             greatest=enemies[j-allyC-1]->stat.wisdom;
                             turnOwnerIndex=j;
                         }
                     }
-                }
                 //Dönme bitti en büyüğe turunu oynat ve oynadığını kaydet
                 playedTurns[a]=turnOwnerIndex;
                 if(turnOwnerIndex==0){//Oyuncu
@@ -50,51 +54,50 @@ void initCombat(pPlayer Player,pCharacter allies[],int allyC,pCharacter enemies[
                 }else{//Düşmanlar
                     playTurnEnemy();
                 }
-                isInitialTurn=0;
             }
-            }else{//Sonraki Aşamalar için
+            isInitialTurn=0;
+            wprintf(L"\nAşama bitti\n");
+        }else{//Sonraki Aşamalar için
                 //Her aşamada sıfırla
                 emptyArray(playedTurns,16);
                 wprintf(L"\nAşama başladı");
                 for(int a=0;a<combatantC;a++){// Tüm savaşçılar için bir kere tur aç
-                    // Tüm savaşçıları dön
-                    for(int j=0;j<combatantC;j++){
-                        // Her tur sıfırla
-                        turnOwnerIndex=0;
-                        greatest=0;
-                        if(isIn(j,playedTurns,combatantC)){//Turun sahibi oynadıysa geç
-                            continue;
-                        }
-                        if(j==0){//Oyuncu
-                            if(Player->stat.dexterity>greatest){
-                                greatest=Player->stat.dexterity;
-                                turnOwnerIndex=j;
-                            }
-                        }else if(j<=allyC && j>0){//Dostlar
-                            if(allies[j-1]->stat.dexterity>greatest){
-                                greatest=allies[j-1]->stat.dexterity;
-                                turnOwnerIndex=j;
-                            }
-                        }else{//Düşmanlar
-                            if(enemies[j-allyC-1]->stat.dexterity>greatest){
-                                greatest=enemies[j-allyC-1]->stat.dexterity;
-                                turnOwnerIndex=j;
-                            }
+                // Tüm savaşçıları dön
+                    j=0;
+                    // Her tur sıfırla
+                    turnOwnerIndex=-1;
+                    greatest=0;
+                    //Oyuncu
+                    if(Player->stat.dexterity>greatest && !isIn(j,playedTurns,combatantC)){
+                        greatest=Player->stat.dexterity;
+                        turnOwnerIndex=j;
+                    }
+                    j++;
+                    //Dostlar
+                    for(;j<=allyC;j++){
+                        if(allies[j-1]->stat.dexterity>greatest && !isIn(j,playedTurns,combatantC)){
+                            greatest=allies[j-1]->stat.dexterity;
+                            turnOwnerIndex=j;
                         }
                     }
-                    //Dönme bitti en büyüğe turunu oynat ve oynadığını kaydet
-                    playedTurns[a]=turnOwnerIndex;
-                    if(turnOwnerIndex==0){//Oyuncu
-                        playerTurn();
-                    }else if(turnOwnerIndex<=allyC && turnOwnerIndex>0){//Dostlar
-                        playTurnAlly();
-                    }else{//Düşmanlar
-                        playTurnEnemy();
+                    //Düşmanlar
+                    for(;j<=enemyC+allyC;j++){
+                        if(enemies[j-allyC-1]->stat.dexterity>greatest && !isIn(j,playedTurns,combatantC)){
+                            greatest=enemies[j-allyC-1]->stat.dexterity;
+                            turnOwnerIndex=j;
+                        }
                     }
+                //Dönme bitti en büyüğe turunu oynat ve oynadığını kaydet
+                playedTurns[a]=turnOwnerIndex;
+                if(turnOwnerIndex==0){//Oyuncu
+                    playerTurn();
+                }else if(turnOwnerIndex<=allyC && turnOwnerIndex>0){//Dostlar
+                    playTurnAlly();
+                }else{//Düşmanlar
+                    playTurnEnemy();
                 }
             }
-        
-        wprintf(L"\nAşama bitti\n");
+        }
     }
 }
 
@@ -105,7 +108,6 @@ char isIn(int number,int array[],int size){
             return 1;
         }
     }
-    printf("   %d %d %d   ",array[0],array[1],array[2]);
     return 0;
 }
 

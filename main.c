@@ -153,10 +153,10 @@ int main(void) {
     message output[10]={};
 
     character ally,enemy;
-    ally.stat.wisdom=11;
-    ally.stat.dexterity=12;
+    ally.stat.wisdom=9;
+    ally.stat.dexterity=9;
     enemy.stat.wisdom=12;
-    enemy.stat.dexterity=11;
+    enemy.stat.dexterity=8;
 
     initCombat(&Player,(pCharacter[]){&ally},1,(pCharacter[]){&enemy},1);
 
