@@ -14,6 +14,7 @@
 #include "include/combat.h"
 #include <stdlib.h>
 #include "include/eventhandler.h"
+#include "story/beginning.h"
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
 
@@ -27,7 +28,7 @@ char artBuffer [4096]; //Ascii tablolarının maks karakter sayısı
 
 int collectionSize=0;
 
-
+void* functionToCall=NULL;
 
 int main(void) {
     setlocale(LC_ALL, "");
@@ -111,8 +112,8 @@ int main(void) {
         L"Ne yapmak istediğini seç",
         NULL,
         0,
-        (pmenu[]){&startAdventure, &eatFood, &talkToSomeone, &sing,&locationMenu},
-        5,
+        (pmenu[]){&startAdventure, &eatFood, &talkToSomeone,&locationMenu},
+        4,
         NULL
     );
 
@@ -144,7 +145,6 @@ int main(void) {
 
     CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
 
-
     //Başlangıç Seçenekleri
 
     int time=8*3600;
@@ -174,7 +174,7 @@ int main(void) {
     enemy.stat.wisdom=12;
     enemy.stat.dexterity=8;
 
-    //initCombat(&Player,(pCharacter[]){&ally},1,(pCharacter[]){&enemy},1);
+    initCombat(&Player,(pCharacter[]){&ally},1,(pCharacter[]){&enemy},1);
 
     missionC=0;
     while(1){
@@ -183,6 +183,8 @@ int main(void) {
         displayHorLine(stdOut,&coord,(COORD){0,15},(COORD){33,15},'-');
         displayHUD(stdOut,&Player,(COORD){0,17},&time);
         printMessages(stdOut,output,(COORD){35,0},10,"letter");
+
+        
 
         //Klavyeden geçerli tuş alınması
         int key=-1;

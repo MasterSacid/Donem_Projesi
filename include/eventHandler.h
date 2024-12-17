@@ -9,11 +9,10 @@
 #include <string.h>
 #include <windows.h>
 #include "locationtime.h"
+#include "../story/beginning.h"
 
-void updateMission(int *missionC, pmenu talkMenu,void *storyPart);
-
-void updateLocations(int missionC, pmenu locationMenu);
+void updateMission(int *missionC, pmenu talkMenu);
 
 void updateCharacters(int missionC, pmenu talkMenu);
 
-#endif //EVENTHANDLER_H
+#endif //EVENTHANDLER_H 

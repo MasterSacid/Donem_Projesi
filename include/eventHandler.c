@@ -6,8 +6,9 @@
 #include "menu.h"
 #include "character.h"
 #include "eventhandler.h"
+#include "../story/beginning.h"
 
-void updateMission(int* missionC,pmenu talkMenu,void* storyPart){
+void updateMission(int* missionC,pmenu talkMenu){
     updateCharacters(*missionC, talkMenu);
     (*missionC)++;
 }

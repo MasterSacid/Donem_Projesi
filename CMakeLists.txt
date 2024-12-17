@@ -23,6 +23,8 @@ add_executable(Donem_Projesi
         include/combat.c
         include/eventhandler.c
         include/eventhandler.h
+        story/beginning.c
+        story/beginning.h
 )
 
 target_link_libraries(Donem_Projesi winmm)
