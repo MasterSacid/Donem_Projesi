@@ -69,7 +69,7 @@ int main(void) {
         0,
         &main_menu
     );
-    startAdventure.actions[0] = startAdventureEvent;
+
 
     initMenu(
        &talkToSomeone,
@@ -81,7 +81,7 @@ int main(void) {
        0,
        &main_menu
     );
-    talkToSomeoneMenuChange(&talkToSomeone);
+
 
     initMenu(
         &sideQuests,
@@ -208,9 +208,7 @@ int main(void) {
                     //Alt menü olmayan seçenekler seçiliyken yapılacaklar
                     }else{
                         int actionIndex = itemIndex - selectedMenu->childrenCount;
-                        if (selectedMenu->actions[actionIndex]) {
-                            selectedMenu->actions[actionIndex]();
-                        }
+
                         if(selectedMenu==&confirm_exit){
                             if(itemIndex==0){
                                 return exitProgram(stdOut,&coord,&collection);

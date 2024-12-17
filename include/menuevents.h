@@ -4,6 +4,5 @@
 
 #ifndef MENUEVENTS_H
 #define MENUEVENTS_H
-void startAdventureEvent();
-void talkToSomeoneMenuChange(menu* talkToSomeone);
+
 #endif //MENUEVENTS_H
