@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "console.h"
+#include "../include/console.h"
 #include <windows.h>
 #include "narrative.h"
 #include "eventhandler.h"
-#include "console.h"
 
 extern int MISSION_COUNTER;
 extern message GAME_MESSAGES[];
@@ -16,13 +15,13 @@ void dialoguePerson0() {
     if (MISSION_COUNTER == 0) {
         //Barmen
          message barmen1 = {L"\nBarmen: Daha ne kadar oyalanacaksın, ozan? Burada fazladan oturmanın bir maliyeti olur, unutma."};
-         message barmen2 = {L"\nBir içki daha alabilir miyim ?."};
+         message barmen2 = {L"\nBir içki daha alabilir miyim ?.\n"};
          message barmen3 = {L"\nBarmen: Hahah, paranın olmadığını unuttun galiba."};
          message barmen4 = {L"\n\0"};
 
         message barmen[] = {barmen1, barmen2, barmen3, barmen4};
 
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 3; i >= 0; --i) {
             sendToRightSection(barmen[i]);
         }
     }

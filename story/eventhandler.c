@@ -2,14 +2,15 @@
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
-#include "locationtime.h"
-#include "menu.h"
-#include "character.h"
+#include "../include/menu.h"
+#include "../include/console.h"
+#include "../include/locationtime.h"
+#include "../story/beginning.h"
+#include "../include/character.h"
 #include "eventhandler.h"
 #include "dialogues.h"
-#include "../story/beginning.h"
-#include "../story/part2.h"
-
+#include "beginning.h"
+#include "part2.h"
 extern int MISSION_COUNTER,ITEM_INDEX;
 extern message GAME_MESSAGES[];
 
@@ -72,13 +73,3 @@ void updateNPCDialog(){
              dialoguePerson3();
          }
 }
-/*
-void updateMiniMission (int MISSION_COUNTER,int selectedMission) {
-    if (MISSION_COUNTER == 0) {
-        if (selectedMission == 0) {
-
-        }
-    }
-
-}
-*/

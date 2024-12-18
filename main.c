@@ -1,22 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
-#include "include\menu.h"
-#include "include\console.h"
+#include <stdlib.h>
+#include <wchar.h>
+#include <locale.h>
+#include "include/menu.h"
+#include "include/console.h"
 #include "include/arthandler.h"
 #include "include/rolldice.h"
 #include "include/effects.h"
-#include <wchar.h>
-#include <locale.h>
-#include "include\character.h"
-#include "include\locationtime.h"
-#include "include/narrative.h"
+#include "include/character.h"
+#include "include/locationtime.h"
 #include "include/combat.h"
-#include <stdlib.h>
-#include "include/eventhandler.h"
+#include "story/narrative.h"
+#include "story/eventhandler.h"
 #include "story/beginning.h"
+#include "story/dialogues.h"
 #include "UI/ui.h"
-#include "include/dialogues.h"
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
 /*
@@ -266,6 +266,8 @@ int main(void) {
                 SELECTED_MENU=SELECTED_MENU->parent;
             }
         }else{//Ana menünün çıkışı
+            clear();
+            unhide_cursor();
             return 0;
         }
         // Yapılan işlemler sonrası değişimleri güncelleme

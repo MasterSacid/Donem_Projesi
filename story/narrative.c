@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "menu.h"
-#include "console.h"
+#include "../include/menu.h"
+#include "../include/console.h"
 #include <string.h>
 #include <wchar.h>
 #include <windows.h>

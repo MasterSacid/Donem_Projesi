@@ -1,5 +1,5 @@
 #pragma once
-#include "console.h"
+#include "../include/console.h"
 
 typedef struct dialog{
     message message;
