@@ -1,4 +1,10 @@
 #pragma once
+#include <windows.h>
+#include "console.h"
+#include <wchar.h>
+#include <string.h>
+#include <stdio.h>
+#include <time.h>
 #define styleHiglight BACKGROUND_BLUE|BACKGROUND_GREEN|BACKGROUND_RED
 #define styleDefault FOREGROUND_BLUE|FOREGROUND_GREEN|FOREGROUND_RED
 

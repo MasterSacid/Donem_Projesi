@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
+#include "menu.h"
+#include "console.h"
 #include "locationtime.h"
 #include "../story/beginning.h"
 
@@ -14,4 +16,4 @@ void updateMission(int *missionC, pmenu talkMenu);
 
 void updateCharacters(int missionC, pmenu talkMenu);
 
-void updateNPCDialog(int missionC, int selectedPerson);
+void updateNPCDialog(int missionC, int selectedPerson,int* rightSideMessageCounter,message text[]);

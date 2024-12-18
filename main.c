@@ -16,6 +16,7 @@
 #include "include/eventhandler.h"
 #include "story/beginning.h"
 #include "UI/ui.h"
+#include "include/dialogues.h"
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
 
@@ -224,7 +225,7 @@ int main(void) {
                 }
             }
             if(selectedMenu==&talkToSomeone){//Konuşma Menüsü
-                updateNPCDialog(missionC,uiValue);
+                updateNPCDialog(missionC,uiValue,&rightSideTextC,rightSideText);
             }
         }else if(selectedMenu!=&main_menu){//Ana haricindeki menülerin çıkışı
             if(uiValue>=totalCount && selectedMenu->parent!=NULL){

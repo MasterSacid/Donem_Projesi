@@ -29,6 +29,9 @@ add_executable(Donem_Projesi
         story/part2.c
         UI/ui.h
         UI/ui.c
+        include/dialogues.c
+        include/dialogues.h
+
 )
 
 target_link_libraries(Donem_Projesi winmm)

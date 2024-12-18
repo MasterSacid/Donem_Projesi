@@ -15,6 +15,19 @@ void printSequence(HANDLE stdOut,dialog sequence[]){
         }
     }
 }
+//Narrative.c
+void printSequenceOnDialog(HANDLE stdOut,dialog sequence[]){
+    for(int i=0;sequence[i].message.string[0]!='\0';i++){
+        printsAnimated(stdOut,&sequence[i].message,(COORD){35,0},10,"letter");
+        Sleep(sequence[i].duration);
+        if(sequence[i].clear){
+            system("cls");
+        }
+    }
+}
+
+
+
 /*
 int dialogChoice(HANDLE stdOut,HANDLE stdIn,wchar_t string[],wchar_t opts[][64],int optCount){
     int itemIndex=0;

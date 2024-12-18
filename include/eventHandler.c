@@ -6,6 +6,7 @@
 #include "menu.h"
 #include "character.h"
 #include "eventhandler.h"
+#include "dialogues.h"
 #include "../story/beginning.h"
 #include "../story/part2.h"
 
@@ -54,17 +55,27 @@ void moveToTavern(pmenu locationMenu){
     }
 }
 
-void updateNPCDialog(int missionC,int selectedPerson){
-    if(missionC==0){
+void updateNPCDialog(int missionC,int selectedPerson,int* rightSideMessageCounter,message text[]){
         if(selectedPerson==0){
-            system("cls");
-            wprintf(L"Konuşma 1");
-            Sleep(1000);
+            dialoguePerson0(missionC,rightSideMessageCounter);
         }
         if(selectedPerson==1){
-            system("cls");
-            wprintf(L"Konuşma 2");
-            Sleep(1000);
+            dialoguePerson1(missionC,rightSideMessageCounter);
+        }
+         if(selectedPerson==2) {
+            dialoguePerson2(missionC);
+         }
+         if(selectedPerson==3) {
+             dialoguePerson3(missionC);
+         }
+}
+/*
+void updateMiniMission (int missionC,int selectedMission) {
+    if (missionC == 0) {
+        if (selectedMission == 0) {
+
         }
     }
+
 }
+*/
