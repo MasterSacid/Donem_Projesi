@@ -57,7 +57,7 @@ void moveToTavern(pmenu locationMenu){
 
 void updateNPCDialog(int missionC,int selectedPerson,int* rightSideMessageCounter,message text[]){
         if(selectedPerson==0){
-            dialoguePerson0(missionC,rightSideMessageCounter);
+            dialoguePerson0(missionC,rightSideMessageCounter,text);
         }
         if(selectedPerson==1){
             dialoguePerson1(missionC,rightSideMessageCounter);

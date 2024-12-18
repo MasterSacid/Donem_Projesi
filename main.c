@@ -197,17 +197,7 @@ int main(void) {
     message rightSideText[10]={};
     int rightSideTextC=0;
 
-    message test1={L"\nTEST1"};
-    message test2={L"\nTEST2"};
-    message test3={L"\nTEST3"};
-    message test4={L"\nTEST4"};
-
     int uiValue=0;
-
-    sendToRightSection(rightSideText,&rightSideTextC,&test1);
-    sendToRightSection(rightSideText,&rightSideTextC,&test2);
-    sendToRightSection(rightSideText,&rightSideTextC,&test3);
-    sendToRightSection(rightSideText,&rightSideTextC,&test4);
 
     while(1){
         uiValue=0;

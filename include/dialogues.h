@@ -7,7 +7,7 @@
 #include "narrative.h"
 #include "eventhandler.h"
 #include "console.h"
-void dialoguePerson0(int missionC,int*rightSideMessageCounter);
+void dialoguePerson0(int missionC,int*rightSideMessageCounter,message text[]);
 void dialoguePerson1(int missionC,int*rightSideMessageCounter);
 void dialoguePerson2(int missionC);
 void dialoguePerson3(int missionC);
