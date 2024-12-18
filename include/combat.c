@@ -5,7 +5,16 @@
 #include <stdio.h>
 #include <wchar.h>
 
-void initCombat(pPlayer Player,pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
+extern HANDLE STDOUT,STDIN;
+extern pMenu SELECTED_MENU;
+extern int ITEM_INDEX;
+extern int TIME;
+extern player PLAYER;
+extern message GAME_MESSAGES[];
+extern int GAME_MESSAGE_COUNT;
+extern COORD SCREEN_SIZE;
+
+void initCombat(pMenu combat_menu,pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
     char isInitialTurn=1;
     int turnOwnerIndex=0;
     int playedTurns[16]={};
@@ -18,7 +27,6 @@ void initCombat(pPlayer Player,pCharacter allies[],int allyC,pCharacter enemies[
         if(isInitialTurn){// İlk aşama için
             //Her aşamada sıfırla
             emptyArray(playedTurns,16);
-            wprintf(L"\nAşama başladı");
             for(int a=0;a<combatantC;a++){// Tüm savaşçılar için bir kere tur aç
                 // Tüm savaşçıları dön
                     j=0;
@@ -26,8 +34,8 @@ void initCombat(pPlayer Player,pCharacter allies[],int allyC,pCharacter enemies[
                     turnOwnerIndex=-1;
                     greatest=0;
                     //Oyuncu
-                    if(Player->stat.wisdom>greatest && !isIn(j,playedTurns,combatantC)){
-                        greatest=Player->stat.wisdom;
+                    if(PLAYER.stat.wisdom>greatest && !isIn(j,playedTurns,combatantC)){
+                        greatest=PLAYER.stat.wisdom;
                         turnOwnerIndex=j;
                     }
                     j++;
@@ -48,19 +56,17 @@ void initCombat(pPlayer Player,pCharacter allies[],int allyC,pCharacter enemies[
                 //Dönme bitti en büyüğe turunu oynat ve oynadığını kaydet
                 playedTurns[a]=turnOwnerIndex;
                 if(turnOwnerIndex==0){//Oyuncu
-                    playerTurn();
+                    playerTurn(combat_menu);
                 }else if(turnOwnerIndex<=allyC && turnOwnerIndex>0){//Dostlar
-                    playTurnAlly();
+                    playTurnAlly(allies[turnOwnerIndex-1]);
                 }else{//Düşmanlar
-                    playTurnEnemy();
+                    playTurnEnemy(enemies[turnOwnerIndex-allyC-1]);
                 }
             }
             isInitialTurn=0;
-            wprintf(L"\nAşama bitti\n");
         }else{//Sonraki Aşamalar için
                 //Her aşamada sıfırla
                 emptyArray(playedTurns,16);
-                wprintf(L"\nAşama başladı");
                 for(int a=0;a<combatantC;a++){// Tüm savaşçılar için bir kere tur aç
                 // Tüm savaşçıları dön
                     j=0;
@@ -68,8 +74,8 @@ void initCombat(pPlayer Player,pCharacter allies[],int allyC,pCharacter enemies[
                     turnOwnerIndex=-1;
                     greatest=0;
                     //Oyuncu
-                    if(Player->stat.dexterity>greatest && !isIn(j,playedTurns,combatantC)){
-                        greatest=Player->stat.dexterity;
+                    if(PLAYER.stat.dexterity>greatest && !isIn(j,playedTurns,combatantC)){
+                        greatest=PLAYER.stat.dexterity;
                         turnOwnerIndex=j;
                     }
                     j++;
@@ -90,11 +96,11 @@ void initCombat(pPlayer Player,pCharacter allies[],int allyC,pCharacter enemies[
                 //Dönme bitti en büyüğe turunu oynat ve oynadığını kaydet
                 playedTurns[a]=turnOwnerIndex;
                 if(turnOwnerIndex==0){//Oyuncu
-                    playerTurn();
+                    playerTurn(combat_menu);
                 }else if(turnOwnerIndex<=allyC && turnOwnerIndex>0){//Dostlar
-                    playTurnAlly();
+                    playTurnAlly(allies[turnOwnerIndex-1]);
                 }else{//Düşmanlar
-                    playTurnEnemy();
+                    playTurnEnemy(enemies[turnOwnerIndex-allyC-1]);
                 }
             }
         }
@@ -118,15 +124,31 @@ void emptyArray(int array[],int size){
     }
 }
 
-void playerTurn(){
-    printf("\nOyuncunun turu");
-    Sleep(1000);
+void playerTurn(pMenu combat_menu){
+    message turnInfo={
+        .shown=0,
+        .string=L"Oynama sırası sende!"
+    };
+    sendToRightSection(turnInfo);
+    char actionTaken=0;
+    while(actionTaken==0){
+        userInteraction();
+        if(SELECTED_MENU!=combat_menu){
+
+        }
+    }
 }
-void playTurnAlly(){
-    printf("\nDostun turu");
-    Sleep(1000);
+void playTurnAlly(pCharacter ally){
+    message turnInfo={
+        .shown=0,
+        .string=L"Dostun hamle yapıyor"
+    };
+    sendToRightSection(turnInfo);
 }
-void playTurnEnemy(){
-    wprintf(L"\nDüşmanın turu");
-    Sleep(1000);
+void playTurnEnemy(pCharacter enemy){
+    message turnInfo={
+        .shown=0,
+        .string=L"Düşman hamle yapıyor"
+    };
+    sendToRightSection(turnInfo);
 }

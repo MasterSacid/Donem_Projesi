@@ -8,8 +8,8 @@
 
 
 void beginning() {
-    HANDLE stdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    HANDLE stdIn = GetStdHandle(STD_INPUT_HANDLE);
+    HANDLE STDOUT = GetStdHandle(STD_OUTPUT_HANDLE);
+    HANDLE STDIN = GetStdHandle(STD_INPUT_HANDLE);
     dialog dialogues1[]={
         {{L"\nOmzundaki deri çantanı sıkıca tutarak taş yoldan ilerliyorsun."},1000,1},
         {{L"\nHava serin, ay ışığı önündeki yolu aydınlatıyor. Karşında yükselen devasa kapı, üzerinde eski yazıtlar ve yılların yorgunluğunu taşıyan derin çatlaklarla seni bekliyor"},1000,1},
@@ -77,30 +77,30 @@ void beginning() {
 
 
 
-    printSequence(stdOut,dialogues1);
+    printSequence(dialogues1);
 
     wchar_t sorgu1[] = {L"Gardiyanın dikkatini dağıtmak için bir seçim yap"};
     wchar_t secenekler1[2][300] = {
         L"Seçenek1:Ah, bu nedir? Bir kuş mu pislemiş yoksa zırhınız parlamıyor mu?",
         L"Seçenek2:Oha! O bir örümcek mi yoksa!",
     };
-    dialogChoice(stdOut,stdIn,sorgu1,secenekler1,2);
+    dialogChoice(sorgu1,secenekler1,2);
 
     system("cls");
    message dialog2= {{L"Ne!  Hani!   Nerede ?"}};
-    printsAnimated(stdOut,&dialog2,(COORD){0,0},300,"word");
+    printsAnimated(&dialog2,(COORD){0,0},300,"word");
     system("cls");
 
-   printSequence(stdOut,dialogues2);
+   printSequence(dialogues2);
     wchar_t sorgu2[] = {L"Bara girecek misin"};
     wchar_t secenekler2[2][300] = {
         L"Evet",
         L"Başka bir seçeneğin yok ki zaten :(",
     };
-    dialogChoice(stdOut,stdIn,sorgu2,secenekler2,2);
+    dialogChoice(sorgu2,secenekler2,2);
     system("cls");
 
-    printSequence(stdOut,dialogues3);
+    printSequence(dialogues3);
 
     wchar_t sorgu3[] = {L"Uyandın"};
     wchar_t secenekler3[1][300] = {
@@ -108,9 +108,5 @@ void beginning() {
     };
     system("cls");
 
-    printSequence(stdOut,dialogues4);
-
-
-
+    printSequence(dialogues4);
 }
-

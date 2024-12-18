@@ -9,9 +9,15 @@
 #include "character.h"
 #include "locationtime.h"
 
+extern HANDLE STDOUT,STDIN;
+extern int ITEM_INDEX;
+extern COORD SCREEN_SIZE;
+extern int TIME;
+extern player PLAYER;
+
 
 //Menünün değerlerini ayarlamak için kullanılacak fonksiyon
-void initMenu(pmenu menu,wchar_t name[64],wchar_t description[128],wchar_t menuItems[][64],int itemCount,pmenu children[16],int childrenCount,pmenu parent){
+void initMenu(pMenu menu,wchar_t name[64],wchar_t description[128],wchar_t menuItems[][64],int itemCount,pMenu children[16],int childrenCount,pMenu parent){
     wcscpy(menu->name,name);
     wcscpy(menu->description,description);
     menu->itemCount=itemCount;
@@ -29,17 +35,17 @@ void initMenu(pmenu menu,wchar_t name[64],wchar_t description[128],wchar_t menuI
 }
 
 //Menüyü ekrana yazdıran fonksiyon
-void displayMenu(HANDLE stdOut,pmenu menu,int itemIndex,PCOORD coord){
+void displayMenu(pMenu menu){
     
     int totalCount=menu->childrenCount+menu->itemCount;
 
-    if(itemIndex>totalCount){
-        itemIndex=totalCount;
+    if(ITEM_INDEX>totalCount){
+        ITEM_INDEX=totalCount;
     }
     printf("================================");
-    CONSOLE_SCREEN_BUFFER_INFO buffer=refreshSize(stdOut,coord);
+    CONSOLE_SCREEN_BUFFER_INFO buffer=refreshSize();
     buffer.dwCursorPosition.X=16-wcslen(menu->name)/2;
-    SetConsoleCursorPosition(stdOut,buffer.dwCursorPosition);
+    SetConsoleCursorPosition(STDOUT,buffer.dwCursorPosition);
     wprintf(L"%s\n\n",menu->name);
     if(menu->description[0]!='\n'){
         wprintf(L"%ls\n",menu->description);
@@ -49,26 +55,26 @@ void displayMenu(HANDLE stdOut,pmenu menu,int itemIndex,PCOORD coord){
         wprintf(L"%ls\n",menu->description);
     }
     for(int i=0;i<totalCount;i++){
-        if(i==itemIndex){
-            SetConsoleTextAttribute(stdOut,styleHiglight);
+        if(i==ITEM_INDEX){
+            SetConsoleTextAttribute(STDOUT,styleHiglight);
         }
         wprintf(L"> %ls\n",menu->menuItems[i]);
-        SetConsoleTextAttribute(stdOut,styleDefault);
+        SetConsoleTextAttribute(STDOUT,styleDefault);
     }
-    if(itemIndex>=totalCount){
-        SetConsoleTextAttribute(stdOut,styleHiglight);
+    if(ITEM_INDEX>=totalCount){
+        SetConsoleTextAttribute(STDOUT,styleHiglight);
     }
     if(menu->parent!=NULL){
         wprintf(L"< %ls",menu->parent->name);
-        SetConsoleTextAttribute(stdOut,styleDefault);
+        SetConsoleTextAttribute(STDOUT,styleDefault);
     }else{
         wprintf(L"< Oyundan Çık");
-        SetConsoleTextAttribute(stdOut,styleDefault);
+        SetConsoleTextAttribute(STDOUT,styleDefault);
     }
 }
 
-void displayHUD(HANDLE stdOut,pPlayer player,COORD hudPos,int* time){
-    int savedTime=*time;
+void displayHUD(COORD hudPos){
+    int savedTime=TIME;
     int hour=0,minute=0;
     if(savedTime>=MAX_TIME){
         savedTime=0;
@@ -83,15 +89,15 @@ void displayHUD(HANDLE stdOut,pPlayer player,COORD hudPos,int* time){
         savedTime-=60;
         minute++;
     }
-    SetConsoleCursorPosition(stdOut,hudPos);
-    wprintf(L"%ls\n",player->name);
-    wprintf(L"%ls konumundasın.\n\n",player->locationName);
-    wprintf(L"Altın         : %*d\n",5,player->currency);
-    wprintf(L"Seviye        : %*d\n",5,player->level);
-    wprintf(L"Tecrübe puanı : %*d/100\n",5,player->xpPoint);
-    wprintf(L"Can           : %*d/%d\n",5,player->health,player->maxHealth);
-    wprintf(L"Yorgunluk     : %*d/100\n",5,player->exhaustion);
-    wprintf(L"Tokluk        : %*d/100\n",5,player->saturation);
-    wprintf(L"Akıl Sağlığı  : %*d/100\n",5,player->mental);
+    SetConsoleCursorPosition(STDOUT,hudPos);
+    wprintf(L"%ls\n",PLAYER.name);
+    wprintf(L"%ls konumundasın.\n\n",PLAYER.locationName);
+    wprintf(L"Altın         : %*d\n",5,PLAYER.currency);
+    wprintf(L"Seviye        : %*d\n",5,PLAYER.level);
+    wprintf(L"Tecrübe puanı : %*d/100\n",5,PLAYER.xpPoint);
+    wprintf(L"Can           : %*d/%d\n",5,PLAYER.health,PLAYER.maxHealth);
+    wprintf(L"Yorgunluk     : %*d/100\n",5,PLAYER.exhaustion);
+    wprintf(L"Tokluk        : %*d/100\n",5,PLAYER.saturation);
+    wprintf(L"Akıl Sağlığı  : %*d/100\n",5,PLAYER.mental);
     printf("\n\nSaat %02d:%02d",hour,minute);
 }

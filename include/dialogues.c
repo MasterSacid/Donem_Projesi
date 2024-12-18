@@ -7,9 +7,13 @@
 #include "eventhandler.h"
 #include "console.h"
 
+extern int MISSION_COUNTER;
+extern message GAME_MESSAGES[];
+extern int GAME_MESSAGE_COUNTER;
 
-void dialoguePerson0(int missionC, int* rightSideMessageCounter,message text[]) {
-    if (missionC == 0) {
+
+void dialoguePerson0() {
+    if (MISSION_COUNTER == 0) {
         //Barmen
          message barmen1 = {L"\nBarmen: Daha ne kadar oyalanacaksın, ozan? Burada fazladan oturmanın bir maliyeti olur, unutma."};
          message barmen2 = {L"\nBir içki daha alabilir miyim ?."};
@@ -19,13 +23,13 @@ void dialoguePerson0(int missionC, int* rightSideMessageCounter,message text[]) 
         message barmen[] = {barmen1, barmen2, barmen3, barmen4};
 
         for (int i = 0; i < 4; ++i) {
-            sendToRightSection(text, rightSideMessageCounter, &barmen[i]);
+            sendToRightSection(barmen[i]);
         }
     }
 }
 
-void dialoguePerson1(int missionC,int* rightSideMessageCounter) {
-    HANDLE stdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+void dialoguePerson1() {
+    HANDLE STDOUT = GetStdHandle(STD_OUTPUT_HANDLE);
     //ayyaş
 
         message ayyas1={L"Ayyaş: (Gözleri yarı kapalı) Heey, sen yeni bir yüzsün. Şarkı çalar mısın? Bu yerin biraz müziğe ihtiyacı var."};
@@ -35,12 +39,12 @@ void dialoguePerson1(int missionC,int* rightSideMessageCounter) {
     message ayyas[]={ayyas1,ayyas2,ayyas3,ayyas4};
 
     for (int i = 0; i < 4; ++i) {
-        sendToRightSection(ayyas,rightSideMessageCounter,&ayyas[i]);
+        sendToRightSection(ayyas[i]);
     }
 }
 
-void dialoguePerson2(int missionC) {
-    HANDLE stdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+void dialoguePerson2() {
+    HANDLE STDOUT = GetStdHandle(STD_OUTPUT_HANDLE);
     message evsiz[10]={};
       message evsiz1= {L"Evsiz: Hey, bard! Üstündeki çanta… Ne taşıyorsun? Biraz ekmek var mı?"};
       message evsiz2= {L"Sen: Üzgünüm, hiçbir şeyim yok."};
@@ -48,8 +52,8 @@ void dialoguePerson2(int missionC) {
 
 }
 
-void dialoguePerson3(int missionC) {
-    HANDLE stdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+void dialoguePerson3() {
+    HANDLE STDOUT = GetStdHandle(STD_OUTPUT_HANDLE);
     message garson[10]={};
         message garson1={L"Garson: (Hızlıca masaların arasında dolaşırken) Dur, yeni misin sen? Ben seni daha önce burada görmedim."};
         message garson2={L"Sen: Evet, ilk kez geldim."};

@@ -2,7 +2,7 @@
 #include <windows.h>
 
 typedef struct {
-    HANDLE stdOut;
+    HANDLE STDOUT;
     WORD color;
     int duration;
 } ScreenEffect;

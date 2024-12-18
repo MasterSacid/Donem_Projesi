@@ -6,8 +6,8 @@
 #include "../include/narrative.h"
 
 void bolum_2_savas() {
-    HANDLE stdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    HANDLE stdIn = GetStdHandle(STD_INPUT_HANDLE);
+    HANDLE STDOUT = GetStdHandle(STD_OUTPUT_HANDLE);
+    HANDLE STDIN = GetStdHandle(STD_INPUT_HANDLE);
 
     dialog dialogues1[] = {
         {{L"\nAdam: Sana bir iş teklif ediyorum. Bunun kolay olmadığını baştan söyleyeyim. Ama ödül, karşılaşacağın tehlikeye değebilir."}, 1000, 1},
@@ -39,8 +39,8 @@ void bolum_2_savas() {
     };
     system("cls");
 
-    printSequence(stdOut, dialogues1);
-    dialogChoice(stdOut, stdIn, sorgu1, secenekler1, 2);
+    printSequence(dialogues1);
+    dialogChoice(sorgu1, secenekler1, 2);
 
     dialog dialogues2[] = {
         {{L"\nKoruma 1: Sen bizimle dalga mı geçiyorsun!"}, 1000, 1},
@@ -51,5 +51,5 @@ void bolum_2_savas() {
         {{L"\0"}, 10, 1}
     };
 
-    printSequence(stdOut, dialogues2);
+    printSequence(dialogues2);
 }

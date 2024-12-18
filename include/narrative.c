@@ -6,9 +6,11 @@
 #include <windows.h>
 #include "narrative.h"
 
-void printSequence(HANDLE stdOut,dialog sequence[]){
+extern HANDLE STDOUT,STDIN;
+
+void printSequence(dialog sequence[]){
     for(int i=0;sequence[i].message.string[0]!='\0';i++){
-        printsAnimated(stdOut,&sequence[i].message,(COORD){0,0},10,"letter");
+        printsAnimated(&sequence[i].message,(COORD){0,0},10,"letter");
         Sleep(sequence[i].duration);
         if(sequence[i].clear){
             system("cls");
@@ -16,9 +18,9 @@ void printSequence(HANDLE stdOut,dialog sequence[]){
     }
 }
 //Narrative.c
-void printSequenceOnDialog(HANDLE stdOut,dialog sequence[]){
+void printSequenceOnDialog(dialog sequence[]){
     for(int i=0;sequence[i].message.string[0]!='\0';i++){
-        printsAnimated(stdOut,&sequence[i].message,(COORD){35,0},10,"letter");
+        printsAnimated(&sequence[i].message,(COORD){35,0},10,"letter");
         Sleep(sequence[i].duration);
         if(sequence[i].clear){
             system("cls");
@@ -29,12 +31,12 @@ void printSequenceOnDialog(HANDLE stdOut,dialog sequence[]){
 
 
 /*
-int dialogChoice(HANDLE stdOut,HANDLE stdIn,wchar_t string[],wchar_t opts[][64],int optCount){
+int dialogChoice(HANDLE STDOUT,HANDLE STDIN,wchar_t string[],wchar_t opts[][64],int optCount){
     int itemIndex=0;
     COORD size;
-    refreshSize(stdOut,&size);
+    refreshSize(STDOUT,&size);
     CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-    GetConsoleScreenBufferInfo(stdOut,&bufferInfo);
+    GetConsoleScreenBufferInfo(STDOUT,&bufferInfo);
     COORD pos=bufferInfo.dwCursorPosition;
     pos.Y+=5;
     int sizeTracker=0;
@@ -42,21 +44,21 @@ int dialogChoice(HANDLE stdOut,HANDLE stdIn,wchar_t string[],wchar_t opts[][64],
 
         wprintf(L"%ls",string);
         printf("\n");
-        SetConsoleCursorPosition(stdOut,(COORD){pos.X+sizeTracker,pos.Y});
+        SetConsoleCursorPosition(STDOUT,(COORD){pos.X+sizeTracker,pos.Y});
         // Seçenekleri Yazdır
         for(int i=0;wcscmp(opts[i],L"\0")!=0;i++){
-            refreshSize(stdOut,&size);
+            refreshSize(STDOUT,&size);
             if(itemIndex==i){
-                SetConsoleCursorPosition(stdOut,(COORD){pos.X+sizeTracker,pos.Y+1});
+                SetConsoleCursorPosition(STDOUT,(COORD){pos.X+sizeTracker,pos.Y+1});
                 for(int i=0;i<wcslen(opts[i]);i++){
                     printf("%c",'^');
                 }
-                SetConsoleCursorPosition(stdOut,(COORD){pos.X+sizeTracker,pos.Y});
-                SetConsoleTextAttribute(stdOut,styleHiglight);
+                SetConsoleCursorPosition(STDOUT,(COORD){pos.X+sizeTracker,pos.Y});
+                SetConsoleTextAttribute(STDOUT,styleHiglight);
             }
             if(sizeTracker>size.X){
                 pos.Y+=2;
-                SetConsoleCursorPosition(stdOut,(COORD){pos.X,pos.Y});
+                SetConsoleCursorPosition(STDOUT,(COORD){pos.X,pos.Y});
                 sizeTracker=0;
                 wprintf(L"%ls",opts[i]);
                 sizeTracker+=wcslen(opts[i])+5;
@@ -64,9 +66,9 @@ int dialogChoice(HANDLE stdOut,HANDLE stdIn,wchar_t string[],wchar_t opts[][64],
                 wprintf(L"%ls",opts[i]);
                 sizeTracker+=wcslen(opts[i])+5;
             }
-            SetConsoleCursorPosition(stdOut,(COORD){pos.X+sizeTracker,pos.Y});
+            SetConsoleCursorPosition(STDOUT,(COORD){pos.X+sizeTracker,pos.Y});
 
-            SetConsoleTextAttribute(stdOut,styleDefault);
+            SetConsoleTextAttribute(STDOUT,styleDefault);
         }
         sizeTracker=0;
         // Seçenekleri yazdırma bitti
@@ -74,7 +76,7 @@ int dialogChoice(HANDLE stdOut,HANDLE stdIn,wchar_t string[],wchar_t opts[][64],
         //Tuş alma
         int key=-1;
         while(key==-1){
-            key=waitKeys(stdIn,(WORD[]){VK_LEFT,VK_RIGHT,VK_RETURN},3);
+            key=waitKeys(STDIN,(WORD[]){VK_LEFT,VK_RIGHT,VK_RETURN},3);
         }
         switch(key){
             case -1:
@@ -99,16 +101,16 @@ int dialogChoice(HANDLE stdOut,HANDLE stdIn,wchar_t string[],wchar_t opts[][64],
                 return itemIndex;
                 break;
         }
-        clear(stdOut,&size);
+        clear(STDOUT,&size);
     }
 } */
 
-int dialogChoice(HANDLE stdOut, HANDLE stdIn, wchar_t string[], wchar_t opts[][300], int optCount) {
+int dialogChoice(wchar_t string[], wchar_t opts[][300], int optCount) {
     int itemIndex = 0;
     COORD size;
-    refreshSize(stdOut, &size); // Get console dimensions
+    refreshSize(); // Get console dimensions
     CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-    GetConsoleScreenBufferInfo(stdOut, &bufferInfo);
+    GetConsoleScreenBufferInfo(STDOUT, &bufferInfo);
     COORD pos = bufferInfo.dwCursorPosition;
     pos.Y += 2;
 
@@ -121,18 +123,18 @@ int dialogChoice(HANDLE stdOut, HANDLE stdIn, wchar_t string[], wchar_t opts[][3
         // Print options vertically
         int currentY = pos.Y; // Track current Y position
         for (int i = 0; i < optCount; i++) {
-            SetConsoleCursorPosition(stdOut, (COORD){pos.X, currentY});
+            SetConsoleCursorPosition(STDOUT, (COORD){pos.X, currentY});
 
             // Highlight selected option
             if (itemIndex == i) {
-                SetConsoleTextAttribute(stdOut, styleHiglight);
+                SetConsoleTextAttribute(STDOUT, styleHiglight);
                 wprintf(L"> %ls", opts[i]);
             } else {
-                SetConsoleTextAttribute(stdOut, styleDefault);
+                SetConsoleTextAttribute(STDOUT, styleDefault);
                 wprintf(L"  %ls", opts[i]); // Two spaces for alignment
             }
 
-            SetConsoleTextAttribute(stdOut, styleDefault);
+            SetConsoleTextAttribute(STDOUT, styleDefault);
 
             // Calculate the number of lines this option takes
             int optionLength = wcslen(opts[i]);
@@ -143,7 +145,7 @@ int dialogChoice(HANDLE stdOut, HANDLE stdIn, wchar_t string[], wchar_t opts[][3
         // Key input handling
         int key = -1;
         while (key == -1) {
-            key = waitKeys(stdIn, (WORD[]){VK_UP, VK_DOWN, VK_RETURN}, 3);
+            key = waitKeys((WORD[]){VK_UP, VK_DOWN, VK_RETURN}, 3);
         }
 
         switch (key) {
@@ -165,6 +167,6 @@ int dialogChoice(HANDLE stdOut, HANDLE stdIn, wchar_t string[], wchar_t opts[][3
                 return itemIndex;
         }
 
-        clear(stdOut, &size);
+        system("cls");
     }
 }

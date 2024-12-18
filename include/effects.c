@@ -1,7 +1,7 @@
 #include <windows.h>
 
 typedef struct {
-    HANDLE stdOut;
+    HANDLE STDOUT;
     WORD color;
     int duration;
 } ScreenEffect;
@@ -11,7 +11,7 @@ typedef struct {
 
 void flashScreen(ScreenEffect effect) {
     CONSOLE_SCREEN_BUFFER_INFO bufferInfo; //contains the info about the console screen buffer
-    GetConsoleScreenBufferInfo(effect.stdOut, &bufferInfo);
+    GetConsoleScreenBufferInfo(effect.STDOUT, &bufferInfo);
 
     // Calculate total screen size
     int width = bufferInfo.dwSize.X;
@@ -30,7 +30,7 @@ void flashScreen(ScreenEffect effect) {
     };
 
     // Save entire screen content including characters and their attributes
-    ReadConsoleOutput(effect.stdOut,
+    ReadConsoleOutput(effect.STDOUT,
                       screenBuffer,
                       (COORD){width, height},
                       (COORD){0, 0},
@@ -42,19 +42,19 @@ void flashScreen(ScreenEffect effect) {
     Sets the character attributes for a specified number of character cells,
     beginning at the specified coordinates in a screen buffer.
     */
-    FillConsoleOutputAttribute(effect.stdOut, effect.color, totalSize, (COORD){0, 0}, &write);
+    FillConsoleOutputAttribute(effect.STDOUT, effect.color, totalSize, (COORD){0, 0}, &write);
 
     /*for this one
     Writes a character to the console screen buffer a specified number of times,
     beginning at the specified coordinates. */
-    FillConsoleOutputCharacter(effect.stdOut, ' ', totalSize, (COORD){0, 0}, &write);
+    FillConsoleOutputCharacter(effect.STDOUT, ' ', totalSize, (COORD){0, 0}, &write);
 
     Sleep(effect.duration);
 
     /* Restore the original screen content by
      writing character and color attribute data to a specified rectangular
      block of character cells in a console screen buffer. */
-    WriteConsoleOutput(effect.stdOut,
+    WriteConsoleOutput(effect.STDOUT,
                        screenBuffer,
                        (COORD){width, height},
                        (COORD){0, 0},
@@ -66,10 +66,10 @@ void flashScreen(ScreenEffect effect) {
 /*NOTES BY THE AUTHOR (SACİD)
  In order to use this function effectiveley you have to define it in main like this
 
-HANDLE stdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+HANDLE STDOUT = GetStdHandle(STD_OUTPUT_HANDLE);
 
 ScreenEffect effect = {
-.stdOut = stdOut,
+.STDOUT = STDOUT,
 .color = BACKGROUND_RED | BACKGROUND_INTENSITY,
 .duration = 200
 };

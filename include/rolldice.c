@@ -12,7 +12,7 @@ typedef struct {
 } DiceRollConfig;
 
 // Function to display a single dice frame
-void displayDiceFrame(HANDLE stdOut, int number, COORD position) {
+void displayDiceFrame(HANDLE STDOUT, int number, COORD position) {
     char fileName[64];
     sprintf(fileName, "../dicenums/%d.txt", number);
 
@@ -20,9 +20,9 @@ void displayDiceFrame(HANDLE stdOut, int number, COORD position) {
     if (file == NULL) return;
 
     CONSOLE_SCREEN_BUFFER_INFO savePos;
-    GetConsoleScreenBufferInfo(stdOut, &savePos);
+    GetConsoleScreenBufferInfo(STDOUT, &savePos);
 
-    SetConsoleCursorPosition(stdOut, position);
+    SetConsoleCursorPosition(STDOUT, position);
     char ch;
     COORD currentPos = position;
 
@@ -30,7 +30,7 @@ void displayDiceFrame(HANDLE stdOut, int number, COORD position) {
         if (ch == '\n') {
             currentPos.Y++;
             currentPos.X = position.X;
-            SetConsoleCursorPosition(stdOut, currentPos);
+            SetConsoleCursorPosition(STDOUT, currentPos);
         } else {
             putchar(ch);
             currentPos.X++;
@@ -38,16 +38,16 @@ void displayDiceFrame(HANDLE stdOut, int number, COORD position) {
     }
 
     fclose(file);
-    SetConsoleCursorPosition(stdOut, savePos.dwCursorPosition);
+    SetConsoleCursorPosition(STDOUT, savePos.dwCursorPosition);
 }
 
 // Main dice rolling function
-int rollDiceAnimated(HANDLE stdOut, DiceRollConfig config) {
+int rollDiceAnimated(HANDLE STDOUT, DiceRollConfig config) {
     srand(time(NULL));
 
     // Store the current screen content
     CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-    GetConsoleScreenBufferInfo(stdOut, &bufferInfo);
+    GetConsoleScreenBufferInfo(STDOUT, &bufferInfo);
 
     // Calculate buffer size
     DWORD bufferSize = bufferInfo.dwSize.X * bufferInfo.dwSize.Y;
@@ -55,7 +55,7 @@ int rollDiceAnimated(HANDLE stdOut, DiceRollConfig config) {
     SMALL_RECT readRegion = {0, 0, bufferInfo.dwSize.X - 1, bufferInfo.dwSize.Y - 1};
 
     // Save current screen content
-    ReadConsoleOutput(stdOut, screenBuffer, bufferInfo.dwSize, (COORD){0, 0}, &readRegion);
+    ReadConsoleOutput(STDOUT, screenBuffer, bufferInfo.dwSize, (COORD){0, 0}, &readRegion);
 
     // Play initial dice sound
     PlaySound(TEXT("../sounds/effects/dice/dice.wav"), NULL, SND_FILENAME | SND_ASYNC);
@@ -65,7 +65,7 @@ int rollDiceAnimated(HANDLE stdOut, DiceRollConfig config) {
     // Animation loop
     for (int i = 0; i < config.rolls; i++) {
         // Restore the original screen content
-        WriteConsoleOutput(stdOut, screenBuffer, bufferInfo.dwSize, (COORD){0, 0}, &readRegion);
+        WriteConsoleOutput(STDOUT, screenBuffer, bufferInfo.dwSize, (COORD){0, 0}, &readRegion);
 
         // Generate random number for animation
         int animationRoll;
@@ -76,7 +76,7 @@ int rollDiceAnimated(HANDLE stdOut, DiceRollConfig config) {
         }
 
         // Show the dice
-        displayDiceFrame(stdOut, animationRoll, config.position);
+        displayDiceFrame(STDOUT, animationRoll, config.position);
 
 
         PlaySound(TEXT("../sounds/effects/dice/knockwood.wav"), NULL, SND_FILENAME | SND_ASYNC);
@@ -95,7 +95,7 @@ int rollDiceAnimated(HANDLE stdOut, DiceRollConfig config) {
 
     return finalRoll;
 }
-int quickRollDice(HANDLE stdOut, COORD position, int diceType) {
+int quickRollDice(HANDLE STDOUT, COORD position, int diceType) {
     DiceRollConfig config = {
         .result = 0,            // Random sonuc
         .position = position,   // konum belirle
@@ -104,7 +104,7 @@ int quickRollDice(HANDLE stdOut, COORD position, int diceType) {
         .rolls = 8             // kaç tur çevrilcek
     };
 
-    return rollDiceAnimated(stdOut, config);
+    return rollDiceAnimated(STDOUT, config);
 }
 
 

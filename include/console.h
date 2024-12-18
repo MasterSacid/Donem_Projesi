@@ -15,26 +15,28 @@ typedef struct message{
     char color[8][16];
 }message,*pMessage;
 
-CONSOLE_SCREEN_BUFFER_INFO refreshSize(HANDLE stdOut,PCOORD coord);
-int waitKeys(HANDLE stdIn,WORD keys[],int keyAmount);
-void clear(HANDLE stdOut,PCOORD coord);
+CONSOLE_SCREEN_BUFFER_INFO refreshSize();
 
-void clearChosenArea(HANDLE stdOut, PCOORD coord, COORD start, COORD end); //Sacit ekledi kafan karışmasın
+int waitKeys(WORD keys[],int keyAmount);
 
-void displayVertLine(HANDLE stdOut, PCOORD coord, COORD start, COORD end, char displaychar);
+void clearChosenArea(COORD start, COORD end); //Sacit ekledi kafan karışmasın
 
-void displayHorLine(HANDLE stdOut,PCOORD coord,COORD start,COORD end,char displaychar);
+void clear();
 
-void offset_prints(HANDLE stdOut, wchar_t string[], COORD start);
+void displayVertLine(COORD start, COORD end, char displaychar);
 
-void hide_cursor(HANDLE stdOut);
+void displayHorLine(COORD start,COORD end,char displaychar);
 
-void unhide_cursor(HANDLE stdOut);
+void offset_prints(wchar_t string[], COORD start);
 
-void printsAnimated(HANDLE stdOut, pMessage msg, COORD start, int ms, char stopAt[]);
+void hide_cursor();
 
-void printMessages(HANDLE stdOut, message msgs[], COORD start,int ms,char style[]);
+void unhide_cursor();
+
+void printsAnimated(pMessage msg, COORD start, int ms, char stopAt[]);
+
+void printMessages(COORD start,int ms,char style[]);
 
 void fitToLine(int lineSize, wchar_t string[]);
 
-void sendToRightSection(message rightSection[], int *rigthSideMessageC, pMessage message);
+void sendToRightSection(message newMessage);

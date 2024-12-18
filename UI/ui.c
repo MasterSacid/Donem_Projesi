@@ -1,58 +1,58 @@
 #include "ui.h"
 #include <windows.h>
 
-int userInteraction(HANDLE stdOut,HANDLE stdIn,pmenu selectedMenu,int* ie,PCOORD coord,pPlayer Player,int* time,message output[]){
-    int itemIndex=*ie;
+extern HANDLE STDOUT,STDIN;
+extern pMenu SELECTED_MENU;
+extern int TIME;
+extern COORD SCREEN_SIZE;
+extern int ITEM_INDEX;
+extern message GAME_MESSAGES[];
+extern int PLAYER;
+extern pMenu SELECTED_MENU;
+
+void userInteraction(){
+    clear();
+    drawUI();
+    userInput();
+}
+
+void drawUI(){
+    displayMenu(SELECTED_MENU);
+    displayVertLine((COORD){33,0},(COORD){33,60},'|');
+    displayHorLine((COORD){0,15},(COORD){33,15},'-');
+    displayHUD((COORD){0,17});
+    printMessages((COORD){35,0},10,"letter");
+}
+
+void userInput(){
+    int key;
     while(1){
-        clear(stdOut,coord);
-        drawUI(stdOut,selectedMenu,*ie,coord,Player,time,output);
-        itemIndex=userInput(stdIn,selectedMenu,ie);
-        if(itemIndex==-1){
-            continue;
-        }
-        *ie=itemIndex;
-        return itemIndex;
-    }
-}
-
-void drawUI(HANDLE stdOut,pmenu selectedMenu,int itemIndex,PCOORD coord,pPlayer Player,int* time,message output[]){
-    displayMenu(stdOut,selectedMenu,itemIndex,coord);
-    displayVertLine(stdOut,coord,(COORD){33,0},(COORD){33,60},'|');
-    displayHorLine(stdOut,coord,(COORD){0,15},(COORD){33,15},'-');
-    displayHUD(stdOut,Player,(COORD){0,17},time);
-    printMessages(stdOut,output,(COORD){35,0},10,"letter");
-}
-
-int userInput(HANDLE stdIn,pmenu selectedMenu,int* ie){
-    int itemIndex=*ie;
-        int key=-1;
+        key=-1;
         while(key==-1){
-            key=waitKeys(stdIn,(WORD[]){VK_UP,VK_DOWN,VK_RETURN},3);
+            key=waitKeys((WORD[]){VK_UP,VK_DOWN,VK_RETURN},3);
         }
-        int totalCount=selectedMenu->childrenCount+selectedMenu->itemCount;
+        int totalCount=SELECTED_MENU->childrenCount+SELECTED_MENU->itemCount;
         switch(key){
             case 0:
-                if(itemIndex<=0){
-                    itemIndex=totalCount;
-                }else if(itemIndex>=totalCount){
-                    itemIndex=totalCount-1;
+                if(ITEM_INDEX<=0){
+                    ITEM_INDEX=totalCount;
+                }else if(ITEM_INDEX>=totalCount){
+                    ITEM_INDEX=totalCount-1;
                 }else{
-                    itemIndex--;
+                    ITEM_INDEX--;
                 }
-                *ie=itemIndex;
-                return -1;
+                break;
             case 1:
-                if(itemIndex>=totalCount){
-                    itemIndex=0;
+                if(ITEM_INDEX>=totalCount){
+                    ITEM_INDEX=0;
                 }else{
-                    itemIndex++;
+                    ITEM_INDEX++;
                 }
-                *ie=itemIndex;
-                return -1;
+                break;
             case 2:
-                system("cls");
-                *ie=itemIndex;
-                return itemIndex;
+                return;
         }
-    return -1;
+        clear();
+        drawUI();
+    }
 }

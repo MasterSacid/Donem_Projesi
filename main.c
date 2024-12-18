@@ -19,30 +19,26 @@
 #include "include/dialogues.h"
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
-
-int exitProgram(HANDLE stdOut, PCOORD coord, void **collectionAdress);
-
-int missionC=0;
-
-// Ekran boyutunu saklamak için açılan COORD yapısı
-COORD coord;
-char artBuffer [4096]; //Ascii tablolarının maks karakter sayısı
-
-int collectionSize=0;
-
-void* functionToCall=NULL;
+/*
+    GLOBAL DEĞERLER
+*/
+HANDLE STDOUT,STDIN;
+int MISSION_COUNTER=0;
+int TIME;
+int ITEM_INDEX;
+player PLAYER;
+COORD SCREEN_SIZE;
+pMenu SELECTED_MENU;
+message GAME_MESSAGES[10]={};
+int GAME_MESSAGE_COUNTER=0;
+char artBuffer [4096];
 
 int main(void) {
     setlocale(LC_ALL, "");
-    HANDLE stdOut=GetStdHandle(STD_OUTPUT_HANDLE);
-    HANDLE stdIn=GetStdHandle(STD_INPUT_HANDLE);
+    STDOUT=GetStdHandle(STD_OUTPUT_HANDLE);
+    STDIN=GetStdHandle(STD_INPUT_HANDLE);
 
-    hide_cursor(stdOut);
-
-
-    //Garbage collection
-
-    void* collection=malloc(sizeof(void*));
+    hide_cursor();
 
     /*
         MENÜLER
@@ -60,7 +56,6 @@ int main(void) {
         0,
         &main_menu
     );
-    
 
     initMenu(
         &startAdventure,
@@ -117,18 +112,69 @@ int main(void) {
        &main_menu
     );
 
-    // Önemli not : Yemek menüsü seçildikten sonra yanda ascii resimler gösterilebilir. Bu bir fikir sadece
-
-
     initMenu(
         &main_menu,
         L"Ana Menü",
         L"Ne yapmak istediğini seç",
         NULL,
         0,
-        (pmenu[]){&startAdventure, &eatFood, &talkToSomeone,&locationMenu,&item_menu},
+        (pMenu[]){&startAdventure, &eatFood, &talkToSomeone,&locationMenu,&item_menu},
         5,
         NULL
+    );
+
+    menu combat_menu,attack,use_spell,use_item,run_confirm;
+
+    initMenu(
+    &combat_menu,
+        L"Savaş",
+        L"Ne yapmak istediğini seç",
+        NULL,
+        0,
+        (pMenu[]){&attack,&use_spell,&use_item,&run_confirm},
+        4,
+        NULL
+    );
+
+    initMenu(
+       &attack,
+       L"Saldır",
+       L"Nasıl saldıracaksın?",
+       (wchar_t[][64]){L"Silah1",L"Silah2",L"Yumruk",L"Tekme"},
+       4,
+       NULL,
+       0,
+       &combat_menu
+    );
+    initMenu(
+       &use_spell,
+       L"Büyü Kullan",
+       L"Hangi büyüyü kullanacaksın?",
+       (wchar_t[][64]){L"Büyü1",L"Büyü2",L"Büyü3",L"Büyü4"},
+       4,
+       NULL,
+       0,
+       &combat_menu
+    );
+    initMenu(
+       &use_item,
+       L"Eşya Kullan",
+       L"Hangi eşyayı kullanacaksın?",
+       (wchar_t[][64]){L"Eşya",L"Eşya",L"Eşya",L"Eşya"},
+       4,
+       NULL,
+       0,
+       &combat_menu
+    );
+    initMenu(
+       &run_confirm,
+       L"Kaç",
+       L"Kaçmak istediğine emin misin?",
+       (wchar_t[][64]){L"Evet"},
+       1,
+       NULL,
+       0,
+       &combat_menu
     );
 
 
@@ -163,21 +209,21 @@ int main(void) {
         Başlangıç Seçenekleri
     */
 
-    int time=8*3600;
+    TIME=8*3600;
 
-    player Player;
-    wcscpy(Player.name,L"Player");
-    Player.locationAdress=&tavern;
-    initStats(&Player.stat,10,10,10,10,10,10);
-    Player.level=1;
-    Player.maxHealth=5*Player.stat.constition+(5*Player.stat.constition*(Player.level-1)/25);
-    Player.health=Player.maxHealth;
-    Player.currency=20;
-    Player.mental=100;
-    Player.saturation=100;
-    Player.exhaustion=0;
-    Player.abilityPoints=0;
-    updatePlayer(&Player);
+    wcscpy(PLAYER.name,L"PLAYER");
+    PLAYER.locationAdress=&tavern;
+    initStats(&PLAYER.stat,10,10,10,10,10,10);
+    printf("%d",PLAYER.stat.charisma);
+    PLAYER.level=1;
+    PLAYER.maxHealth=5*PLAYER.stat.constition+(5*PLAYER.stat.constition*(PLAYER.level-1)/25);
+    PLAYER.health=PLAYER.maxHealth;
+    PLAYER.currency=20;
+    PLAYER.mental=100;
+    PLAYER.saturation=100;
+    PLAYER.exhaustion=0;
+    PLAYER.abilityPoints=0;
+    updatePlayer();
 
     character ally,enemy;
     ally.stat.wisdom=9;
@@ -188,67 +234,50 @@ int main(void) {
 /*
     ANA DÖNGÜ
 */
-    pmenu selectedMenu=&main_menu;
+    SELECTED_MENU=&main_menu;
 
-    int itemIndex=0;
+    ITEM_INDEX=0;
 
-    clear(stdOut,&coord);
+    int totalCount;
 
-    message rightSideText[10]={};
-    int rightSideTextC=0;
+    clear();
 
-    int uiValue=0;
+    //initCombat(&combat_menu,(pCharacter[]){&ally},1,(pCharacter[]){&enemy},1);
 
     while(1){
-        uiValue=0;
-        int totalCount=selectedMenu->childrenCount+selectedMenu->itemCount;
-        uiValue=userInteraction(stdOut,stdIn,selectedMenu,&itemIndex,&coord,&Player,&time,rightSideText);
+        int totalCount=SELECTED_MENU->childrenCount+SELECTED_MENU->itemCount;
+        userInteraction();
 
-        if(selectedMenu->childrenCount>uiValue){//Children menülerden seçim
-            selectedMenu=selectedMenu->children[uiValue];
+        if(SELECTED_MENU->childrenCount>ITEM_INDEX){//Children menülerden seçim
+            SELECTED_MENU=SELECTED_MENU->children[ITEM_INDEX];
     
-        }else if((selectedMenu->itemCount)>uiValue-(selectedMenu->childrenCount) && (uiValue-(selectedMenu->childrenCount))>=0){
+        }else if((SELECTED_MENU->itemCount)>ITEM_INDEX-(SELECTED_MENU->childrenCount) && (ITEM_INDEX-(SELECTED_MENU->childrenCount))>=0){
             //Fonksiyon çağrıları
-            if(selectedMenu==&startAdventure){//Macera Menüsü
-                if(uiValue==0){
-                    updateMission(&missionC,&talkToSomeone);
+            if(SELECTED_MENU==&startAdventure){//Macera Menüsü
+                if(ITEM_INDEX==0){
+                    updateMission(&talkToSomeone);
                 }
             }
-            if(selectedMenu==&talkToSomeone){//Konuşma Menüsü
-                updateNPCDialog(missionC,uiValue,&rightSideTextC,rightSideText);
+            if(SELECTED_MENU==&talkToSomeone){//Konuşma Menüsü
+                updateNPCDialog();
             }
-        }else if(selectedMenu!=&main_menu){//Ana haricindeki menülerin çıkışı
-            if(uiValue>=totalCount && selectedMenu->parent!=NULL){
-                selectedMenu=selectedMenu->parent;
+        }else if(SELECTED_MENU!=&main_menu){//Ana haricindeki menülerin çıkışı
+            if(ITEM_INDEX>=totalCount && SELECTED_MENU->parent!=NULL){
+                SELECTED_MENU=SELECTED_MENU->parent;
             }
         }else{//Ana menünün çıkışı
-            return exitProgram(stdOut,&coord,&collection);
+            return 0;
         }
         // Yapılan işlemler sonrası değişimleri güncelleme
-        updatePlayer(&Player);
-        system("cls");
+        updatePlayer();
+        clear();
     }
 }
 
 
 int centerArtX() {
-    int rightSectionWidth = coord.X - 33;
+    int rightSectionWidth = SCREEN_SIZE.X - 33;
     int artWidth = getArtWidth(artBuffer);
     int centeredX = 33 + ((rightSectionWidth - artWidth) / 2);
     return centeredX;
-}
-
-void garbageCollector(void **collectorAdress,void *toBeCollected){
-    collectionSize++;
-    *collectorAdress=realloc(collectorAdress,(sizeof(void*))*collectionSize);
-    collectorAdress[collectionSize-1]=toBeCollected;
-}
-
-int exitProgram(HANDLE stdOut,PCOORD coord,void **collectionAdress){
-    clear(stdOut,coord);
-    unhide_cursor(stdOut);
-    for(int i;i<collectionSize;i++){
-        free(collectionAdress[i]);
-    }
-    return 0;
 }

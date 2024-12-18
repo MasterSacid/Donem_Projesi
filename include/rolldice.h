@@ -10,7 +10,7 @@ typedef struct {
 } DiceRollConfig;
 
 // Function Declarations
-void displayDiceFrame(HANDLE stdOut, int number, COORD position);
-int rollDiceAnimated(HANDLE stdOut, DiceRollConfig config);
-int quickRollDice(HANDLE stdOut, COORD position, int diceType);
+void displayDiceFrame(HANDLE STDOUT, int number, COORD position);
+int rollDiceAnimated(HANDLE STDOUT, DiceRollConfig config);
+int quickRollDice(HANDLE STDOUT, COORD position, int diceType);
 

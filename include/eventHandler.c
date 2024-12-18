@@ -10,10 +10,13 @@
 #include "../story/beginning.h"
 #include "../story/part2.h"
 
-void updateMission(int* missionC,pmenu talkMenu){
-    updateCharacters(*missionC, talkMenu);
-    (*missionC)++;
-    switch (*missionC)
+extern int MISSION_COUNTER,ITEM_INDEX;
+extern message GAME_MESSAGES[];
+
+void updateMission(pMenu talkMenu){
+    updateCharacters(talkMenu);
+    (MISSION_COUNTER)++;
+    switch (MISSION_COUNTER)
     {
     case 1:
         beginning();
@@ -27,7 +30,7 @@ void updateMission(int* missionC,pmenu talkMenu){
 }
 
 
-void updateCharacters(int missionC,pmenu talkMenu){
+void updateCharacters(pMenu talkMenu){
 
     wchar_t list[][8][64]={
         //Mission 0
@@ -39,13 +42,13 @@ void updateCharacters(int missionC,pmenu talkMenu){
     };
     int listCounts[]={2,2,3};
 
-    talkMenu->itemCount=listCounts[missionC];
-    for(int i=0;i<listCounts[missionC];i++){
-        wcscpy(talkMenu->menuItems[i],list[missionC][i]);
+    talkMenu->itemCount=listCounts[MISSION_COUNTER];
+    for(int i=0;i<listCounts[MISSION_COUNTER];i++){
+        wcscpy(talkMenu->menuItems[i],list[MISSION_COUNTER][i]);
     }
 }
 
-void moveToTavern(pmenu locationMenu){
+void moveToTavern(pMenu locationMenu){
     locationMenu->itemCount=4;
     for(int i=0;i<4;i++){
         wcscpy(locationMenu->menuItems[i],L"Şifahane");
@@ -55,23 +58,23 @@ void moveToTavern(pmenu locationMenu){
     }
 }
 
-void updateNPCDialog(int missionC,int selectedPerson,int* rightSideMessageCounter,message text[]){
-        if(selectedPerson==0){
-            dialoguePerson0(missionC,rightSideMessageCounter,text);
+void updateNPCDialog(){
+        if(ITEM_INDEX==0){
+            dialoguePerson0();
         }
-        if(selectedPerson==1){
-            dialoguePerson1(missionC,rightSideMessageCounter);
+        if(ITEM_INDEX==1){
+            dialoguePerson1();
         }
-         if(selectedPerson==2) {
-            dialoguePerson2(missionC);
+         if(ITEM_INDEX==2) {
+            dialoguePerson2();
          }
-         if(selectedPerson==3) {
-             dialoguePerson3(missionC);
+         if(ITEM_INDEX==3) {
+             dialoguePerson3();
          }
 }
 /*
-void updateMiniMission (int missionC,int selectedMission) {
-    if (missionC == 0) {
+void updateMiniMission (int MISSION_COUNTER,int selectedMission) {
+    if (MISSION_COUNTER == 0) {
         if (selectedMission == 0) {
 
         }

@@ -1,5 +1,9 @@
 #include "character.h"
 #include <stdlib.h>
+#include <stdio.h>
+#include <wchar.h>
+
+extern player PLAYER;
 
 void initStats(pStats stats,int con,int cha,int dex,int inl,int str,int wis){
     stats->constition=con;
@@ -34,11 +38,11 @@ pCharacter createNPC(wchar_t name[]){
     return characterAdress;
 }
 
-void updatePlayer(pPlayer Player){
-    Player->maxHealth=5*Player->stat.constition+(5*Player->stat.constition*(Player->level-1)/25);
-    while(Player->xpPoint>=100){
-        Player->xpPoint-=100;
-        Player->abilityPoints+=1;
+void updatePlayer(){
+    PLAYER.maxHealth=5*PLAYER.stat.constition+(5*PLAYER.stat.constition*(PLAYER.level-1)/25);
+    while(PLAYER.xpPoint>=100){
+        PLAYER.xpPoint-=100;
+        PLAYER.abilityPoints+=1;
     }
-    wcscpy(Player->locationName,Player->locationAdress->name);
+    wcscpy(PLAYER.locationName,PLAYER.locationAdress->name);
 }

@@ -62,4 +62,4 @@ pItem createItem(wchar_t name[], wchar_t description[], wchar_t type[], int valu
 
 pCharacter createNPC(wchar_t name[]);
 
-void updatePlayer(pPlayer Player);
+void updatePlayer();

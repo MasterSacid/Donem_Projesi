@@ -3,8 +3,8 @@
 #include "../include/menu.h"
 #include "../include/console.h"
 
-int userInteraction(HANDLE stdOut, HANDLE stdIn, pmenu selectedMenu, int *ie, PCOORD coord, pPlayer Player, int *time, message output[]);
+void userInteraction();
 
-void drawUI(HANDLE stdOut, pmenu selectedMenu, int itemIndex, PCOORD coord, pPlayer Player, int *time, message output[]);
+void drawUI();
 
-int userInput(HANDLE stdIn, pmenu selectedMenu, int *ie);
+void userInput();

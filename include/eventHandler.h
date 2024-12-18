@@ -12,8 +12,8 @@
 #include "locationtime.h"
 #include "../story/beginning.h"
 
-void updateMission(int *missionC, pmenu talkMenu);
+void updateMission(pMenu talkMenu);
 
-void updateCharacters(int missionC, pmenu talkMenu);
+void updateCharacters(pMenu talkMenu);
 
-void updateNPCDialog(int missionC, int selectedPerson,int* rightSideMessageCounter,message text[]);
+void updateNPCDialog();
