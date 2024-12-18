@@ -47,7 +47,7 @@ int main(void) {
         MENÜLER
     */
 
-    menu main_menu,confirm_exit,startAdventure,talkToSomeone,locationMenu,sing,eatFood,food_menu;
+    menu main_menu,confirm_exit,startAdventure,talkToSomeone,locationMenu,sing,eatFood,food_menu,item_menu;
 
     initMenu(
         &confirm_exit,
@@ -72,13 +72,11 @@ int main(void) {
         &main_menu
     );
 
-
-
     initMenu(
        &talkToSomeone,
-       L"Birisyle konuş",
+       L"Birisiyle konuş",
        L"Kimle konuşucaksın",
-       (wchar_t[][64]){L"Şarkı1",L"Şarkı2"},
+       (wchar_t[][64]){L"Kişi1",L"Kişi2"},
        2,
        NULL,
        0,
@@ -100,7 +98,18 @@ int main(void) {
        &eatFood,
        L"Yemek ye",
        L"Ne yiyeceksin?",
-       (wchar_t[][64]){L"Şarkı1",L"Şarkı2"},
+       (wchar_t[][64]){L"Yemek1",L"Yemek2"},
+       2,
+       NULL,
+       0,
+       &main_menu
+    );
+
+    initMenu(
+       &item_menu,
+       L"Eşyalarım",
+       L"Eşyalarını burada inceleyebilirsin",
+       (wchar_t[][64]){L"Eşya1",L"Eşya2"},
        2,
        NULL,
        0,
@@ -116,8 +125,8 @@ int main(void) {
         L"Ne yapmak istediğini seç",
         NULL,
         0,
-        (pmenu[]){&startAdventure, &eatFood, &talkToSomeone,&locationMenu},
-        4,
+        (pmenu[]){&startAdventure, &eatFood, &talkToSomeone,&locationMenu,&item_menu},
+        5,
         NULL
     );
 
@@ -184,16 +193,25 @@ int main(void) {
 
     clear(stdOut,&coord);
 
-    message output[10]={};
+    message rightSideText[10]={};
+    int rightSideTextC=0;
+
+    message test1={L"\nTEST1"};
+    message test2={L"\nTEST2"};
+    message test3={L"\nTEST3"};
+    message test4={L"\nTEST4"};
 
     int uiValue=0;
 
-    missionC=0;
+    sendToRightSection(rightSideText,&rightSideTextC,&test1);
+    sendToRightSection(rightSideText,&rightSideTextC,&test2);
+    sendToRightSection(rightSideText,&rightSideTextC,&test3);
+    sendToRightSection(rightSideText,&rightSideTextC,&test4);
 
     while(1){
         uiValue=0;
         int totalCount=selectedMenu->childrenCount+selectedMenu->itemCount;
-        uiValue=userInteraction(stdOut,stdIn,selectedMenu,&itemIndex,&coord,&Player,&time,output);
+        uiValue=userInteraction(stdOut,stdIn,selectedMenu,&itemIndex,&coord,&Player,&time,rightSideText);
 
         if(selectedMenu->childrenCount>uiValue){//Children menülerden seçim
             selectedMenu=selectedMenu->children[uiValue];
@@ -217,7 +235,7 @@ int main(void) {
         }
         // Yapılan işlemler sonrası değişimleri güncelleme
         updatePlayer(&Player);
-        clear(stdOut,&coord);
+        system("cls");
     }
 }
 

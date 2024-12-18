@@ -173,17 +173,17 @@ void printsAnimated(HANDLE stdOut,pMessage msg,COORD start,int ms,char stopAt[])
 }
 
 void printMessages(HANDLE stdOut,message msgs[],COORD start,int ms,char style[]){
-        for(int i=0;i<10;i++){
-            if(msgs[i].shown==0){
-                printsAnimated(stdOut,&msgs[i],(COORD){start.X,start.Y+2*i},ms,style);
-                msgs[i].shown=1;
-            }else{
-                offset_prints(stdOut,msgs[i].string,(COORD){start.X,start.Y+2*i});
-            }
-            if(msgs[i+1].string[0]==L'\0'){
-                break;
-            }
+    for(int i=0;i<10;i++){
+        if(msgs[i].shown==0){
+            printsAnimated(stdOut,&msgs[i],(COORD){start.X,start.Y+2*i},ms,style);
+            msgs[i].shown=1;
+        }else{
+            offset_prints(stdOut,msgs[i].string,(COORD){start.X,start.Y+2*i});
         }
+        if(msgs[i+1].string[0]==L'\0'){
+            break;
+        }
+    }
 }
 
 void fitToLine(int lineSize,wchar_t string[]){
@@ -205,4 +205,16 @@ void fitToLine(int lineSize,wchar_t string[]){
             }
         }
     }
+}
+
+void sendToRightSection(message rightSection[], int *rightSideMessageC, message *newMessage) {
+    if (*rightSideMessageC < 10) {
+        (*rightSideMessageC)++;
+    }
+
+    for (int i = *rightSideMessageC - 1; i > 0; i--) {
+        rightSection[i] = rightSection[i - 1];
+    }
+
+    rightSection[0] = *newMessage;
 }

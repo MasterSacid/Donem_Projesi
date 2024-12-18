@@ -30,3 +30,5 @@ void printsAnimated(HANDLE stdOut, pMessage msg, COORD start, int ms, char stopA
 void printMessages(HANDLE stdOut, message msgs[], COORD start,int ms,char style[]);
 
 void fitToLine(int lineSize, wchar_t string[]);
+
+void sendToRightSection(message rightSection[], int *rigthSideMessageC, pMessage message);
