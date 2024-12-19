@@ -72,13 +72,5 @@ void updateNPCDialog(){
              dialoguePerson3();
          }
 }
-/*
-void updateMiniMission (int MISSION_COUNTER,int selectedMission) {
-    if (MISSION_COUNTER == 0) {
-        if (selectedMission == 0) {
 
-        }
-    }
 
-}
-*/
