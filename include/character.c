@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <wchar.h>
+#include "menu.h"
+
 
 extern player PLAYER;
 
@@ -45,4 +47,11 @@ void updatePlayer(){
         PLAYER.abilityPoints+=1;
     }
     wcscpy(PLAYER.chr.locationName,PLAYER.chr.locationAdress->name);
+}
+
+updateItems(pMenu item_menu){
+    item_menu->itemCount=PLAYER.chr.itemCount;
+    for(int i=0;i<item_menu->itemCount;i++){
+        wcscpy(item_menu->menuItems[i],PLAYER.chr.items[i]->name);
+    }
 }

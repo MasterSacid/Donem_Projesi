@@ -30,6 +30,7 @@ typedef struct character{
     wchar_t characterClass[32];
     pLocation locationAdress;
     pItem items[16];
+    int itemCount;
     stats stat;
     int currency;
     int level;

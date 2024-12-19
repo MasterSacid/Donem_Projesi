@@ -1,7 +1,6 @@
 #pragma once
 #include <windows.h>
 #include <wchar.h>
-#include "character.h"
 
 typedef struct menu{
     wchar_t name[64];
