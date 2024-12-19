@@ -146,6 +146,7 @@ void printsAnimated(pMessage msg,COORD start,int ms,char stopAt[]){
             start.X++;
             Sleep(ms);
         }
+        Sleep(1000);
     }else if(strcmp(stopAt,"word")==0){
         wchar_t array[32];
         int counter=0;
@@ -176,7 +177,7 @@ void printsAnimated(pMessage msg,COORD start,int ms,char stopAt[]){
 }
 
 void printMessages(COORD start,int ms,char style[]){
-    for(int i=0;i<10;i++){
+    for(int i=0;i<15;i++){
         if(GAME_MESSAGES[i].shown==0){
             printsAnimated(&GAME_MESSAGES[i],(COORD){start.X,start.Y+2*i},ms,style);
             GAME_MESSAGES[i].shown=1;
@@ -211,7 +212,7 @@ void fitToLine(int lineSize,wchar_t string[]){
 }
 
 void sendToRightSection(message newMessage) {
-    if (GAME_MESSAGE_COUNTER < 10) {
+    if (GAME_MESSAGE_COUNTER < 15) {
         (GAME_MESSAGE_COUNTER)++;
     }
 

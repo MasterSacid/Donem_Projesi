@@ -67,6 +67,9 @@ void displayMenu(pMenu menu){
     if(menu->parent!=NULL){
         wprintf(L"< %ls",menu->parent->name);
         SetConsoleTextAttribute(STDOUT,styleDefault);
+    }else if(wcscmp(menu->name,L"Savaş")==0){
+
+        SetConsoleTextAttribute(STDOUT,styleDefault);
     }else{
         wprintf(L"< Oyundan Çık");
         SetConsoleTextAttribute(STDOUT,styleDefault);
@@ -90,14 +93,18 @@ void displayHUD(COORD hudPos){
         minute++;
     }
     SetConsoleCursorPosition(STDOUT,hudPos);
-    wprintf(L"%ls\n",PLAYER.name);
-    wprintf(L"%ls konumundasın.\n\n",PLAYER.locationName);
-    wprintf(L"Altın         : %*d\n",5,PLAYER.currency);
-    wprintf(L"Seviye        : %*d\n",5,PLAYER.level);
+    wprintf(L"%ls\n",PLAYER.chr.name);
+    wprintf(L"%ls konumundasın.\n\n",PLAYER.chr.locationName);
+    wprintf(L"Altın         : %*d\n",5,PLAYER.chr.currency);
+    wprintf(L"Seviye        : %*d\n",5,PLAYER.chr.level);
     wprintf(L"Tecrübe puanı : %*d/100\n",5,PLAYER.xpPoint);
-    wprintf(L"Can           : %*d/%d\n",5,PLAYER.health,PLAYER.maxHealth);
+    wprintf(L"Can           : %*d/%d\n",5,PLAYER.chr.health,PLAYER.chr.maxHealth);
     wprintf(L"Yorgunluk     : %*d/100\n",5,PLAYER.exhaustion);
     wprintf(L"Tokluk        : %*d/100\n",5,PLAYER.saturation);
     wprintf(L"Akıl Sağlığı  : %*d/100\n",5,PLAYER.mental);
     printf("\n\nSaat %02d:%02d",hour,minute);
+}
+
+void bindFunction(pMenu menu,int menuIndex,void (*fPtr)()){
+    menu->fptrArray[menuIndex]=fPtr;
 }

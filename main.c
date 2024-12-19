@@ -29,7 +29,8 @@ int ITEM_INDEX;
 player PLAYER;
 COORD SCREEN_SIZE;
 pMenu SELECTED_MENU;
-message GAME_MESSAGES[10]={};
+pMenu MAIN_MENU;
+message GAME_MESSAGES[15]={};
 int GAME_MESSAGE_COUNTER=0;
 char artBuffer [4096];
 
@@ -39,6 +40,7 @@ int main(void) {
     STDIN=GetStdHandle(STD_INPUT_HANDLE);
 
     hide_cursor();
+    srand(time(NULL));
 
     /*
         MENÜLER
@@ -123,60 +125,9 @@ int main(void) {
         NULL
     );
 
-    menu combat_menu,attack,use_spell,use_item,run_confirm;
+    initCombatMenus();
 
-    initMenu(
-    &combat_menu,
-        L"Savaş",
-        L"Ne yapmak istediğini seç",
-        NULL,
-        0,
-        (pMenu[]){&attack,&use_spell,&use_item,&run_confirm},
-        4,
-        NULL
-    );
-
-    initMenu(
-       &attack,
-       L"Saldır",
-       L"Nasıl saldıracaksın?",
-       (wchar_t[][64]){L"Silah1",L"Silah2",L"Yumruk",L"Tekme"},
-       4,
-       NULL,
-       0,
-       &combat_menu
-    );
-    initMenu(
-       &use_spell,
-       L"Büyü Kullan",
-       L"Hangi büyüyü kullanacaksın?",
-       (wchar_t[][64]){L"Büyü1",L"Büyü2",L"Büyü3",L"Büyü4"},
-       4,
-       NULL,
-       0,
-       &combat_menu
-    );
-    initMenu(
-       &use_item,
-       L"Eşya Kullan",
-       L"Hangi eşyayı kullanacaksın?",
-       (wchar_t[][64]){L"Eşya",L"Eşya",L"Eşya",L"Eşya"},
-       4,
-       NULL,
-       0,
-       &combat_menu
-    );
-    initMenu(
-       &run_confirm,
-       L"Kaç",
-       L"Kaçmak istediğine emin misin?",
-       (wchar_t[][64]){L"Evet"},
-       1,
-       NULL,
-       0,
-       &combat_menu
-    );
-
+    MAIN_MENU=&main_menu;
 
     /*
         KONUMLAR
@@ -203,33 +154,37 @@ int main(void) {
     .pathLength=0
    };
 
-    CONSOLE_SCREEN_BUFFER_INFO bufferInfo;
-
     /*
         Başlangıç Seçenekleri
     */
 
     TIME=8*3600;
 
-    wcscpy(PLAYER.name,L"PLAYER");
-    PLAYER.locationAdress=&tavern;
-    initStats(&PLAYER.stat,10,10,10,10,10,10);
-    printf("%d",PLAYER.stat.charisma);
-    PLAYER.level=1;
-    PLAYER.maxHealth=5*PLAYER.stat.constition+(5*PLAYER.stat.constition*(PLAYER.level-1)/25);
-    PLAYER.health=PLAYER.maxHealth;
-    PLAYER.currency=20;
+    wcscpy(PLAYER.chr.name,L"PLAYER");
+    PLAYER.chr.locationAdress=&tavern;
+    initStats(&PLAYER.chr.stat,10,10,10,10,10,10);
+    printf("%d",PLAYER.chr.stat.charisma);
+    PLAYER.chr.level=1;
+    PLAYER.chr.maxHealth=5*PLAYER.chr.stat.constition+(5*PLAYER.chr.stat.constition*(PLAYER.chr.level-1)/25);
+    PLAYER.chr.health=PLAYER.chr.maxHealth;
+    PLAYER.chr.currency=20;
     PLAYER.mental=100;
     PLAYER.saturation=100;
     PLAYER.exhaustion=0;
     PLAYER.abilityPoints=0;
     updatePlayer();
 
-    character ally,enemy;
+    character ally,enemy,ally2;
+    ally2.stat.wisdom=1;
+    ally2.stat.dexterity=1;
     ally.stat.wisdom=9;
     ally.stat.dexterity=9;
     enemy.stat.wisdom=12;
     enemy.stat.dexterity=8;
+
+    wcscpy(ally.name,L"Ally");
+    wcscpy(ally2.name,L"ally2");
+    wcscpy(enemy.name,L"Foe");
 
 /*
     ANA DÖNGÜ
@@ -242,7 +197,7 @@ int main(void) {
 
     clear();
 
-    //initCombat(&combat_menu,(pCharacter[]){&ally},1,(pCharacter[]){&enemy},1);
+    initCombat((pCharacter[]){&ally,&ally2},2,(pCharacter[]){&enemy},1);
 
     while(1){
         int totalCount=SELECTED_MENU->childrenCount+SELECTED_MENU->itemCount;

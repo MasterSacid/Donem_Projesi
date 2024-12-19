@@ -39,10 +39,10 @@ pCharacter createNPC(wchar_t name[]){
 }
 
 void updatePlayer(){
-    PLAYER.maxHealth=5*PLAYER.stat.constition+(5*PLAYER.stat.constition*(PLAYER.level-1)/25);
+    PLAYER.chr.maxHealth=5*PLAYER.chr.stat.constition+(5*PLAYER.chr.stat.constition*(PLAYER.chr.level-1)/25);
     while(PLAYER.xpPoint>=100){
         PLAYER.xpPoint-=100;
         PLAYER.abilityPoints+=1;
     }
-    wcscpy(PLAYER.locationName,PLAYER.locationAdress->name);
+    wcscpy(PLAYER.chr.locationName,PLAYER.chr.locationAdress->name);
 }

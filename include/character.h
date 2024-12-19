@@ -35,25 +35,15 @@ typedef struct character{
     int level;
     int health;
     int maxHealth;
-    int turn;
 }character,*pCharacter;
 
 typedef struct player{
-    wchar_t name[32];
-    wchar_t locationName[32];
-    pLocation locationAdress;
-    pItem items[16];
-    stats stat;
-    int currency;
-    int level;
+    character chr;
     int xpPoint;
-    int health;
-    int maxHealth;
     int saturation;
     int exhaustion;
     int mental;
     int abilityPoints;
-    int turn;
 }player,*pPlayer;
 
 void initStats(pStats stats, int con, int cha, int dex, int inl, int str, int wis);
