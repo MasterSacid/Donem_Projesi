@@ -215,6 +215,7 @@ int main(void) {
             }
             if(SELECTED_MENU==&talkToSomeone){//Konuşma Menüsü
                 updateNPCDialog();
+
             }
         }else if(SELECTED_MENU!=&main_menu){//Ana haricindeki menülerin çıkışı
             if(ITEM_INDEX>=totalCount && SELECTED_MENU->parent!=NULL){
