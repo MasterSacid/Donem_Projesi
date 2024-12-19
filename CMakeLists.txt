@@ -33,6 +33,8 @@ add_executable(Donem_Projesi
         include/dialogues.h
         story/minimissions.c
         story/minimissions.h
+        story/part3.c
+        story/part3.h
 
 )
 

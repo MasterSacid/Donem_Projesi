@@ -9,6 +9,7 @@
 #include "dialogues.h"
 #include "../story/beginning.h"
 #include "../story/part2.h"
+#include "../story/part3.h"
 
 extern int MISSION_COUNTER,ITEM_INDEX;
 extern message GAME_MESSAGES[];
@@ -19,7 +20,8 @@ void updateMission(pMenu talkMenu){
     switch (MISSION_COUNTER)
     {
     case 1:
-        beginning();
+        //beginning();
+        part3();
         break;
     case 2:
         bolum_2_savas();

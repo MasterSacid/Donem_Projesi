@@ -11,14 +11,6 @@
 #include "../include/narrative.h"
 
 
-
-
-
-
-
-
-
-
 int minigamePicker (int ITEM_INDEX,int MISSION_COUNTER) {
     HANDLE stdOut = GetStdHandle(STD_OUTPUT_HANDLE);
     //-----------MEMORY GAME -----------------
