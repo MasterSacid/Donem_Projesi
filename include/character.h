@@ -25,8 +25,17 @@ typedef struct item{
     dictValue itemValues[8];
 }item,*pItem;
 
-typedef struct character{
+typedef struct shop{
     wchar_t name[32];
+    wchar_t description[128];
+    pItem items[16];
+    pItem selected_item;
+    int item_prices[16];
+    int itemC;
+}shop,*pShop;
+
+typedef struct character{
+    wchar_t name[64];
     wchar_t locationName[32];
     wchar_t characterClass[32];
     pLocation locationAdress;
@@ -35,8 +44,8 @@ typedef struct character{
     stats stat;
     int currency;
     int level;
-    int health;
-    int maxHealth;
+    float health;
+    float maxHealth;
 }character,*pCharacter;
 
 typedef struct player{
@@ -45,6 +54,7 @@ typedef struct player{
     float saturation;
     float exhaustion;
     float mental;
+    float hygiene;
     int abilityPoints;
 }player,*pPlayer;
 
@@ -60,4 +70,12 @@ void addItem(pCharacter character, pItem item);
 
 void removeItem(pCharacter character, pItem item);
 
+void array_add_item(pItem item, pItem items[], int *arrayC);
+
+void array_remove_item(pItem item, pItem items[], int *arrayC);
+
 int getValueByDictName(wchar_t name[32], dictValue array[], int i);
+
+void resource_operation(float *resource, float value, float max, float min);
+
+void player_sleep();

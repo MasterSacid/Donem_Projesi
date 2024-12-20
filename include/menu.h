@@ -3,8 +3,6 @@
 #include <wchar.h>
 #include "character.h"
 
-typedef struct menu* pMenu;
-
 typedef struct menu{
     wchar_t name[64];
     wchar_t description[128];
@@ -33,3 +31,5 @@ int confirm_menu(pMenu confirm_menu, wchar_t name[32], wchar_t description[128],
 void update_locations(pMenu locationMenu);
 
 void update_talk_menu(pMenu talkToSomeone);
+
+void update_location_activities(pMenu activity_menu);

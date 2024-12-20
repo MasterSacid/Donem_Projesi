@@ -19,6 +19,7 @@
 #include "story/minimissions.h"
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
+
 /*
     GLOBAL DEĞERLER
 */
@@ -47,13 +48,42 @@ int main(void) {
     */
 
     menu main_menu,confirm_exit,startAdventure,talkToSomeone,locationMenu,sing,eatFood,food_menu,item_menu,inspect_menu,skill_menu;
-    menu confirm;
+    menu confirm,location_activities;
+    location tavern,foodShop,healer,weaponsmith;
+
+    initMenu(
+        &confirm,
+        L"",
+        L"",
+        (wchar_t[][64]){L"evet"},
+        1,
+        (pMenu[]){},
+        0,
+        &main_menu
+    );
+
+    initMenu(
+        &location_activities,
+        L"",
+        L"",
+        (wchar_t[][64]){},
+        0,
+        (pMenu[]){},
+        0,
+        &main_menu
+    );
 
     initMenu(
         &skill_menu,
         L"Yetenek Menüsü",
         L"Artırmak istediğin yetenekleri\nseç",
-        (wchar_t[][64]){L"Bilgelik",L"Çeviklik",L"Dayanıklılık",L"Güç",L"Karizma",L"Zeka"},
+        (wchar_t[][64]){
+        L"Bilgelik        ",
+        L"Çeviklik        ",
+        L"Dayanıklılık    ",
+        L"Güç             ",
+        L"Karizma         ",
+        L"Zeka            "},
         6,
         NULL,
         0,
@@ -143,7 +173,7 @@ int main(void) {
         L"Ne yapmak istediğini seç",
         NULL,
         0,
-        (pMenu[]){&startAdventure, &food_menu, &talkToSomeone,&locationMenu,&item_menu,&skill_menu},
+        (pMenu[]){&location_activities,&startAdventure, &food_menu,&locationMenu,&item_menu,&skill_menu},
         6,
         NULL
     );
@@ -156,15 +186,16 @@ int main(void) {
         KONUMLAR
     */
 
-   location tavern,foodShop,healer,weaponsmith;
-
    tavern=(location){
     .name=L"Han",
     .description=L"Han Description Placeholder",
     .path={&foodShop,&healer,&weaponsmith},
     .pathLength={100,150,200},
     .pathCount=3,
-    .characterCount=0
+    .characters={},
+    .characterCount=0,
+    .activities={L"Birisiyle Konuş",L"Şarkı Söyle",L"Uyu"},
+    .activityCount=3
    };
 
     foodShop=(location){
@@ -173,7 +204,9 @@ int main(void) {
     .path={&tavern,&healer,&weaponsmith},
     .pathLength={100,150,250},
     .pathCount=3,
-    .characterCount=0
+    .characterCount=0,
+    .activities={L"Yiyecek satın al"},
+    .activityCount=1
    };
 
     healer=(location){
@@ -182,7 +215,9 @@ int main(void) {
     .path={&tavern,&foodShop,&weaponsmith},
     .pathLength={150,150,200},
     .pathCount=3,
-    .characterCount=0
+    .characterCount=0,
+    .activities={L"Şifalı eşyalar satın al"},
+    .activityCount=1
    };
 
     weaponsmith=(location){
@@ -191,7 +226,9 @@ int main(void) {
     .path={&tavern,&foodShop,&healer},
     .pathLength={100,250,200},
     .pathCount=3,
-    .characterCount=0
+    .characterCount=0,
+    .activities={L"Silah satın al"},
+    .activityCount=1
    };
 
     /*
@@ -206,12 +243,14 @@ int main(void) {
     printf("%d",PLAYER.chr.stat.charisma);
     PLAYER.chr.level=1;
     PLAYER.chr.maxHealth=5*PLAYER.chr.stat.constition+(5*PLAYER.chr.stat.constition*(PLAYER.chr.level-1)/25);
-    PLAYER.chr.health=PLAYER.chr.maxHealth;
+    PLAYER.chr.health=30;
     PLAYER.chr.currency=20;
-    PLAYER.mental=100.0;
+    PLAYER.mental=80.0;
     PLAYER.saturation=80.0;
     PLAYER.exhaustion=0.0;
     PLAYER.abilityPoints=0;
+    PLAYER.hygiene=100.0;
+
 
     // Başlangıç Eşyaları
     item bread={
@@ -247,6 +286,49 @@ int main(void) {
     wcscpy(ally2.name,L"ally2");
     wcscpy(enemy.name,L"Foe");
 
+    // Eşya Alışveriş Değerleri
+
+    menu shop_menu;
+
+    shop_menu=(menu){
+        .parent=&location_activities
+    };
+
+    shop food_shop={
+        .name=L"Erzak Dükkanı",
+        .description=L"Ne alacaksın?"
+    };
+
+    shop weapon_shop={
+        .name=L"Silahçı",
+        .description=L"Ne alacaksın?"
+    };
+
+    shop healer_shop={
+        .name=L"Şifacı",
+        .description=L"Ne alacaksın?"
+    };
+
+    pShop selected_shop=NULL;
+
+/*
+    Karakterler
+*/
+    character hanci={
+        .name=L"Hancı"
+    };
+    character ayyas={
+        .name=L"Ayyaş"
+    };
+    character evsiz={
+        .name=L"Evsiz"
+    };
+    character garson={
+        .name=L"Garsons"
+    };
+    pCharacter characters[][32]={{&hanci,&ayyas,&evsiz,&garson}};
+    int listCounts[]={4};
+
 /*
     ANA DÖNGÜ
 */
@@ -261,11 +343,13 @@ int main(void) {
     //initCombat((pCharacter[]){&ally,&ally2},2,(pCharacter[]){&enemy},1);
 
     while(1){
-        int totalCount=SELECTED_MENU->childrenCount+SELECTED_MENU->itemCount;
         updateItems(&item_menu,&food_menu);
         update_skill_menu(&skill_menu);
         update_locations(&locationMenu);
         update_talk_menu(&talkToSomeone);
+        update_location_activities(&location_activities);
+        updateCharacters(&tavern,listCounts,characters);
+        int totalCount=SELECTED_MENU->childrenCount+SELECTED_MENU->itemCount;
         userInteraction();
 
         if(SELECTED_MENU->childrenCount>ITEM_INDEX){//Children menülerden seçim
@@ -275,7 +359,7 @@ int main(void) {
             //Fonksiyon çağrıları
             if(SELECTED_MENU==&startAdventure){//Macera Menüsü
                 if(ITEM_INDEX==0){
-                    updateMission(&talkToSomeone);
+                    updateMission(&tavern,listCounts,characters);
                 }
             }
             if(SELECTED_MENU==&talkToSomeone){//Konuşma Menüsü
@@ -295,6 +379,22 @@ int main(void) {
                 change_location(PLAYER.chr.locationAdress->path[ITEM_INDEX]);
                 continue;
             }
+            if(SELECTED_MENU==&shop_menu){
+                selected_shop->selected_item=selected_shop->items[ITEM_INDEX];
+                if(confirm_menu(&confirm,L"Satın al",L"Bu eşyayı almak istediğinden emin misin",&shop_menu)==0){
+                    addItem(&PLAYER.chr,selected_shop->selected_item);
+                    array_remove_item(selected_shop->selected_item,selected_shop->items,&selected_shop->itemC);
+                    selected_shop->itemC--;
+                    SELECTED_MENU=&location_activities;
+                }
+            }
+            if(SELECTED_MENU==&location_activities){
+                //BU FONKSİYONDAKİ SIRALAMALAR ÖNEMLİ
+                location_activity_handler((pLocation[]){&tavern,&healer,&foodShop,&weaponsmith}
+                ,(pMenu[]){&talkToSomeone,&shop_menu}
+                ,(pShop[]){&healer_shop,&food_shop,&weapon_shop}
+                ,&selected_shop);
+            }
         }else if(SELECTED_MENU!=&main_menu){//Ana menü haricindeki menülerin çıkışı
             if(ITEM_INDEX>=totalCount && SELECTED_MENU->parent!=NULL){
                 SELECTED_MENU=SELECTED_MENU->parent;
@@ -309,7 +409,6 @@ int main(void) {
         clear();
     }
 }
-
 
 int centerArtX() {
     int rightSectionWidth = SCREEN_SIZE.X - 33;

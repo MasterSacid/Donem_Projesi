@@ -16,6 +16,7 @@ extern COORD SCREEN_SIZE;
 extern int TIME;
 extern player PLAYER;
 extern pMenu MAIN_MENU;
+extern pMenu SELECTED_MENU;
 
 
 //Menünün değerlerini ayarlamak için kullanılacak fonksiyon
@@ -24,14 +25,13 @@ void initMenu(pMenu menu,wchar_t name[64],wchar_t description[128],wchar_t menuI
     wcscpy(menu->description,description);
     menu->itemCount=itemCount;
     menu->childrenCount=childrenCount;
-    //itemCount'a göre ilerleyerek menuItems'a children'ların isimlerini çeker.
+    //child menüleri kopyalar
     for(int i=0;i<childrenCount;i++){
         menu->children[i]=children[i];
-        wcscpy(menu->menuItems[i],menu->children[i]->name);
     }
     //menuItems'ları kopyalar.
     for(int i=0;i<itemCount;i++){
-        wcscpy(menu->menuItems[i+childrenCount],menuItems[i]);
+        wcscpy(menu->menuItems[i],menuItems[i]);
     }
     menu->parent=parent;
 }
@@ -56,11 +56,18 @@ void displayMenu(pMenu menu){
         printf("================================\n\n");
         wprintf(L"%ls\n",menu->description);
     }
-    for(int i=0;i<totalCount;i++){
+    for(int i=0;i<menu->childrenCount;i++){
         if(i==ITEM_INDEX){
             SetConsoleTextAttribute(STDOUT,styleHiglight);
         }
-        wprintf(L"> %ls\n",menu->menuItems[i]);
+        wprintf(L"> %ls\n",menu->children[i]->name);
+        SetConsoleTextAttribute(STDOUT,styleDefault);
+    }
+    for(int i=0;i<menu->itemCount;i++){
+        if(i==ITEM_INDEX){
+            SetConsoleTextAttribute(STDOUT,styleHiglight);
+        }
+        wprintf(L"- %ls\n",menu->menuItems[i]);
         SetConsoleTextAttribute(STDOUT,styleDefault);
     }
     if(ITEM_INDEX>=totalCount){
@@ -103,10 +110,11 @@ void displayHUD(COORD hudPos){
     wprintf(L"Altın         : %*d\n",5,PLAYER.chr.currency);
     wprintf(L"Seviye        : %*d\n",5,PLAYER.chr.level);
     wprintf(L"Tecrübe puanı : %*d/100\n",5,PLAYER.xpPoint);
-    wprintf(L"Can           : %*d/%d\n",5,PLAYER.chr.health,PLAYER.chr.maxHealth);
+    wprintf(L"Can           : %5.0f/%.0f\n",PLAYER.chr.health,PLAYER.chr.maxHealth);
     wprintf(L"Yorgunluk     : %5.0f/100\n",PLAYER.exhaustion);
     wprintf(L"Tokluk        : %5.0f/100\n",PLAYER.saturation);
     wprintf(L"Akıl Sağlığı  : %5.0f/100\n",PLAYER.mental);
+    wprintf(L"Hijyen        : %5.0f/100\n",PLAYER.hygiene);
     printf("\n\nSaat %02d:%02d",hour,minute);
 }
 
@@ -141,13 +149,10 @@ void eat_food(pMenu food_menu,pMenu item_menu){
             break;
         }
     }
-    PLAYER.saturation+=(float)getValueByDictName(L"saturation",item->itemValues,item->value);
+    resource_operation(&PLAYER.saturation,(float)getValueByDictName(L"saturation",item->itemValues,item->value),100,0);
     message info;
     swprintf(info.string,sizeof(wchar_t)*512,L"%ls yedin.",item->name);
     removeItem(&PLAYER.chr,item);
-    if(PLAYER.saturation>100){
-        PLAYER.saturation=100;
-    }
     pass_time(300);
     updateItems(item_menu,food_menu);
     sendToRightSection(info);
@@ -157,17 +162,29 @@ void eat_food(pMenu food_menu,pMenu item_menu){
 
 void update_skill_menu(pMenu skill_menu){
     swprintf(skill_menu->description,sizeof(wchar_t)*128,L"Artırmak istediğin yetenekleri\n seç. (%d Puanın var)",PLAYER.abilityPoints);
+    for(int i=0;i<skill_menu->itemCount;i++){
+        swprintf(&skill_menu->menuItems[i][15],sizeof(wchar_t)*16,L": %d",*(&PLAYER.chr.stat.constition+i));
+    }
 }
 
 int confirm_menu(pMenu confirm_menu,wchar_t name[32],wchar_t description[128],pMenu parent){
+    SELECTED_MENU=confirm_menu;
     wcscpy(confirm_menu->name,name);
     wcscpy(confirm_menu->description,description);
     confirm_menu->parent=parent;
     userInteraction();
+    if(ITEM_INDEX==1){
+        SELECTED_MENU=confirm_menu->parent;
+        clear();
+        drawUI();
+        return -1;
+    }
+    clear();
+    drawUI();
     if(ITEM_INDEX==0){
         return 0;
     }else{
-        return 1;
+        return -1;
     }
 }
 
@@ -182,6 +199,15 @@ void update_locations(pMenu locationMenu){
 void update_talk_menu(pMenu talkToSomeone){
     talkToSomeone->itemCount=PLAYER.chr.locationAdress->characterCount;
     for(int i=0;i<PLAYER.chr.locationAdress->characterCount;i++){
-        wcscpy(talkToSomeone->menuItems[i],PLAYER.chr.locationAdress->character[i]->name);
+        wcscpy(talkToSomeone->menuItems[i],PLAYER.chr.locationAdress->characters[i]->name);
+    }
+}
+
+void update_location_activities(pMenu activity_menu){
+    activity_menu->itemCount=PLAYER.chr.locationAdress->activityCount;
+    wcscpy(activity_menu->name,PLAYER.chr.locationAdress->name);
+    swprintf(activity_menu->description,sizeof(wchar_t)*64,L"%ls,\nkonumunda yapılacaklar",PLAYER.chr.locationAdress->name);
+    for(int i=0;i<PLAYER.chr.locationAdress->activityCount;i++){
+        wcscpy(activity_menu->menuItems[i],PLAYER.chr.locationAdress->activities[i]);
     }
 }
