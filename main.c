@@ -326,7 +326,10 @@ int main(void) {
     character garson={
         .name=L"Garsons"
     };
-    pCharacter characters[][32]={{&hanci,&ayyas,&evsiz,&garson}};
+    pCharacter characters[][32]={
+        {&hanci,&ayyas,&evsiz,&garson},
+        {}//DOLDUR
+    };
     int listCounts[]={4};
 
 /*
