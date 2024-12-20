@@ -2,8 +2,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <wchar.h>
-#include "menu.h"
 
+struct menu;  
+
+typedef struct menu* pMenu;
 
 extern player PLAYER;
 
@@ -49,9 +51,29 @@ void updatePlayer(){
     wcscpy(PLAYER.chr.locationName,PLAYER.chr.locationAdress->name);
 }
 
-updateItems(pMenu item_menu){
-    item_menu->itemCount=PLAYER.chr.itemCount;
-    for(int i=0;i<item_menu->itemCount;i++){
-        wcscpy(item_menu->menuItems[i],PLAYER.chr.items[i]->name);
+void addItem(pCharacter character,pItem item){
+    character->items[character->itemCount]=item;
+    character->itemCount++;
+}
+
+void removeItem(pCharacter character,pItem item){
+    for(int i=0;i<character->itemCount;i++){
+        if(character->items[i]==item){
+            character->items[i]=NULL;
+            for(int j=i;j<character->itemCount;j++){
+                character->items[j]=character->items[j+1];
+            }
+            break;
+        }
     }
+    character->itemCount--;
+}
+
+int getValueByDictName(wchar_t name[32],dictValue array[],int i){
+    for(;i>0;i--){
+        if(wcscmp(array[i-1].name,name)==0){
+            return array[i-1].value;
+        }
+    }
+    return 0;
 }

@@ -10,6 +10,11 @@ typedef struct location{
     wchar_t description[128];
     struct location* path[16];
     int pathLength[16];
+    int pathCount;
     pCharacter character[16];
-    int charachterCount;
+    int characterCount;
 }location, *pLocation;
+
+void pass_time(int time);
+
+void change_location(pLocation location);

@@ -31,8 +31,6 @@ add_executable(Donem_Projesi
         story/dialogues.h
         UI/ui.h
         UI/ui.c
-        include/dialogues.c
-        include/dialogues.h
         story/minimissions.c
         story/minimissions.h
 

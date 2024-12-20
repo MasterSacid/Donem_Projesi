@@ -32,7 +32,6 @@ void updateMission(pMenu talkMenu){
 
 
 void updateCharacters(pMenu talkMenu){
-
     wchar_t list[][8][64]={
         //Mission 0
         {{L"Person1"},{L"Person2"}},
@@ -46,16 +45,6 @@ void updateCharacters(pMenu talkMenu){
     talkMenu->itemCount=listCounts[MISSION_COUNTER];
     for(int i=0;i<listCounts[MISSION_COUNTER];i++){
         wcscpy(talkMenu->menuItems[i],list[MISSION_COUNTER][i]);
-    }
-}
-
-void moveToTavern(pMenu locationMenu){
-    locationMenu->itemCount=4;
-    for(int i=0;i<4;i++){
-        wcscpy(locationMenu->menuItems[i],L"Şifahane");
-        wcscpy(locationMenu->menuItems[i],L"Silahçı");
-        wcscpy(locationMenu->menuItems[i],L"Erzak dükkanı");
-        wcscpy(locationMenu->menuItems[i],L"Odana çık ve uyu");
     }
 }
 

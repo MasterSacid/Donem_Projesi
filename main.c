@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
-#include <stdlib.h>
 #include <wchar.h>
 #include <locale.h>
 #include "include/menu.h"
@@ -17,6 +16,7 @@
 #include "story/beginning.h"
 #include "story/dialogues.h"
 #include "UI/ui.h"
+#include "story/minimissions.h"
 
 int centerArtX(); //Bu fonksiyon main içinde olmak zorunda
 /*
@@ -46,7 +46,30 @@ int main(void) {
         MENÜLER
     */
 
-    menu main_menu,confirm_exit,startAdventure,talkToSomeone,locationMenu,sing,eatFood,food_menu,item_menu;
+    menu main_menu,confirm_exit,startAdventure,talkToSomeone,locationMenu,sing,eatFood,food_menu,item_menu,inspect_menu,skill_menu;
+    menu confirm;
+
+    initMenu(
+        &skill_menu,
+        L"Yetenek Menüsü",
+        L"Artırmak istediğin yetenekleri\nseç",
+        (wchar_t[][64]){L"Bilgelik",L"Çeviklik",L"Dayanıklılık",L"Güç",L"Karizma",L"Zeka"},
+        6,
+        NULL,
+        0,
+        &main_menu
+    );
+
+    initMenu(
+        &inspect_menu,
+        L"",
+        L"",
+        (wchar_t[][64]){},
+        0,
+        NULL,
+        0,
+        &main_menu
+    );
 
     initMenu(
         &confirm_exit,
@@ -74,7 +97,7 @@ int main(void) {
        &talkToSomeone,
        L"Birisiyle konuş",
        L"Kimle konuşucaksın",
-       (wchar_t[][64]){L"Kişi1",L"Kişi2"},
+       (wchar_t[][64]){L"Hancı",L"Ayyaş"},
        2,
        NULL,
        0,
@@ -85,15 +108,15 @@ int main(void) {
        &locationMenu,
        L"Yolculuk Menüsü",
        L"Nereye gitmek istersin",
-       (wchar_t[][64]){},
-       0,
+       (wchar_t[][64]){L"Şifacı",L"Erzak Dükkanı",L"Silahçı"},
+       3,
        NULL,
        0,
        &main_menu
     );
 
     initMenu(
-       &eatFood,
+       &food_menu,
        L"Yemek ye",
        L"Ne yiyeceksin?",
        (wchar_t[][64]){L"Yemek1",L"Yemek2"},
@@ -106,7 +129,7 @@ int main(void) {
     initMenu(
        &item_menu,
        L"Eşyalarım",
-       L"Eşyalarını burada inceleyebilirsin",
+       L"Eşyalarını burada inceleyebilir-\nsin",
        (wchar_t[][64]){L"Eşya1",L"Eşya2"},
        2,
        NULL,
@@ -120,8 +143,8 @@ int main(void) {
         L"Ne yapmak istediğini seç",
         NULL,
         0,
-        (pMenu[]){&startAdventure, &eatFood, &talkToSomeone,&locationMenu,&item_menu},
-        5,
+        (pMenu[]){&startAdventure, &food_menu, &talkToSomeone,&locationMenu,&item_menu,&skill_menu},
+        6,
         NULL
     );
 
@@ -133,25 +156,42 @@ int main(void) {
         KONUMLAR
     */
 
-   location tavern={
+   location tavern,foodShop,healer,weaponsmith;
+
+   tavern=(location){
     .name=L"Han",
     .description=L"Han Description Placeholder",
-    .path=NULL,
-    .pathLength=0
+    .path={&foodShop,&healer,&weaponsmith},
+    .pathLength={100,150,200},
+    .pathCount=3,
+    .characterCount=0
    };
 
-    location foodShop={
-    .name=L"Han",
-    .description=L"Han Description Placeholder",
-    .path=NULL,
-    .pathLength=0
+    foodShop=(location){
+    .name=L"Erzak Dükkanı",
+    .description=L"Food Shop Description Placeholder",
+    .path={&tavern,&healer,&weaponsmith},
+    .pathLength={100,150,250},
+    .pathCount=3,
+    .characterCount=0
    };
 
-    location healer={
-    .name=L"Han",
-    .description=L"Han Description Placeholder",
-    .path=NULL,
-    .pathLength=0
+    healer=(location){
+    .name=L"Şifacı",
+    .description=L"Healer Description Placeholder",
+    .path={&tavern,&foodShop,&weaponsmith},
+    .pathLength={150,150,200},
+    .pathCount=3,
+    .characterCount=0
+   };
+
+    weaponsmith=(location){
+    .name=L"Silahçı",
+    .description=L"Healer Description Placeholder",
+    .path={&tavern,&foodShop,&healer},
+    .pathLength={100,250,200},
+    .pathCount=3,
+    .characterCount=0
    };
 
     /*
@@ -168,10 +208,31 @@ int main(void) {
     PLAYER.chr.maxHealth=5*PLAYER.chr.stat.constition+(5*PLAYER.chr.stat.constition*(PLAYER.chr.level-1)/25);
     PLAYER.chr.health=PLAYER.chr.maxHealth;
     PLAYER.chr.currency=20;
-    PLAYER.mental=100;
-    PLAYER.saturation=100;
-    PLAYER.exhaustion=0;
+    PLAYER.mental=100.0;
+    PLAYER.saturation=80.0;
+    PLAYER.exhaustion=0.0;
     PLAYER.abilityPoints=0;
+
+    // Başlangıç Eşyaları
+    item bread={
+        .name=L"Ekmek",
+        .description=L"Biraz kurumuş olsa\nda yenebilir durumda",
+        .type=L"food",
+        .value=1,
+        .itemValues=(dictValue){L"saturation",10}
+    };
+    item blade={
+        .name=L"Bıçak",
+        .description=L"Yakın zamanda dövülmüş\n bir bıçak(+1 Hasar)",
+        .type=L"weapon",
+        .value=1,
+        .itemValues=(dictValue){L"modifier",1}
+    };
+
+    addItem(&PLAYER.chr,&bread);
+    addItem(&PLAYER.chr,&bread);
+    addItem(&PLAYER.chr,&blade);
+
     updatePlayer();
 
     character ally,enemy,ally2;
@@ -197,10 +258,14 @@ int main(void) {
 
     clear();
 
-    initCombat((pCharacter[]){&ally,&ally2},2,(pCharacter[]){&enemy},1);
+    //initCombat((pCharacter[]){&ally,&ally2},2,(pCharacter[]){&enemy},1);
 
     while(1){
         int totalCount=SELECTED_MENU->childrenCount+SELECTED_MENU->itemCount;
+        updateItems(&item_menu,&food_menu);
+        update_skill_menu(&skill_menu);
+        update_locations(&locationMenu);
+        update_talk_menu(&talkToSomeone);
         userInteraction();
 
         if(SELECTED_MENU->childrenCount>ITEM_INDEX){//Children menülerden seçim
@@ -215,9 +280,22 @@ int main(void) {
             }
             if(SELECTED_MENU==&talkToSomeone){//Konuşma Menüsü
                 updateNPCDialog();
-
             }
-        }else if(SELECTED_MENU!=&main_menu){//Ana haricindeki menülerin çıkışı
+            if(SELECTED_MENU==&item_menu){
+                inspectItem(&inspect_menu);
+                SELECTED_MENU=&inspect_menu;
+            }
+            if(SELECTED_MENU==&food_menu){
+                eat_food(&food_menu,&item_menu);
+            }
+            if(SELECTED_MENU==&skill_menu){
+                update_skill_menu(&skill_menu);
+            }
+            if(SELECTED_MENU==&locationMenu){
+                change_location(PLAYER.chr.locationAdress->path[ITEM_INDEX]);
+                continue;
+            }
+        }else if(SELECTED_MENU!=&main_menu){//Ana menü haricindeki menülerin çıkışı
             if(ITEM_INDEX>=totalCount && SELECTED_MENU->parent!=NULL){
                 SELECTED_MENU=SELECTED_MENU->parent;
             }
