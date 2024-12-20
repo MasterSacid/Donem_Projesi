@@ -2,6 +2,7 @@
 #include <wchar.h>
 #include "locationtime.h"
 
+
 typedef struct dictValue{
     wchar_t name[16];
     int value;
@@ -30,30 +31,21 @@ typedef struct character{
     wchar_t characterClass[32];
     pLocation locationAdress;
     pItem items[16];
+    int itemCount;
     stats stat;
     int currency;
     int level;
     int health;
     int maxHealth;
-    int turn;
 }character,*pCharacter;
 
 typedef struct player{
-    wchar_t name[32];
-    wchar_t locationName[32];
-    pLocation locationAdress;
-    pItem items[16];
-    stats stat;
-    int currency;
-    int level;
+    character chr;
     int xpPoint;
-    int health;
-    int maxHealth;
-    int saturation;
-    int exhaustion;
-    int mental;
+    float saturation;
+    float exhaustion;
+    float mental;
     int abilityPoints;
-    int turn;
 }player,*pPlayer;
 
 void initStats(pStats stats, int con, int cha, int dex, int inl, int str, int wis);
@@ -63,3 +55,9 @@ pItem createItem(wchar_t name[], wchar_t description[], wchar_t type[], int valu
 pCharacter createNPC(wchar_t name[]);
 
 void updatePlayer();
+
+void addItem(pCharacter character, pItem item);
+
+void removeItem(pCharacter character, pItem item);
+
+int getValueByDictName(wchar_t name[32], dictValue array[], int i);

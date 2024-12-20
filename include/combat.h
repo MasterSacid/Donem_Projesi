@@ -7,14 +7,36 @@
 #include "console.h"
 #include "../UI/ui.h"
 
-void initCombat(pMenu combat_menu, pCharacter allies[], int allyC, pCharacter enemies[], int enemyC);
+#define t_character 0
+#define t_player 1
+
+#define cha 0
+#define cons 1
+#define dext 2
+#define inte 3
+#define stre 4
+#define wisd 5
+
+void initCombatMenus();
+
+void initCombat(pCharacter allies[], int allyC, pCharacter enemies[], int enemyC);
 
 char isIn(int number, int array[], int size);
 
 void emptyArray(int array[], int size);
 
-void playerTurn(pMenu combat_menu);
+int playerTurn(pCharacter allies[], int allyC, pCharacter enemies[], int enemyC);
 
-void playTurnAlly(pCharacter ally);
+void playTurnAlly(pCharacter ally, pCharacter allies[], int allyC, pCharacter enemies[], int enemyC);
 
-void playTurnEnemy(pCharacter enemy);
+void playTurnEnemy(pCharacter enemy, pCharacter allies[], int allyC, pCharacter enemies[], int enemyC);
+
+int try_to_run();
+
+void character_attack(pCharacter actor, pCharacter target);
+
+void player_attack(pCharacter enemies[], int enemyIndex);
+
+pCharacter randomTarget(pCharacter characters[], int targetC, char incPlayer);
+
+void updateTargets(pCharacter enemies[], int enemyC);

@@ -3,6 +3,10 @@
 #include <stdio.h>
 #include <wchar.h>
 
+struct menu;  
+
+typedef struct menu* pMenu;
+
 extern player PLAYER;
 
 void initStats(pStats stats,int con,int cha,int dex,int inl,int str,int wis){
@@ -39,10 +43,37 @@ pCharacter createNPC(wchar_t name[]){
 }
 
 void updatePlayer(){
-    PLAYER.maxHealth=5*PLAYER.stat.constition+(5*PLAYER.stat.constition*(PLAYER.level-1)/25);
+    PLAYER.chr.maxHealth=5*PLAYER.chr.stat.constition+(5*PLAYER.chr.stat.constition*(PLAYER.chr.level-1)/25);
     while(PLAYER.xpPoint>=100){
         PLAYER.xpPoint-=100;
         PLAYER.abilityPoints+=1;
     }
-    wcscpy(PLAYER.locationName,PLAYER.locationAdress->name);
+    wcscpy(PLAYER.chr.locationName,PLAYER.chr.locationAdress->name);
+}
+
+void addItem(pCharacter character,pItem item){
+    character->items[character->itemCount]=item;
+    character->itemCount++;
+}
+
+void removeItem(pCharacter character,pItem item){
+    for(int i=0;i<character->itemCount;i++){
+        if(character->items[i]==item){
+            character->items[i]=NULL;
+            for(int j=i;j<character->itemCount;j++){
+                character->items[j]=character->items[j+1];
+            }
+            break;
+        }
+    }
+    character->itemCount--;
+}
+
+int getValueByDictName(wchar_t name[32],dictValue array[],int i){
+    for(;i>0;i--){
+        if(wcscmp(array[i-1].name,name)==0){
+            return array[i-1].value;
+        }
+    }
+    return 0;
 }

@@ -5,9 +5,9 @@
 #include <time.h>
 #include <conio.h>
 #include "../include/rolldice.h"
-#include "../include/eventHandler.h"
+#include "eventhandler.h"
 #include "../include/console.h"
-#include "../include/narrative.h"
+#include "narrative.h"
 
 extern int ITEM_INDEX;
 extern int MISSION_COUNTER;

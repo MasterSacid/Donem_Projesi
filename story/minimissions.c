@@ -6,9 +6,9 @@
 #include <conio.h>
 #include "../include/rolldice.h"
 #include "minimissions.h"
-#include "../include/eventHandler.h"
+#include "eventhandler.h"
 #include "../include/console.h"
-#include "../include/narrative.h"
+#include "narrative.h"
 
 
 int minigamePicker (int ITEM_INDEX,int MISSION_COUNTER) {
@@ -58,10 +58,7 @@ int minigamePicker (int ITEM_INDEX,int MISSION_COUNTER) {
             return gameScore;
         }
     }
-
-
-
-
+    return 1;
 }
 
 
@@ -101,7 +98,7 @@ void displaySequence(int sequence[], int length, int untilThatNumber) {
         displayNumberFromFile(sequence[i]);
 
 
-        char soundFile[20];
+        char soundFile[128];
         sprintf(soundFile, "../sounds/memorygame/coremusic/%d.wav", i % untilThatNumber + 1);
         playSoundAndWait(soundFile);
     }
@@ -139,7 +136,7 @@ int userInputForMinigame(int sequence[], int length,int untilThatNumber) {
         displayNumberFromFile(userInput);
 
         // Play sound
-        char soundFile[20];
+        char soundFile[128];
         sprintf(soundFile, "../sounds/memorygame/coremusic/%d.wav", i % untilThatNumber + 1);
         playSoundAndWait(soundFile);
 

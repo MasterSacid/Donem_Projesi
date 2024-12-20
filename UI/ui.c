@@ -21,7 +21,7 @@ void drawUI(){
     displayVertLine((COORD){33,0},(COORD){33,60},'|');
     displayHorLine((COORD){0,15},(COORD){33,15},'-');
     displayHUD((COORD){0,17});
-    printMessages((COORD){35,0},10,"letter");
+    printMessages((COORD){34,0},10,"letter");
 }
 
 void userInput(){
