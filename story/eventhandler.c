@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
-#include "locationtime.h"
-#include "menu.h"
-#include "character.h"
+#include "../include/locationtime.h"
+#include "../include/menu.h"
+#include "../include/character.h"
 #include "eventhandler.h"
 #include "dialogues.h"
 #include "../story/beginning.h"

@@ -4,6 +4,6 @@
 #include <string.h>
 #include <windows.h>
 #include "../include/console.h"
-#include "../include/narrative.h"
+#include "narrative.h"
 
 void part3();
