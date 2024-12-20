@@ -9,8 +9,10 @@
 #include "../include/locationtime.h"
 #include "eventhandler.h"
 #include "dialogues.h"
-#include "beginning.h"
-#include "part2.h"
+#include "../story/beginning.h"
+#include "../story/part2.h"
+#include "../story/part3.h"
+
 extern int MISSION_COUNTER,ITEM_INDEX;
 extern message GAME_MESSAGES[];
 
@@ -20,7 +22,8 @@ void updateMission(pLocation tavern,int listCounts[],pCharacter chars[][32]){
     switch (MISSION_COUNTER)
     {
     case 1:
-        beginning();
+        //beginning();
+        part3();
         break;
     case 2:
         bolum_2_savas();
@@ -53,3 +56,5 @@ void updateNPCDialog(){
              dialoguePerson3();
          }
 }
+
+
