@@ -19,7 +19,7 @@
 
 void initCombatMenus();
 
-void initCombat(pCharacter allies[], int allyC, pCharacter enemies[], int enemyC);
+int initCombat(pCharacter allies[], int allyC, pCharacter enemies[], int enemyC);
 
 char isIn(int number, int array[], int size);
 

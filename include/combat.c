@@ -99,7 +99,7 @@ void initCombatMenus(){
     combat_menu.draw_exit=0;
 }
 
-void initCombat(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
+int initCombat(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
     message info={
         .string=L"Savaş başladı"
     };
@@ -153,7 +153,7 @@ void initCombat(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
                 if(turnOwnerIndex==0){//Oyuncu
                     if(playerTurn(allies,allyC,enemies,enemyC)==0){
                         SELECTED_MENU=MAIN_MENU;
-                        return;
+                        return 1;
                     }
                 }else if(turnOwnerIndex<=allyC && turnOwnerIndex>0){//Dostlar
                     playTurnAlly(allies[turnOwnerIndex-1],allies,allyC,enemies,enemyC);
@@ -167,9 +167,12 @@ void initCombat(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
                     PLAYER.chr.currency+=loot_currency;
                     PLAYER.xpPoint+=loot_exp;
                     SELECTED_MENU=MAIN_MENU;
-                    return;
+                    return 1;
                 }else if(state==2){
                     SELECTED_MENU=LOST_MENU;
+                    clear();
+                    drawUI();
+                    return 0;
                 }
                 combatantC=allyC+enemyC+1;
             }
@@ -208,7 +211,7 @@ void initCombat(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
                 if(turnOwnerIndex==0){
                     if(playerTurn(allies,allyC,enemies,enemyC)==0){
                         SELECTED_MENU=MAIN_MENU;
-                        return;
+                        return 1;
                     }
                 }else if(turnOwnerIndex<=allyC && turnOwnerIndex>0){//Dostlar
                     playTurnAlly(allies[turnOwnerIndex-1],allies,allyC,enemies,enemyC);
@@ -222,9 +225,12 @@ void initCombat(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
                     PLAYER.chr.currency+=loot_currency;
                     PLAYER.xpPoint+=loot_exp;
                     SELECTED_MENU=MAIN_MENU;
-                    return;
+                    return 1;
                 }else if(state==2){
                     SELECTED_MENU=LOST_MENU;
+                    clear();
+                    drawUI();
+                    return 0;
                 }
                 combatantC=allyC+enemyC+1;
             }
@@ -525,7 +531,7 @@ int combatant_state_check(pCharacter allies[],int* allyC,pCharacter enemies[],in
             i--;
         }
     }
-    if(PLAYER.chr.health<=0){
+    if(PLAYER.chr.health<=0.1){
         message info={
             .string=L"Öldün."
         };

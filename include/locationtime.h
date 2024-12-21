@@ -27,3 +27,5 @@ void pass_time(int time);
 void change_location(pLocation location);
 
 void location_activity_handler(pLocation locations[], pMenu menus[], pShop shops[],pShop *selected_shop);
+
+void update_shop(pShop shop, pMenu menu, pMenu location_activity);

@@ -56,6 +56,17 @@ int main(void) {
     LOST_MENU=&lost;
 
     initMenu(
+        &lost,
+        L"Yaşamını yitirdin",
+        L"... Yolun sonu ...",
+        (wchar_t[][64]){L"Çıkış yap"},
+        1,
+        (pMenu[]){},
+        0,
+        &main_menu
+    );
+
+    initMenu(
         &confirm,
         L"",
         L"",
@@ -251,7 +262,7 @@ int main(void) {
     printf("%d",PLAYER.chr.stat.charisma);
     PLAYER.chr.level=1;
     PLAYER.chr.maxHealth=5*PLAYER.chr.stat.constition+(5*PLAYER.chr.stat.constition*(PLAYER.chr.level-1)/25);
-    PLAYER.chr.health=30;
+    PLAYER.chr.health=0.0;
     PLAYER.chr.currency=100;
     PLAYER.mental=80.0;
     PLAYER.saturation=80.0;

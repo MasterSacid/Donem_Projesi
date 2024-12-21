@@ -7,8 +7,15 @@ extern int TIME;
 extern player PLAYER;
 extern int ITEM_INDEX;
 extern pMenu SELECTED_MENU;
+extern pMenu LOST_MENU;
 
 void pass_time(int time){
+
+    if(PLAYER.chr.health<=0){
+        SELECTED_MENU=LOST_MENU;
+        return;
+    }
+
     TIME+=time;
     while(TIME>MAX_TIME){
         TIME-=MAX_TIME;
@@ -72,15 +79,7 @@ void location_activity_handler(pLocation locations[],pMenu menus[],pShop shops[]
     }
     if(PLAYER.chr.locationAdress==locations[1]){
         if(ITEM_INDEX==0){
-            *selected_shop=shops[0];
-            wcscpy(menus[1]->name,shops[0]->name);
-            wcscpy(menus[1]->description,shops[0]->description);
-            menus[1]->itemCount=shops[0]->itemC;
-            for(int i=0;i<shops[0]->itemC;i++){
-                wcscpy(menus[1]->menuItems[i],shops[0]->items[i]->name);
-            }
-            SELECTED_MENU=menus[1];
-            menus[1]->parent=menus[2];
+
         }
     }
     if(PLAYER.chr.locationAdress==locations[2]){
@@ -93,4 +92,15 @@ void location_activity_handler(pLocation locations[],pMenu menus[],pShop shops[]
             
         }
     }
+}
+
+void update_shop(pShop shop,pMenu menu,pMenu location_activity){
+    wcscpy(menu->name,shop->name);
+    wcscpy(menu->description,shop->description);
+    menu->itemCount=shop->itemC;
+    for(int i=0;i<shop->itemC;i++){
+        wcscpy(menu->menuItems[i],shop->items[i]->name);
+    }
+    SELECTED_MENU=menu;
+    menu->parent=location_activity;
 }
