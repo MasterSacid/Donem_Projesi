@@ -10,6 +10,12 @@
 #include "../story/beginning.h"
 #include "../story/part2.h"
 #include "../story/part3.h"
+#include "../story/part4.h"
+#include "../story/part5.h"
+#include "../story/part6.h"
+#include "../story/part7.h"
+#include "../story/part8.h"
+#include "../story/part9.h"
 
 extern int MISSION_COUNTER,ITEM_INDEX;
 extern message GAME_MESSAGES[];
@@ -21,10 +27,17 @@ void updateMission(pMenu talkMenu){
     {
     case 1:
         //beginning();
-        part3();
+        //part3();
+        //part4();
+        //part5();
+        //part6();
+        //part7();
+        //part8();
+        //part9();
+
         break;
     case 2:
-        bolum_2_savas();
+        part2();
         break;
     default:
         break;
