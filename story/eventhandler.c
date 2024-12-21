@@ -29,12 +29,10 @@ void updateMission(pLocation tavern,int listCounts[],pCharacter chars[][32]){
     {
         case 1:
             //part2();
-                printf("comething");
-                Sleep(1000);
 
         break;
         case 2:
-           // part3();
+            part3();
         printf("comething");
         Sleep(1000);
         break;

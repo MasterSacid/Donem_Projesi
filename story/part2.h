@@ -1,6 +1,10 @@
-//
-// Created by ahmetak on 12/16/2024.
-//
 #pragma once
-
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <windows.h>
+#include "../include/console.h"
+#include "narrative.h"
+#include "../include/combat.h"
+#include "../include/character.h"
 void part2();

@@ -273,12 +273,14 @@ int playerTurn(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
             //Alt menülerden hazır hale gelmesi gerekenler için fonksiyonlar
             if(SELECTED_MENU==&combat_menu && ITEM_INDEX==0){
                 updateTargets(enemies,enemyC,&view_enemies);
-            }else if(SELECTED_MENU==&combat_menu && ITEM_INDEX==1){
+            }else if(SELECTED_MENU==&combat_menu && ITEM_INDEX==1){//Saldırı menüsü fonksiyonu
                 if(PLAYER.selected_character==NULL){
                     updateTargets(enemies,enemyC,&selection_menu);
                     SELECTED_MENU=&selection_menu;
                     userInteraction();
-                    if(ITEM_INDEX==selection_menu.childrenCount){
+                    clear();
+                    drawUI();
+                    if(ITEM_INDEX==selection_menu.itemCount){
                         SELECTED_MENU=&combat_menu;
                         continue;
                     }
@@ -290,13 +292,15 @@ int playerTurn(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
                     SELECTED_MENU=&selection_menu;
                     update_attack_weapons();
                     userInteraction();
-                    if(ITEM_INDEX==1){
+                    clear();
+                    drawUI();
+                    if(ITEM_INDEX==selection_menu.itemCount){
                         SELECTED_MENU=&combat_menu;
                         continue;
                     }
                     PLAYER.selected_item=findItemByName(&PLAYER.chr,SELECTED_MENU->menuItems[ITEM_INDEX]);
                 }
-                player_attack(enemies,ITEM_INDEX);
+                player_attack();
                 actionTaken=1;
             }else{
                 SELECTED_MENU=SELECTED_MENU->children[ITEM_INDEX];
@@ -407,9 +411,9 @@ void character_attack(pCharacter actor,pCharacter target){//Karakterlerin saldı
     sendToRightSection(info);
 }
 
-void player_attack(pCharacter enemies[],int enemyIndex){//Oyunucunun saldırısını kontrol eden fonksiyon
+void player_attack(){//Oyunucunun saldırısını kontrol eden fonksiyon
     resource_operation(&PLAYER.exhaustion,-10.0,100,0);
-    int dodge_check=(rand()%20+1)+(PLAYER.chr.stat.dexterity-enemies[enemyIndex]->stat.dexterity);
+    int dodge_check=(rand()%20+1)+(PLAYER.chr.stat.dexterity-PLAYER.selected_character->stat.dexterity);
     message info={.shown=0};
     if(dodge_check<6){
         swprintf(info.string,sizeof(info.string)/sizeof(wchar_t),L"Hedefin saldırından kaçındı.");
@@ -431,9 +435,9 @@ void player_attack(pCharacter enemies[],int enemyIndex){//Oyunucunun saldırıs�
             damage=0;
             swprintf(info.string,sizeof(info.string)/sizeof(wchar_t),L"Güçsüz bir saldırı gerçekleştirdin ve hedefin bundan etkilenmedi.");
         }else{
-            enemies[enemyIndex]->health-=damage;
+            PLAYER.selected_character->health-=damage;
             swprintf(info.string,sizeof(info.string)/sizeof(wchar_t),L"%ls'e %d hasar verdin. [ %.0f ]"
-            ,enemies[enemyIndex]->name,damage,enemies[enemyIndex]->health);
+            ,PLAYER.selected_character->name,damage,PLAYER.selected_character->health);
         }
     }
     sendToRightSection(info);

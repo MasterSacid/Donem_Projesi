@@ -35,7 +35,7 @@ int try_to_run();
 
 void character_attack(pCharacter actor, pCharacter target);
 
-void player_attack(pCharacter enemies[], int enemyIndex);
+void player_attack();
 
 pCharacter randomTarget(pCharacter characters[], int targetC, char incPlayer);
 
