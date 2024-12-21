@@ -5,7 +5,65 @@
 #include "../include/console.h"
 #include "narrative.h"
 #include "part8.h"
+#include "../include/combat.h"
+#include "../include/character.h"
+character haydutBoss = {
+    .name = L"Kral Haydut",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
 
+character haydutpart8 = {
+    .name = L"Haydut1",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
+character haydutpart8_1 = {
+    .name = L"Haydut2",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
+character haydutpart8_2 = {
+    .name = L"Haydut3",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
+character haydutpart8_3 = {
+    .name = L"Haydut4",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
+character sebinchi8 = {
+    .name = L"Sebinchi",
+  .level = 2,
+  .health = 50,
+  .stat = {20,5,10,5,16,5},
+  .currency = 50,
+};
+character lyria8 = {
+    .name = L"Lyria",
+    .level = 2,
+    .health = 50,
+    .stat = {20,5,10,5,16,5},
+    .currency = 50,
+};
+character broski8 = {
+    .name = L"Broski",
+    .level = 2,
+    .health = 50,
+    .stat = {20,5,10,5,16,5},
+    .currency = 50,
+};
 void part8() {
 
     dialog dialogues8_part1[] = {
@@ -14,7 +72,7 @@ void part8() {
         {{L"\nSebinchi ise kılıcını temizlerken hiçbir şey olmamış gibi davranıyor."}, 1000, 1},
         {{L"\nSessizliği daha fazla kaldıramıyorsun."}, 1000, 1},
         {{L"\nSen: \"Bu iş gerçekten bitti mi? Haydutlar konusunda hâlâ bir şeyler yapılması gerektiğini düşünmüyor musunuz?\""}, 1000, 1},
-        {{L"\nBroski: (Başını kaldırır) \"Haklısın. Tamamen bitmedi. Mağarada bulduğumuz belgeler… Her şeyin başındaki liderin yerini işaret ediyor.\""}, 1000, 1},
+        {{L"\nBroski: (Başını kaldırır) \"Haklısın. Tamamen bitmedi. Mağarada bulduğumuz belgeler... Her şeyin başındaki liderin yerini işaret ediyor.\""}, 1000, 1},
         {{L"\nLyria: (Ciddi bir ifadeyle) \"Evet. Haydutların en üst seviyesindeki lider ve kalan yüksek rütbeliler… Hepsi burada.\""}, 1000, 1},
         {{L"\nSebinchi: (Kısık bir gülüşle) \"Pekâlâ. Bu işi kökten bitirmenin zamanı geldi. Ama bu sefer, küçük ozan, bizimle geliyorsun. Yaptığın hataları telafi etmek için bir şans bu.\""}, 1000, 1},
         {{L"\nSen: \"Yani… gerçekten mi? Yanınıza alacaksınız?\""}, 1000, 1},
@@ -24,13 +82,48 @@ void part8() {
         {{L"\nBroski: \"Ama onu yenmek her şeyi bitirecek. Haydutlar bir arada kalamaz, sistem çöker.\""}, 1000, 1},
         {{L"\nBir süre sonra…"}, 1000, 1},
         {{L"\nBir kale var! İçeri girdiniz."}, 1000, 1},
-        {{L"\nKolay savaşlar oluyor."}, 1000, 1},
         {{L"\0"}, 10, 1},
     };
+
 
     printSequence(dialogues8_part1);
 
     // Liderin bulunduğu salona ilerlerken savaşı çağırıyoruz
+    if (initCombat((pCharacter[]){&sebinchi8,&lyria8,&broski8},3,(pCharacter[]){&haydutpart8},1)==0) {
+        return;
+    }
+    system("cls");
+    dialog filler[] = {
+        {{L"Devam Devam Devam!"},1000,1},
+        {{L"\0"},10,1},
+    };
+    printSequence(filler);
+    system("cls");
+    Sleep(100);
+    haydutpart8.health=20;
+    haydutpart8.currency=50;
+    if (initCombat((pCharacter[]){&sebinchi8,&lyria8,&broski8},3,(pCharacter[]){&haydutpart8_1,&haydutpart8},2)==0) {
+        return;
+    }
+    system("cls");
+    dialog filler2[] = {
+        {{L"Durmak yok!"},1000,1},
+        {{L"\0"},10,1},
+    };
+    printSequence(filler2);
+    system("cls");
+    Sleep(100);
+    haydutpart8.health=20;
+    haydutpart8.currency=50;
+    haydutpart8_1.health=20;
+    haydutpart8_1.currency=50;
+
+    if (initCombat((pCharacter[]){&sebinchi8,&lyria8,&broski8},3,(pCharacter[]){&haydutpart8_1,&haydutpart8,&haydutpart8_2,&haydutpart8_3},4)==0) {
+        return;
+    }
+    system("cls");
+    updatePlayer();
+
 
     dialog dialogues8_part2[] = {
         {{L"\nLiderin olduğu salona ulaşıyorsunuz."}, 1000, 1},
@@ -47,6 +140,11 @@ void part8() {
     printSequence(dialogues8_part2);
 
     // Son savaşı çağırıyoruz
+    if (initCombat((pCharacter[]){&sebinchi8,&lyria8,&broski8},3,(pCharacter[]){&haydutBoss},1)==0) {
+        return;
+    }
+    system("cls");
+    updatePlayer();
 
     dialog dialogues8_postBattle[] = {
         {{L"\nSonunda, haydut liderini yenmeyi başardınız!"}, 1000, 1},

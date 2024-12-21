@@ -5,6 +5,44 @@
 #include "../include/console.h"
 #include "narrative.h"
 #include "part6.h"
+#include "../include/combat.h"
+#include "../include/character.h"
+
+character fedai1 = {
+    .name = L"fedai1",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
+character fedai2 = {
+    .name = L"fedai2",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
+character missChance = {
+    .name = L"Miss Chance",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
+character hanci6 = {
+    .name = L"Hancı",
+    .level = 4,
+    .health = 20,
+    .stat = {20,5,10,5,20,5},
+    .currency = 50,
+};
+character finn = {
+    .name = L"Finn",
+    .level = 4,
+    .health = 20,
+    .stat = {700,5,10,5,20,5},
+    .currency = 50,
+};
 
 void part6() {
 
@@ -45,8 +83,13 @@ void part6() {
 
     printSequence(dialogues6);
     dialogChoice(sorgu1, secenekler1, 1);
+    system("cls");
+    Sleep(100);
 
     // Savaşı çağır ve kazan
+    if (initCombat((pCharacter[]){&finn,&hanci6},2,(pCharacter[]){&missChance,&fedai1,&fedai2},3)==0) {
+        return;
+    }
 
     dialog dialoguesPostChoice[] = {
         {{L"\nMissChansing: (Yerde, zor nefes alırken) Bu lir… senin başını belaya sokacak, ozan. Onlar geliyor…"}, 1000, 1},

@@ -5,7 +5,59 @@
 #include "../include/console.h"
 #include "narrative.h"
 #include "part5.h"
+#include "../include/combat.h"
+#include "../include/character.h"
 
+character haydut7 = {
+    .name = L"haydut1",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
+character haydut8 = {
+    .name = L"haydut2",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
+character haydut9 = {
+    .name = L"haydut3",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
+character boss1 = {
+    .name = L"Ödül Avcısı",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
+
+character sebinchi5 = {
+    .name = L"Sebinchi",
+  .level = 2,
+  .health = 50,
+  .stat = {20,5,10,5,16,5},
+  .currency = 50,
+};
+character lyria5 = {
+    .name = L"Lyria",
+    .level = 2,
+    .health = 50,
+    .stat = {20,5,10,5,16,5},
+    .currency = 50,
+};
+character broski5 = {
+    .name = L"Broski",
+    .level = 2,
+    .health = 50,
+    .stat = {20,5,10,5,16,5},
+    .currency = 50,
+};
 void part5() {
 
     dialog dialogues5_part1[] = {
@@ -46,9 +98,14 @@ void part5() {
     printSequence(dialogues5_part2);
 
     // İlk savaşı çağırıyoruz
+    int gameResult=initCombat((pCharacter[]){&sebinchi5,&lyria5,&broski5},3,(pCharacter[]){&haydut7,&haydut8,&haydut9},3);
+    if (gameResult == 0) {
+        return;
+    }
+    system("cls");
 
     dialog dialogues5_afterFirstBattle[] = {
-        {{L"\nSAVAŞ BİTER. Haydutları alt ettiniz! Artık hana dönebilirsiniz!"}, 1000, 1},
+        {{L"\nSAVAŞ BİTTİ. Haydutları alt ettiniz! Artık hana dönebilirsiniz!"}, 1000, 1},
         {{L"\nHey durun orda!"}, 1000, 1},
         {{L"\nNihayet seni buldum. Lir’i korumak için çok çabalıyorsun, ama bu çaba boşuna. Teslim ol ve hayatını kurtar."}, 1000, 1},
         {{L"\nSebinchi: \"Ne oluyor burada? Küçük ozan, bu kim?\""}, 1000, 1},
@@ -61,9 +118,11 @@ void part5() {
     printSequence(dialogues5_afterFirstBattle);
 
     // Boss savaşı çağırıyoruz
-
+    if (initCombat((pCharacter[]){&sebinchi5,&lyria5,&broski5},3,(pCharacter[]){&boss1},1)==0) {
+        return;
+    }
     dialog dialogues5_afterBossBattle[] = {
-        {{L"\nÖdül Avcısı: (Kan kaybederken) \"Seni bulacaklar… lir asla güvende olmayacak…\""}, 1000, 1},
+        {{L"\nÖdül Avcısı: (Kan kaybederken) \"Seni bulacaklar... lir asla güvende olmayacak…\""}, 1000, 1},
         {{L"\nSebinchi, kılıcını yerine koyar ve sert bir şekilde sana döner."}, 1000, 1},
         {{L"\nSebinchi: \"Bu neydi? Bana hemen açıklama yap, ozan. Şimdi bu işi çözmezsen, ben çözerim.\""}, 1000, 1},
         {{L"\nBroski ve Lyria da sana şüpheyle bakıyor."}, 1000, 1},

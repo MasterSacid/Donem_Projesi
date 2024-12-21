@@ -6,5 +6,7 @@
 #include <windows.h>
 #include "../include/console.h"
 #include "narrative.h"
+#include "../include/combat.h"
+#include "../include/character.h"
 
 void part5();

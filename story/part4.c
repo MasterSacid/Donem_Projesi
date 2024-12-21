@@ -5,6 +5,52 @@
 #include "../include/console.h"
 #include "narrative.h"
 #include "part4.h"
+#include "../include/combat.h"
+#include "../include/character.h"
+
+character haydut1 = {
+    .name = L"haydut1",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
+character haydut2 = {
+    .name = L"haydut2",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
+character haydut3 = {
+    .name = L"haydut3",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
+
+character sebinchi4 = {
+    .name = L"Sebinchi",
+  .level = 2,
+  .health = 50,
+  .stat = {20,5,10,5,16,5},
+  .currency = 50,
+};
+character lyria4 = {
+    .name = L"Lyria",
+    .level = 2,
+    .health = 50,
+    .stat = {20,5,10,5,16,5},
+    .currency = 50,
+};
+character broski4 = {
+    .name = L"Broski",
+    .level = 2,
+    .health = 50,
+    .stat = {20,5,10,5,16,5},
+    .currency = 50,
+};
 
 void part4() {
 
@@ -33,9 +79,15 @@ void part4() {
         {{L"\0"}, 10, 1},
     };
 
-    printSequence(dialogues4_part1);
+    //printSequence(dialogues4_part1);
 
     // İlk savaşı çağırıyoruz
+    int gameResult=initCombat((pCharacter[]){&sebinchi4},1,(pCharacter[]){&haydut1,&haydut2,&haydut3},3);
+    if (gameResult == 0) {
+        return;
+    }
+    system("cls");
+
 
     dialog dialogues4_afterFirstBattle[] = {
         {{L"\nOlamaz! Sayıları çok fazla!"}, 1000, 1},
@@ -46,8 +98,20 @@ void part4() {
         {{L"\nSen: \"Tamam. Hadi bunu birlikte yapalım.\""}, 1000, 1},
         {{L"\0"}, 10, 1},
     };
+    haydut1.health = 30;
+    haydut2.health = 30;
+    haydut3.health = 30;
+    haydut1.currency=50;
+    haydut2.currency=50;
+    haydut3.currency=50;
 
     printSequence(dialogues4_afterFirstBattle);
+    updatePlayer();
+    if (initCombat((pCharacter[]){&sebinchi4,&lyria4,&broski4},3,(pCharacter[]){&haydut1,&haydut2,&haydut3},3)==0) {
+        return;
+    }
+
+    system("cls");
 
     // İkinci savaşı çağırıyoruz (4 kişilik takım savaşı)
 

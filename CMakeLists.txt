@@ -33,6 +33,8 @@ add_executable(Donem_Projesi
         UI/ui.c
         story/minimissions.c
         story/minimissions.h
+        include/effects.h
+        include/effects.c
         story/part3.c
         story/part3.h
         story/part4.c

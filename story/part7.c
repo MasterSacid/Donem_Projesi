@@ -5,7 +5,65 @@
 #include "../include/console.h"
 #include "narrative.h"
 #include "part7.h"
+#include "../include/combat.h"
+#include "../include/character.h"
 
+character miniBoss = {
+    .name = L"Arena Savaşçısı",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
+character sebinchi7 = {
+    .name = L"Sebinchi",
+  .level = 2,
+  .health = 50,
+  .stat = {20,5,10,5,16,5},
+  .currency = 50,
+};
+character lyria7 = {
+    .name = L"Lyria",
+    .level = 2,
+    .health = 50,
+    .stat = {20,5,10,5,16,5},
+    .currency = 50,
+};
+character broski7 = {
+    .name = L"Broski",
+    .level = 2,
+    .health = 50,
+    .stat = {20,5,10,5,16,5},
+    .currency = 50,
+};
+character haydutpart7 = {
+    .name = L"Haydut1",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
+character haydutpart7_1 = {
+    .name = L"Haydut2",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
+character haydutpart7_2 = {
+    .name = L"Haydut3",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
+character haydutpart7_3 = {
+    .name = L"Haydut4",
+    .level = 4,
+    .health = 20,
+    .stat = {10,5,10,5,10,5},
+    .currency = 50,
+};
 void part7() {
 
     dialog dialogues7_part1[] = {
@@ -36,7 +94,12 @@ void part7() {
     };
 
     printSequence(dialogues7_part1);
-
+    int gameResult=initCombat(NULL,0,(pCharacter[]){&miniBoss},1);
+    if (gameResult == 0) {
+        return;
+    }
+    system("cls");
+    Sleep(100);
     // Arena savaşını çağırıyoruz
 
     dialog dialogues7_afterArenaBattle[] = {
@@ -55,13 +118,38 @@ void part7() {
 
     printSequence(dialogues7_afterArenaBattle);
 
-    // Haydut kampı savaşını çağırıyoruz
+    // Haydut kampı savaşı sesi ni çağırıyorum
 
     dialog dialogues7_afterCampBattle[] = {
         {{L"\nSebenchi: \"Bu kadar zaman geçti ve sonunda geldiniz. Daha hızlı olamaz mıydınız?\""}, 1000, 1},
         {{L"\nSen: \"Ama geldik. Seni yalnız bırakmayacağımızı biliyordun.\""}, 1000, 1},
         {{L"\nSebenchi: (Alaycı bir şekilde) \"Belki de seni hafife almışım. Şimdi şu haydutları bitirelim.\""}, 1000, 1},
         {{L"\nBroski ve Lyria: \"Lütfen bizi de çözer misiniz! Bizi de unutmadığınız için teşekkür ederiz!\""}, 1000, 1},
+
+        {{L"\0"}, 10, 1},
+    };
+    printSequence(dialogues7_afterCampBattle);
+    if (initCombat((pCharacter[]){&sebinchi7,&lyria7,&broski7},3,(pCharacter[]){&haydutpart7_1,&haydutpart7},2)==0) {
+        return;
+    }
+    system("cls");
+    dialog filler[] = {
+        {{L"Dahası yolda!"},1000,1},
+        {{L"\0"},10,1},
+    };
+    printSequence(filler);
+    system("cls");
+    Sleep(100);
+    haydutpart7.health=20;
+    haydutpart7_1.health=20;
+    haydutpart7.currency=50;
+    haydutpart7_1.currency = 50;
+
+    if (initCombat((pCharacter[]){&sebinchi7,&lyria7,&broski7},3,(pCharacter[]){&haydutpart7_1,&haydutpart7,&haydutpart7_2,&haydutpart7_3},4)==0) {
+        return;
+    }
+
+    dialog dialogstuff [] = {
         {{L"\nHaydut lideri kaçtı, ancak kamp tamamen temizlendi!\""}, 1000, 1},
         {{L"\nEldrion, Sebinchi’ye yaklaşıyor: \"Bu hâlâ senin evin, Sebinchi. Ama seçim senin.\""}, 1000, 1},
         {{L"\nSebenchi: ..."}, 1000, 1},
@@ -70,6 +158,5 @@ void part7() {
         {{L"\nKampa geri döndünüz."}, 1000, 1},
         {{L"\0"}, 10, 1},
     };
-
-    printSequence(dialogues7_afterCampBattle);
+    printSequence(dialogstuff);
 }

@@ -19,11 +19,11 @@ int minigamePicker (int ITEM_INDEX,int MISSION_COUNTER) {
             DiceRollConfig easy = {
                 .result = 0,            // Random sonuc
                 .position = (COORD){15,12},   // konum belirle
-                .diceType = 5,  // maks zar boyutu
+                .diceType = 20,  // maks zar boyutu
                 .animationSpeed = 100,  // animasyon hızı
                 .rolls = 10             // kaç tur çevrilcek
             };
-            int memoryGameResult = memoryGame(3);
+            int memoryGameResult = memoryGame(9);
             int diceResult= rollDiceAnimated(stdOut,easy);
             int gameScore= memoryGameResult + diceResult;
             return gameScore;
@@ -39,7 +39,7 @@ int minigamePicker (int ITEM_INDEX,int MISSION_COUNTER) {
                 .rolls = 10             // kaç tur çevrilcek
             };
 
-            int memoryGameResult= memoryGame(6);
+            int memoryGameResult= memoryGame(9);
             int diceResult= rollDiceAnimated(stdOut,medium);
             int gameScore= memoryGameResult + diceResult;
             return gameScore;
