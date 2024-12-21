@@ -1,4 +1,5 @@
 #include "character.h"
+#include "console.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <wchar.h>
@@ -69,6 +70,25 @@ void removeItem(pCharacter character,pItem item){
     character->itemCount--;
 }
 
+void array_add_item(pItem item,pItem items[],int *arrayC){
+    items[*arrayC]=item;
+    *arrayC+=1;
+}
+
+void array_remove_item(pItem item,pItem items[],int *arrayC){
+    for(int i=0;i<*arrayC;i++){
+        if(items[i]==item){
+            items[i]=NULL;
+            for(int j=i;j<*arrayC;j++){
+                items[j]=items[j+1];
+            }
+            break;
+        }
+    }
+    arrayC--;
+}
+
+
 int getValueByDictName(wchar_t name[32],dictValue array[],int i){
     for(;i>0;i--){
         if(wcscmp(array[i-1].name,name)==0){
@@ -76,4 +96,22 @@ int getValueByDictName(wchar_t name[32],dictValue array[],int i){
         }
     }
     return 0;
+}
+
+void resource_operation(float *resource,float value,float max,float min){
+    *resource+=value;
+    if(*resource>max){
+        *resource=max;
+    }
+    if(*resource<min){
+        *resource=min;
+    }
+}
+
+void player_sleep(){
+    pass_time(8*60*60);
+    resource_operation(&PLAYER.exhaustion,-100,100,0);
+    message info;
+    swprintf(info.string,sizeof(wchar_t)*512,L"Uyudun");
+    sendToRightSection(info);
 }

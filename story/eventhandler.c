@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
-#include "../include/locationtime.h"
 #include "../include/menu.h"
+#include "../include/console.h"
+#include "../story/beginning.h"
 #include "../include/character.h"
+#include "../include/locationtime.h"
 #include "eventhandler.h"
 #include "dialogues.h"
 #include "../story/beginning.h"
@@ -20,8 +22,8 @@
 extern int MISSION_COUNTER,ITEM_INDEX;
 extern message GAME_MESSAGES[];
 
-void updateMission(pMenu talkMenu){
-    updateCharacters(talkMenu);
+void updateMission(pLocation tavern,int listCounts[],pCharacter chars[][32]){
+    updateCharacters(tavern,listCounts,chars);
     (MISSION_COUNTER)++;
     switch (MISSION_COUNTER)
     {
@@ -45,31 +47,11 @@ void updateMission(pMenu talkMenu){
 }
 
 
-void updateCharacters(pMenu talkMenu){
+void updateCharacters(pLocation tavern,int listCounts[],pCharacter chars[][32]){
 
-    wchar_t list[][8][64]={
-        //Mission 0
-        {{L"Person1"},{L"Person2"}},
-        //Mission1
-        {{L"Person2"},{L"Person3"}},
-        //Mission2
-        {{L"Person4"},{L"Person5"},{L"Person6"}},
-    };
-    int listCounts[]={2,2,3};
-
-    talkMenu->itemCount=listCounts[MISSION_COUNTER];
+    tavern->characterCount=listCounts[MISSION_COUNTER];
     for(int i=0;i<listCounts[MISSION_COUNTER];i++){
-        wcscpy(talkMenu->menuItems[i],list[MISSION_COUNTER][i]);
-    }
-}
-
-void moveToTavern(pMenu locationMenu){
-    locationMenu->itemCount=4;
-    for(int i=0;i<4;i++){
-        wcscpy(locationMenu->menuItems[i],L"Şifahane");
-        wcscpy(locationMenu->menuItems[i],L"Silahçı");
-        wcscpy(locationMenu->menuItems[i],L"Erzak dükkanı");
-        wcscpy(locationMenu->menuItems[i],L"Odana çık ve uyu");
+        tavern->characters[i]=chars[MISSION_COUNTER][i];
     }
 }
 
