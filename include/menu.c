@@ -34,6 +34,7 @@ void initMenu(pMenu menu,wchar_t name[64],wchar_t description[128],wchar_t menuI
         wcscpy(menu->menuItems[i],menuItems[i]);
     }
     menu->parent=parent;
+    menu->draw_exit=1;
 }
 
 //Menüyü ekrana yazdıran fonksiyon
@@ -73,11 +74,12 @@ void displayMenu(pMenu menu){
     if(ITEM_INDEX>=totalCount){
         SetConsoleTextAttribute(STDOUT,styleHiglight);
     }
-    if(menu->parent!=NULL){
+    if(wcscmp(menu->name,L"Yetenek Menüsü")==0){
+        SetConsoleTextAttribute(STDOUT,styleDefault);
+    }else if(menu->parent!=NULL){
         wprintf(L"< %ls",menu->parent->name);
         SetConsoleTextAttribute(STDOUT,styleDefault);
     }else if(wcscmp(menu->name,L"Savaş")==0){
-
         SetConsoleTextAttribute(STDOUT,styleDefault);
     }else{
         wprintf(L"< Oyundan Çık");
@@ -161,8 +163,8 @@ void eat_food(pMenu food_menu,pMenu item_menu){
 }
 
 void update_skill_menu(pMenu skill_menu){
-    swprintf(skill_menu->description,sizeof(wchar_t)*128,L"Artırmak istediğin yetenekleri\n seç. (%d Puanın var)",PLAYER.abilityPoints);
-    for(int i=0;i<skill_menu->itemCount;i++){
+    swprintf(skill_menu->description,sizeof(wchar_t)*128,L"Artırmak istediğin yetenekleri\nseç. (%d Puanın var)",PLAYER.abilityPoints);
+    for(int i=0;i<6;i++){
         swprintf(&skill_menu->menuItems[i][15],sizeof(wchar_t)*16,L": %d",*(&PLAYER.chr.stat.constition+i));
     }
 }

@@ -23,6 +23,7 @@ typedef struct item{
     wchar_t type[16];
     int value;
     dictValue itemValues[8];
+    int cost;
 }item,*pItem;
 
 typedef struct shop{
@@ -30,7 +31,6 @@ typedef struct shop{
     wchar_t description[128];
     pItem items[16];
     pItem selected_item;
-    int item_prices[16];
     int itemC;
 }shop,*pShop;
 

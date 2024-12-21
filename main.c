@@ -31,6 +31,8 @@ player PLAYER;
 COORD SCREEN_SIZE;
 pMenu SELECTED_MENU;
 pMenu MAIN_MENU;
+pMenu LOST_MENU;
+pMenu CONFIRM;
 message GAME_MESSAGES[15]={};
 int GAME_MESSAGE_COUNTER=0;
 char artBuffer [4096];
@@ -48,8 +50,10 @@ int main(void) {
     */
 
     menu main_menu,confirm_exit,startAdventure,talkToSomeone,locationMenu,sing,eatFood,food_menu,item_menu,inspect_menu,skill_menu;
-    menu confirm,location_activities;
+    menu confirm,location_activities,lost;
     location tavern,foodShop,healer,weaponsmith;
+
+    LOST_MENU=&lost;
 
     initMenu(
         &confirm,
@@ -61,6 +65,8 @@ int main(void) {
         0,
         &main_menu
     );
+
+    CONFIRM=&confirm;
 
     initMenu(
         &location_activities,
@@ -83,8 +89,10 @@ int main(void) {
         L"Dayanıklılık    ",
         L"Güç             ",
         L"Karizma         ",
-        L"Zeka            "},
-        6,
+        L"Zeka            ",
+        L"Onayla | Ana menü"
+        },
+        7,
         NULL,
         0,
         &main_menu
@@ -194,8 +202,8 @@ int main(void) {
     .pathCount=3,
     .characters={},
     .characterCount=0,
-    .activities={L"Birisiyle Konuş",L"Şarkı Söyle",L"Uyu"},
-    .activityCount=3
+    .activities={L"Birisiyle Konuş",L"Şarkı Söyle",L"Odanda Uyu",L"Odanda Yıkan"},
+    .activityCount=4
    };
 
     foodShop=(location){
@@ -248,8 +256,9 @@ int main(void) {
     PLAYER.mental=80.0;
     PLAYER.saturation=80.0;
     PLAYER.exhaustion=0.0;
-    PLAYER.abilityPoints=0;
     PLAYER.hygiene=100.0;
+    PLAYER.abilityPoints=5;
+
 
 
     // Başlangıç Eşyaları
@@ -258,7 +267,8 @@ int main(void) {
         .description=L"Biraz kurumuş olsa\nda yenebilir durumda",
         .type=L"food",
         .value=1,
-        .itemValues=(dictValue){L"saturation",10}
+        .itemValues=(dictValue){L"saturation",10},
+        .cost=10
     };
     item blade={
         .name=L"Bıçak",
@@ -284,6 +294,12 @@ int main(void) {
     enemy.health=50;
     enemy.stat.wisdom=12;
     enemy.stat.dexterity=8;
+    enemy.stat.constition=10;
+    enemy.stat.charisma=10;
+    enemy.stat.strength=10;
+    enemy.stat.intelligence=10;
+    enemy.level=1;
+    enemy.currency=20;
 
     wcscpy(ally.name,L"Ally");
     wcscpy(ally2.name,L"ally2");
@@ -311,6 +327,8 @@ int main(void) {
         .name=L"Şifacı",
         .description=L"Ne alacaksın?"
     };
+
+    array_add_item(&bread,healer_shop.items,&healer_shop.itemC);
 
     pShop selected_shop=NULL;
 
@@ -342,11 +360,15 @@ int main(void) {
 
     ITEM_INDEX=0;
 
+    int temp_skills[7];
+
     int totalCount;
 
     clear();
 
-    initCombat((pCharacter[]){&ally,&ally2},2,(pCharacter[]){&enemy},1);
+    //initCombat((pCharacter[]){&ally,&ally2},2,(pCharacter[]){&enemy},1);
+
+    skill_menu.draw_exit=0;
 
     while(1){
         updateItems(&item_menu,&food_menu);
@@ -379,17 +401,51 @@ int main(void) {
                 eat_food(&food_menu,&item_menu);
             }
             if(SELECTED_MENU==&skill_menu){
-                update_skill_menu(&skill_menu);
+                if(PLAYER.abilityPoints>0 && ITEM_INDEX<6){
+                    *(&PLAYER.chr.stat.constition+ITEM_INDEX)+=1;
+                    temp_skills[ITEM_INDEX]+=1;
+                    PLAYER.abilityPoints--;
+                    temp_skills[6]++;
+                }
+                if(ITEM_INDEX==6){
+                    if(confirm_menu(&confirm,L"Yetenekleri Onayla",L"Yetenekleri Onaylıyor musun?",MAIN_MENU)==0){
+                        SELECTED_MENU=MAIN_MENU;
+                        for(int i=0;i<6;i++){
+                            temp_skills[i]=0;
+                        }
+                        temp_skills[6]=0;
+                    }else{
+                        for(int i=0;i<6;i++){
+                            *(&PLAYER.chr.stat.constition+i)-=temp_skills[i];
+                            temp_skills[i]=0;
+                        }
+                        PLAYER.abilityPoints+=temp_skills[6];
+                        temp_skills[6]=0;
+                    }
+                }
             }
             if(SELECTED_MENU==&locationMenu){
                 change_location(PLAYER.chr.locationAdress->path[ITEM_INDEX]);
                 continue;
             }
-            if(SELECTED_MENU==&shop_menu){
+            if(SELECTED_MENU==&shop_menu){//Satın alma menüleri 'handle'layan kısım
                 selected_shop->selected_item=selected_shop->items[ITEM_INDEX];
-                if(confirm_menu(&confirm,L"Satın al",L"Bu eşyayı almak istediğinden emin misin",&shop_menu)==0){
-                    addItem(&PLAYER.chr,selected_shop->selected_item);
-                    array_remove_item(selected_shop->selected_item,selected_shop->items,&selected_shop->itemC);
+                wchar_t str[64];
+                swprintf(str,sizeof(wchar_t)*64,L"Bu eşyayı %d altına satın almak\nistiyor musun?",selected_shop->selected_item->cost);
+                if(confirm_menu(&confirm,L"Satın al",str,&shop_menu)==0){
+                    message info={
+                        .shown=0
+                    };
+                    if(selected_shop->selected_item->cost<=PLAYER.chr.currency){
+                        addItem(&PLAYER.chr,selected_shop->selected_item);
+                        swprintf(info.string,sizeof(wchar_t)*512,L"%ls satın aldın.",selected_shop->selected_item->name);
+                        PLAYER.chr.currency-=selected_shop->selected_item->cost;
+                        array_remove_item(selected_shop->selected_item,selected_shop->items,&selected_shop->itemC);
+                    }else{
+                        swprintf(info.string,sizeof(wchar_t)*512,L"Bu eşyayı satın almak için %d altına ihtiyacın var",
+                        selected_shop->selected_item->cost-PLAYER.chr.currency);
+                    }
+                    sendToRightSection(info);
                     selected_shop->itemC--;
                     SELECTED_MENU=&location_activities;
                 }
@@ -401,7 +457,7 @@ int main(void) {
                 ,(pShop[]){&healer_shop,&food_shop,&weapon_shop}
                 ,&selected_shop);
             }
-        }else if(SELECTED_MENU!=&main_menu){//Ana menü haricindeki menülerin çıkışı
+        }else if(SELECTED_MENU!=&main_menu && SELECTED_MENU!=&skill_menu){//Ana menü haricindeki menülerin çıkışı
             if(ITEM_INDEX>=totalCount && SELECTED_MENU->parent!=NULL){
                 SELECTED_MENU=SELECTED_MENU->parent;
             }

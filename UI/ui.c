@@ -32,6 +32,9 @@ void userInput(){
             key=waitKeys((WORD[]){VK_UP,VK_DOWN,VK_RETURN},3);
         }
         int totalCount=SELECTED_MENU->childrenCount+SELECTED_MENU->itemCount;
+        if(SELECTED_MENU->draw_exit!=1){
+            totalCount--;
+        }
         switch(key){
             case 0:
                 if(ITEM_INDEX<=0){

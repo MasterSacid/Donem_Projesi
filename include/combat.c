@@ -15,6 +15,7 @@ extern player PLAYER;
 extern message GAME_MESSAGES[];
 extern int GAME_MESSAGE_COUNT;
 extern COORD SCREEN_SIZE;
+extern pMenu LOST_MENU;
 
 menu combat_menu,attack,use_spell,use_item,run_confirm,target_menu,view_enemies,selection_menu;
 
@@ -100,10 +101,11 @@ void initCombatMenus(){
         L"Ne yapmak istediğini seç",
         NULL,
         0,
-        (pMenu[]){&view_enemies,&attack,&use_spell,&use_item,&run_confirm},
-        5,
+        (pMenu[]){&view_enemies,&attack,&use_item,&run_confirm},
+        4,
         NULL
     );
+    combat_menu.draw_exit=0;
 }
 
 void initCombat(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
@@ -111,6 +113,10 @@ void initCombat(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
         .string=L"Savaş başladı"
     };
     sendToRightSection(info);
+
+    int loot_currency=0;
+    int loot_exp;
+
     char isInitialTurn=1;//İlk tur bool
     int turnOwnerIndex=0;//Tur sahibi index
     int playedTurns[16]={};//Her aşama sıfırlanan turunu oynayanalarını kaydeden liste
@@ -165,9 +171,15 @@ void initCombat(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
                     playTurnEnemy(enemies[turnOwnerIndex-allyC-1],allies,allyC,enemies,enemyC);
                 }
                 //Tur oyandıktan sonra savaşın durumu kontrol etme ve döngü değerlerini yeniden hesaplama
-                if(combatant_state_check(allies,&allyC,enemies,&enemyC)==1){
+                pass_time(60);
+                int state=combatant_state_check(allies,&allyC,enemies,&enemyC,&loot_exp,&loot_currency);
+                if(state==1){
+                    PLAYER.chr.currency+=loot_currency;
+                    PLAYER.xpPoint+=loot_exp;
                     SELECTED_MENU=MAIN_MENU;
                     return;
+                }else if(state==2){
+                    SELECTED_MENU=LOST_MENU;
                 }
                 combatantC=allyC+enemyC+1;
             }
@@ -214,9 +226,15 @@ void initCombat(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
                     playTurnEnemy(enemies[turnOwnerIndex-allyC-1],allies,allyC,enemies,enemyC);
                 }
                 //Tur oyandıktan sonra savaşın durumu kontrol etme ve döngü değerlerini yeniden hesaplama
-                if(combatant_state_check(allies,&allyC,enemies,&enemyC)==1){
+                pass_time(60);
+                int state=combatant_state_check(allies,&allyC,enemies,&enemyC,&loot_exp,&loot_currency);
+                if(state==1){
+                    PLAYER.chr.currency+=loot_currency;
+                    PLAYER.xpPoint+=loot_exp;
                     SELECTED_MENU=MAIN_MENU;
                     return;
+                }else if(state==2){
+                    SELECTED_MENU=LOST_MENU;
                 }
                 combatantC=allyC+enemyC+1;
             }
@@ -243,6 +261,12 @@ void emptyArray(int array[],int size){
 
 int playerTurn(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
     SELECTED_MENU=&combat_menu;
+    if(PLAYER.exhaustion>95){
+        message info={.string=L"Sıranı dinlenmeye harcadın!"};
+        resource_operation(&PLAYER.exhaustion,-20.0,100,0);
+        sendToRightSection(info);
+        return 1;
+    }
     message turnInfo={
         .shown=0,
         .string=L"Oynama sırası sende"
@@ -289,15 +313,14 @@ int playerTurn(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
             }
         }else if(ITEM_INDEX>totalCount-1){//Alt menülerin çıkışı
             SELECTED_MENU=SELECTED_MENU->parent;
-        }else if(ITEM_INDEX>SELECTED_MENU->childrenCount-1){
-
-        }else{//Alt menü seçenekleri
-            if(SELECTED_MENU==&attack){
-            }else if(SELECTED_MENU==&view_enemies){
-                if(ITEM_INDEX==0){
-                    //İnceleme fonksiyonu
+        }else if(ITEM_INDEX>=SELECTED_MENU->childrenCount){
+            if(SELECTED_MENU==&view_enemies){
+                if(ITEM_INDEX<enemyC){
+                    view_stats(enemies,ITEM_INDEX);
                 }
-            }else if(SELECTED_MENU==&run_confirm){//Kaçma Menüsü
+            }
+        }else{//Alt menü seçenekleri
+            if(SELECTED_MENU==&run_confirm){//Kaçma Menüsü
                 if(ITEM_INDEX==0){
                     if(try_to_run()==0){
                         message info={
@@ -350,13 +373,15 @@ int try_to_run(){//Kaçmaya çalışma
     int diceResult=rollDiceAnimated(STDOUT,dice);
     if(diceResult>10-(int)((PLAYER.chr.stat.dexterity-10)/2)){
         sendToRightSection(success);
-        PLAYER.mental-=10;
+        resource_operation(&PLAYER.mental,-10.0,100,0);
+        resource_operation(&PLAYER.exhaustion,30.0,100,0);
         clear();
         drawUI();
         return 0;
     }else{
         sendToRightSection(failure);
-        PLAYER.mental-=20;
+        resource_operation(&PLAYER.mental,-20.0,100,0);
+        resource_operation(&PLAYER.exhaustion,20.0,100,0);
         clear();
         drawUI();
         return 1;
@@ -364,6 +389,9 @@ int try_to_run(){//Kaçmaya çalışma
 }
 
 void character_attack(pCharacter actor,pCharacter target){//Karakterlerin saldırısını kontrol eden fonksiyon
+    if(target==&PLAYER.chr){
+        resource_operation(&PLAYER.hygiene,-20.0,100,0);
+    }
     int dodge_check=(rand()%20+1)+(actor->stat.dexterity-target->stat.dexterity);
     message info={.shown=0};
     if(dodge_check<6){
@@ -390,6 +418,7 @@ void character_attack(pCharacter actor,pCharacter target){//Karakterlerin saldı
 }
 
 void player_attack(pCharacter enemies[],int enemyIndex){//Oyunucunun saldırısını kontrol eden fonksiyon
+    resource_operation(&PLAYER.exhaustion,-10.0,100,0);
     int dodge_check=(rand()%20+1)+(PLAYER.chr.stat.dexterity-enemies[enemyIndex]->stat.dexterity);
     message info={.shown=0};
     if(dodge_check<6){
@@ -465,7 +494,7 @@ int is_eligible(int i,int list[],pCharacter allies[],int allyC,pCharacter enemie
     return 0;
 }
 
-int combatant_state_check(pCharacter allies[],int* allyC,pCharacter enemies[],int* enemyC){
+int combatant_state_check(pCharacter allies[],int* allyC,pCharacter enemies[],int* enemyC,int* exp,int* currency){
     for(int i=0;i<*allyC;i++){
         if(allies[i]->health<=0){
             message info;
@@ -486,9 +515,9 @@ int combatant_state_check(pCharacter allies[],int* allyC,pCharacter enemies[],in
             message info;
             int xp=enemies[i]->level*25+rand()%25;
             int cur=enemies[i]->currency;
-            PLAYER.chr.currency+=cur;
-            PLAYER.xpPoint+=xp;
-            swprintf(info.string,sizeof(wchar_t)*512,L"%ls öldü(Ganimet: %d XP ve %d altın)",enemies[i]->name,xp,cur);
+            *currency+=cur;
+            *exp+=xp;
+            swprintf(info.string,sizeof(wchar_t)*512,L"%ls öldü( %d XP ve %d altın toplam ganimete eklendi)",enemies[i]->name,xp,cur);
             sendToRightSection(info);
             clear();
             drawUI();
@@ -507,7 +536,7 @@ int combatant_state_check(pCharacter allies[],int* allyC,pCharacter enemies[],in
             .string=L"Öldün."
         };
         sendToRightSection(info);
-        return 1;
+        return 2;
     }
     if(*enemyC<=0){
         message info={
@@ -537,4 +566,17 @@ pItem findItemByName(pCharacter chr,wchar_t name[]){
         }
     }
     return NULL;
+}
+
+void view_stats(pCharacter targets[],int targetI){
+    view_enemies.itemCount=6;
+    wcscpy(view_enemies.menuItems[0],L"Dayanıklılık   ");
+    wcscpy(view_enemies.menuItems[1],L"Karizma        ");
+    wcscpy(view_enemies.menuItems[2],L"Çeviklik       ");
+    wcscpy(view_enemies.menuItems[3],L"Zeka           ");
+    wcscpy(view_enemies.menuItems[4],L"Güç            ");
+    wcscpy(view_enemies.menuItems[5],L"Bilgelik       ");
+    for(int i=0;i<6;i++){
+        swprintf(&view_enemies.menuItems[i][15],sizeof(wchar_t)*16,L": %d",*(&(targets[targetI]->stat.constition)+i));
+    }
 }

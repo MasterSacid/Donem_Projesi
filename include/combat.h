@@ -43,8 +43,10 @@ void updateTargets(pCharacter enemies[], int enemyC, pMenu caller);
 
 int is_eligible(int i, int list[], pCharacter allies[], int allyC, pCharacter enemies[], int enemyC);
 
-int combatant_state_check(pCharacter allies[], int *allyC, pCharacter enemies[], int *enemyC);
+int combatant_state_check(pCharacter allies[], int *allyC, pCharacter enemies[], int *enemyC, int *exp, int *currency);
 
 void update_attack_weapons();
 
 pItem findItemByName(pCharacter chr, wchar_t name[]);
+
+void view_stats(pCharacter targets[], int targetI);

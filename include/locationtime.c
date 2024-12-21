@@ -21,7 +21,7 @@ void pass_time(int time){
         time-=i;
         resource_operation(&PLAYER.mental,i/2400.0,100,0.0);
         resource_operation(&PLAYER.saturation,-i/3600.0,100.0,0.0);
-        resource_operation(&PLAYER.exhaustion,i/500.0,100.0,0.0);
+        resource_operation(&PLAYER.exhaustion,i/800.0,100.0,0.0);
         resource_operation(&PLAYER.hygiene,-i/2400.0,100.0,0.0);
 
         if(PLAYER.chr.health<PLAYER.chr.maxHealth && PLAYER.saturation>30){
@@ -37,6 +37,7 @@ void pass_time(int time){
 
 void change_location(pLocation location){
     pass_time(PLAYER.chr.locationAdress->pathLength[ITEM_INDEX]*10);
+    resource_operation(&PLAYER.exhaustion,PLAYER.chr.locationAdress->pathLength[ITEM_INDEX]/10.0,100,0);
     PLAYER.chr.locationAdress=location;
     message info;
     swprintf(info.string,sizeof(wchar_t)*512,L"%ls konumuna yolculuk ettin.",location->name);
@@ -61,6 +62,12 @@ void location_activity_handler(pLocation locations[],pMenu menus[],pShop shops[]
         }
         if(ITEM_INDEX==2){
             player_sleep();
+        }
+        if(ITEM_INDEX==3){
+            message info={.string=L"Yıkandın"};
+            pass_time(30*60);
+            PLAYER.hygiene=100.0;
+            sendToRightSection(info);
         }
     }
     if(PLAYER.chr.locationAdress==locations[1]){
