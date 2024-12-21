@@ -320,6 +320,7 @@ int main(void) {
         Eşyalar
     */
 
+    //Şifacı
     item small_health_pot={
         .name=L"Küçük can iksiri",
         .cost=50,
@@ -345,6 +346,32 @@ int main(void) {
         .description=L"Küçük can iksiri\n75 can doldurur"
     };
     menu shop_menu;
+    //Erzak dükkanı
+        item small_food={
+        .name=L"Küçük Yolluk",
+        .cost=25,
+        .type=L"food",
+        .itemValues={L"saturation",30},
+        .value=1,
+        .description=L"Sanırsam bundan bir kaç\ntane alsam ancak yeter."
+    };
+        item medium_food={
+        .name=L"Orta Yolluk",
+        .cost=45,
+        .type=L"consumable",
+        .itemValues={L"saturation",60},
+        .value=1,
+        .description=L"Hmm... Sanırsam bu kadar yemek\nbeni götürür."
+    };
+        item big_food={
+        .name=L"Maceracının Sandığı",
+        .cost=150,
+        .type=L"consumable",
+        .itemValues={L"saturation",100},
+        .value=1,
+        .description=L"Sanırsam bundan 1 gram daha\nfazlasını yiyemem."
+    };
+
 
 
 
@@ -441,7 +468,7 @@ int main(void) {
 
     clear();
 
-    initCombat((pCharacter[]){&ally},1,(pCharacter[]){&enemy,&enemy1},2);
+    //initCombat((pCharacter[]){&ally},1,(pCharacter[]){&enemy,&enemy1},2);
 
     initMenu(
         &shop_menu,
