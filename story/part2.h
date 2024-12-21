@@ -3,4 +3,4 @@
 //
 #pragma once
 
-void bolum_2_savas();
+void part2();

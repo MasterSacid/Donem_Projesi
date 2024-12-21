@@ -35,6 +35,18 @@ add_executable(Donem_Projesi
         story/minimissions.h
         story/part3.c
         story/part3.h
+        story/part4.c
+        story/part4.h
+        story/part5.c
+        story/part5.h
+        story/part6.c
+        story/part6.h
+        story/part7.c
+        story/part7.h
+        story/part8.c
+        story/part8.h
+        story/part9.c
+        story/part9.h
 
 )
 

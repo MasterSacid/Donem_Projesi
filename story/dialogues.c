@@ -25,8 +25,17 @@ void dialoguePerson0() {
             sendToRightSection(barmen[i]);
         }
     }
-
     if (MISSION_COUNTER == 1) {
+        message hanci1 = {L"Hancı: (Gülümseyerek) Saklanma numaralarından sıkıldın mı ozan? Şimdi buraya geldiysen, bir içki söyle ve kalabalıkla kaynaş. Yoksa burada uzun süre barınamazsın."};
+        message hanci2 = {L"Sen: Kalabalıkla kaynaşmak mı? Peşimdeki gardiyandan zar zor kurtuldum. Şimdi bir de burada mı sorun yaşayacağım?"};
+        message hanci3 = {L"Hancı: (Gülümser) Sorun değil, fırsat yarat burası. Kiminle konuşacağını seç; belki bir sır öğrenir, belki bir iş kaparsın."};
+        message hanci4 = {L"\0"};
+        message hanci[10] = {hanci4, hanci3, hanci2, hanci1};
+        for (int i = 0; i < 4; ++i) {
+            sendToRightSection(hanci[i]);
+        }
+    }
+    if (MISSION_COUNTER == 2) {
         // Sebinchi
         message seb0 = {L"(Sebinchi barın köşesinde, kılıcını masanın üzerine bırakmış oturuyor.) "};
         message seb1 = {L"\nS: Altınlar gelip geçer şimdilik elimizdekilerle yetinmeliyiz."};
@@ -41,6 +50,67 @@ void dialoguePerson0() {
             sendToRightSection(sebDiyalog[i]);
         }
     }
+    if (MISSION_COUNTER == 3) {
+        message hanci1 = {L"Hancı: (Tezgâhın arkasında içki doldururken başını kaldırır ve size bakar.) Demek geri döndünüz. Biraz daha uzun kalacağınızı düşünmüştüm. Elde ettiğiniz şeylere değdi mi bari?"};
+        message hanci2 = {L"Sen: Zaman gösterecek. Ama bu şehirde elde ettiğin her şeyin bedeli olduğunu anladım."};
+        message hanci3 = {L"Hancı: (Kısık bir kahkaha atar) Ah, ozan. Burada herkes bir bedel öder. Peki, sıradaki adım nedir? Daha fazla altın mı, yoksa biraz huzur mu?"};
+        message hanci4 = {L"\0"};
+        message hanci[10] = {hanci4, hanci3, hanci2, hanci1};
+        for (int i = 0; i < 4; ++i) {
+            sendToRightSection(hanci[i]);
+        }
+
+
+    }
+    if (MISSION_COUNTER == 4) {
+        message sebinchi1 = {L"(Sebinchi, her zamanki gibi köşedeki masasında oturmuş, kılıcını temizliyor. Seni sert bir bakışla yanına çağırır.)"};
+        message sebinchi2 = {L"Sebinchi: Küçük ozan, bu lirinle ilgili söylediklerin doğruysa, hepimizi büyük bir tehlikeye soktun. Bu yola birlikte çıktık, ama hâlâ tam olarak nerede durduğunu bilmiyorum."};
+        message sebinchi3 = {L"Sen: Bunu planlamadım, Sebinchi. Liri korumak için başka çarem yoktu. Ama bu yol sadece benim sorumluluğum değil mi?"};
+        message sebinchi4 = {L"Sebinchi: (Hafif bir kahkaha atar) Bu noktadan sonra sorumluluklarımız ortak. Ama lirin yüzünden bir kez daha tehlikeye girersek, bu sefer daha fazla sorgu sual olmayacak."};
+        message sebinchi5 = {L"\0"};
+        message sebinchi[10] = {sebinchi5, sebinchi4, sebinchi3, sebinchi2, sebinchi1};
+        for (int i = 0; i < 5; ++i) {
+            sendToRightSection(sebinchi[i]);
+        }
+
+
+    }
+    if (MISSION_COUNTER == 5 ) {
+        message hanci1 = {L"(Hancı, tezgâhın arkasında, bir şeyler düşünürken sana döner.)"};
+        message hanci2 = {L"Hancı: Sana söyledim, ozan. Bu işler hep böyle biter. Büyük sırlar, büyük düşmanları çeker. Ama artık kaçış yok. Bu sefer savaşmak zorundasın."};
+        message hanci3 = {L"Sen: Savaşmak mı? Sebinchi ve diğerleri hâlâ dışarıda. Onlara yardım etmeden burada oturamam."};
+        message hanci4 = {L"Hancı: (Başını sallayarak) O zaman bir plan yap. Ama unutma, plansız bir kahraman sadece ölmek için yola çıkar."};
+        message hanci5 = {L"\0"};
+        message hanci[10] = {hanci5, hanci4, hanci3, hanci2, hanci1};
+        for (int i = 0; i < 5; ++i) {
+            sendToRightSection(hanci[i]);
+        }
+
+    }
+    if (MISSION_COUNTER == 6) {
+        message sebinchi1 = {L"Sebinchi: Küçük ozan, bugün… seni hafife aldığım için yanılmışım. Ama bu yol, düşündüğünden daha karanlık."};
+        message sebinchi2 = {L"Sen: Sebenchi, Eldrion’un söyledikleri seni bu kadar mı etkiledi?"};
+        message sebinchi3 = {L"Sebinchi: (Başını kaldırmadan konuşur) Eldrion doğru söylüyor olabilir. Ama bazen doğru olanı yapmak, diğerlerini geride bırakmayı gerektirir. Bugün ne kadar ileri gitmeye hazır olduğunu gördüm. Ama sen de aynı soruyu kendine sormalısın."};
+        message sebinchi4 = {L"\0"};
+        message sebinchi[10] = {sebinchi4, sebinchi3, sebinchi2, sebinchi1};
+        for (int i = 0; i < 4; ++i) {
+            sendToRightSection(sebinchi[i]);
+        }
+
+    } //Sebinchi
+    if (MISSION_COUNTER == 7) {
+        message sebinchi1 = {L"(Sebinchi, hana geri döndüğünüzde darmadağınık ortamı görünce kılıcını sıkıca kavrar. Yüzünde ciddi bir ifade vardır.)"};
+        message sebinchi2 = {L"Sebinchi: Bu, sıradan bir saldırı değil. Bize bir mesaj göndermek istiyorlar. Ozan, bu işin arkasında kimin olduğunu biliyorsun, değil mi?"};
+        message sebinchi3 = {L"Sen: Kael… O burada. Ama bunun bu kadar ileri gideceğini düşünmemiştim."};
+        message sebinchi4 = {L"Sebinchi: Bu lir yüzünden herkes başımızda. Ama bu kez birlikteyiz. Ne gerekiyorsa yapacağız."};
+        message sebinchi5 = {L"\0"};
+        message sebinchi[10] = {sebinchi5, sebinchi4, sebinchi3, sebinchi2, sebinchi1};
+        for (int i = 0; i < 5; ++i) {
+            sendToRightSection(sebinchi[i]);
+        }
+
+    }//Seb
+
 }
 
 void dialoguePerson1() {
@@ -57,6 +127,18 @@ void dialoguePerson1() {
         }
     }
     if (MISSION_COUNTER == 1) {
+        message sebinchi1 = {L"(Sebinchi, barın köşesinde, masaya eğilmiş kılıcını yavaşça cilalıyor.)"};
+        message sebinchi2 = {L"Sebinchi: Şimdi ne yapmayı planlıyorsun, ozan? Şehirden kaçarken ki cesaretini burada da gösterecek misin?"};
+        message sebinchi3 = {L"Sen: Pek seçeneğim yok gibi görünüyor. Ama şunu sorayım: Şehirde senin gibi güçlü biri neden bir handa zaman harcar?"};
+        message sebinchi4 = {L"Sebinchi: (Kısık bir kahkaha atar) Güç, yalnızca bir araç. Burası ise bilmek istediğin her şeyin başlangıç noktası. Sana bir sır vereyim, ozan: Fırsatlar, konuştuğun insanlarda gizlidir."};
+        message sebinchi5 = {L"\0"};
+        message sebinchi[10] = {sebinchi5, sebinchi4, sebinchi3, sebinchi2, sebinchi1};
+        for (int i = 0; i < 5; ++i) {
+            sendToRightSection(sebinchi[i]);
+        }
+
+    }
+    if (MISSION_COUNTER == 2) {
         // Tüccar
         message merchantScene = {L"\n(Tüccar, küçük bir masada oturmuş, önündeki deri çantasını düzenliyor.)"};
         message merchant1 = {L"\nTüccar: Hey, sen! Yeni bir maceracı mısın? Sana uygun bir şeylerim olabilir."};
@@ -68,10 +150,74 @@ void dialoguePerson1() {
 
         for (int i = 0; i < 5; ++i) {
             sendToRightSection(merchantDiyalog[i]);
-            Sleep(2000);
+
         }
 
     }
+    if (MISSION_COUNTER == 3) {
+        message sebinchi1 = {L"(Sebinchi, köşedeki masasında oturmuş, kılıcını masaya bırakmış ve bir içki yudumluyor. Seni görünce hafifçe gülümser.)"};
+        message sebinchi2 = {L"Sebinchi: Güzel bir iş çıkardın, küçük ozan. Ama şunu unutma: zaferin rehavetine kapılırsan, bir sonraki savaşı kaybedersin."};
+        message sebinchi3 = {L"Sen: Peki ya sen, Sebinchi? Bu kadar tehlikenin arasında hâlâ neden burada kalıyorsun?"};
+        message sebinchi4 = {L"Sebinchi: (Omuz silkerek) Bazı savaşlar, savaşmaktan daha fazlasını gerektirir. Burada kalmamın nedeni bu. Ama endişelenme, seninle olduğum sürece bu savaşı birlikte vereceğiz."};
+        message sebinchi5 = {L"\0"};
+        message sebinchi[10] = {sebinchi5, sebinchi4, sebinchi3, sebinchi2, sebinchi1};
+        for (int i = 0; i < 5; ++i) {
+            sendToRightSection(sebinchi[i]);
+        }
+
+
+    }
+    if (MISSION_COUNTER == 4) {
+        message broski1 = {L"(Broski, bir masanın kenarına yaslanmış, boş bir içki kadehiyle oynuyor. Seni görünce bakışlarını sertleştirir.)"};
+        message broski2 = {L"Broski: Ozan, bu liri korumak için neden bu kadar ileri gidiyorsun? Bu sadece bir aile yadigârı mı? Yoksa başka bir şey mi saklıyorsun?"};
+        message broski3 = {L"Sen: Bu lirin gücünün farkındayım, Broski. Ama bu gücün yanlış ellerde olmasının sonuçlarını da biliyorum."};
+        message broski4 = {L"Broski: (Derin bir nefes alır) Pekâlâ. Ama bunu söylemek yetmez. Eğer bu lirin yüzünden hayatlarımız tehlikeye girecekse, bu savaş sadece senin değil, bizim de sorunumuz olacak."};
+        message broski5 = {L"\0"};
+        message broski[10] = {broski5, broski4, broski3, broski2, broski1};
+        for (int i = 0; i < 5; ++i) {
+            sendToRightSection(broski[i]);
+        }
+
+
+    }
+    if (MISSION_COUNTER == 5 ) {
+        message finn1 = {L"(Finn, elinde bir kadeh tutarak sana yaklaşır. Yüzünde korku ve kararlılık bir arada okunur.)"};
+        message finn2 = {L"Finn: Ozan! Sebinchi, Broski ve Lyria’nın başı dertte. Hemen bir şeyler yapmalıyız!"};
+        message finn3 = {L"Sen: Finn, sakin ol. Ne olduğunu tam olarak biliyor musun?"};
+        message finn4 = {L"Finn: Bilmiyorum, ama onları tuzağa düşürdüler. Haydutlar çok fazlaydı ve silahlıydılar. Onları kurtarmak için bir şeyler yapmamız lazım!"};
+        message finn5 = {L"\0"};
+        message finn[10] = {finn5, finn4, finn3, finn2, finn1};
+        for (int i = 0; i < 5; ++i) {
+            sendToRightSection(finn[i]);
+        }
+
+    }
+    if (MISSION_COUNTER == 6 ) {
+        message broski1 = {L"(Broski, masanın kenarına yaslanmış, önündeki içkiyi karıştırıyor. Yüzünde hafif bir gülümseme olsa da gözleri ciddi bir ifade taşıyor.)"};
+        message broski2 = {L"Broski: Ozan, bugünkü savaşta gerçekten iyiydin. Ama bu kadar mücadeleden sonra kendini hâlâ iyi hissediyor musun?"};
+        message broski3 = {L"Sen: Bu yol kolay değil, Broski. Ama vazgeçmek bir seçenek değil."};
+        message broski4 = {L"Broski: Doğru. Ama unutma, biz de seninle birlikteyiz. Lirin yükünü tek başına taşımak zorunda değilsin."};
+        message broski5 = {L"\0"};
+        message broski[10] = {broski5, broski4, broski3, broski2, broski1};
+        for (int i = 0; i < 5; ++i) {
+            sendToRightSection(broski[i]);
+        }
+
+    } //Broski
+    if (MISSION_COUNTER == 7) {
+        message broski1 = {L"(Broski, hanın darmadağınık masalarını incelerken derin bir nefes alır. Seni yanına çağırır.)"};
+        message broski2 = {L"Broski: Bu Kael… kardeşlerin mi? Eğer bu doğruysa, bize söylemediğin başka şeyler de var mı?"};
+        message broski3 = {L"Sen: Kael, benim için yalnızca bir düşman değil. Ailemdeki herkes bu lirin gücünü kendi çıkarları için istiyor. Ama bu güç, yanlış ellerde bir felakete dönüşebilir."};
+        message broski4 = {L"Broski: (Kısa bir duraksamanın ardından) Pekâlâ. O zaman bu sadece senin savaşın değil, bizim de savaşımız. Onu durduracağız."};
+        message broski5 = {L"\0"};
+        message broski[10] = {broski5, broski4, broski3, broski2, broski1};
+        for (int i = 0; i < 5; ++i) {
+            sendToRightSection(broski[i]);
+        }
+
+    } //Broski
+
+
 
 }
 
@@ -86,7 +232,18 @@ void dialoguePerson2() {
             sendToRightSection(evsiz[i]);
         }
     }
-    if (MISSION_COUNTER == 1) {
+    if (MISSION_COUNTER==1) {
+        message finn1 = {L"(Finn, küçük bir masanın yanında, heyecanla etrafı izliyor ve seni görünce gözleri parlıyor.)"};
+        message finn2 = {L"Finn: Sen ozan mısın? Gerçekten mi? Bana bir şarkı söyleyecek misin?"};
+        message finn3 = {L"Sen: Belki bir gün. Ama şimdilik dinlenmem gerekiyor."};
+        message finn4 = {L"Finn: (Yaklaşır ve fısıldar) Bir keresinde annem bana bu barda bir hazinenin saklandığını söyledi. Gerçekten bir şeyler biliyor musun? Annem hep abartır ama belki sen biliyorsundur."};
+        message finn5 = {L"\0"};
+        message finn[10] = {finn5, finn4, finn3, finn2, finn1};
+        for (int i = 0; i < 5; ++i) {
+            sendToRightSection(finn[i]);
+        }
+    }
+    if (MISSION_COUNTER == 2) {
         // Althara
         message altharaScene = {L"\n(Althara, koyu renk peleriniyle oturmuş, elindeki kitapla ilgileniyor. Seni fark ettiğinde hafifçe gülümser.)"};
         message althara1 = {L"\nAlthara: Ah, bir ozan! Hikayelerle mi ilgilenirsin, yoksa kendi hikayeni mi yazıyorsun?"};
@@ -101,6 +258,64 @@ void dialoguePerson2() {
         }
 
     }
+    if (MISSION_COUNTER == 3) {
+        message broski1 = {L"(Broski, barın bir köşesinde oturmuş, önündeki içkiyi karıştırıyor. Seni görünce el işaretiyle yanına çağırır.)"};
+        message broski2 = {L"Broski: Ozan, bu işte iyi bir takım olduk, değil mi? Ama hâlâ kendimi sorguluyorum. Biz, bu dünyada bir fark yaratabilir miyiz?"};
+        message broski3 = {L"Sen: Bir fark yaratmak için bir yerden başlamak gerekiyor. Sen neden bu yolda yürüyorsun, Broski?"};
+        message broski4 = {L"Broski: (Başını önüne eğer) Bir şeyleri düzeltmek için. Köyümüze ne olduğunu gördün. Artık sadece hayatta kalmak değil, daha fazlasını yapmak istiyorum."};
+        message broski5 = {L"\0"};
+        message broski[10] = {broski5, broski4, broski3, broski2, broski1};
+        for (int i = 0; i < 5; ++i) {
+            sendToRightSection(broski[i]);
+        }
+
+
+    }
+    if (MISSION_COUNTER == 4) {
+        message lyria1 = {L"(Lyria, masanın başında oturmuş, sessizce bir harita üzerine notlar alıyor. Seni görünce kalemini bırakır ve gözlerini sana diker.)"};
+        message lyria2 = {L"Lyria: Ozan, dürüst ol. Bu kadar güçlü bir şey neden senin gibi bir ozanın ellerinde? Kardeşlerin seni avlamak istiyorsa, bu sadece senin hikâyen değil, bizim de sorunumuz haline geldi."};
+        message lyria3 = {L"Sen: Lyria, bu liri korumaya yemin ettim. Sadece benim için değil, onun başkalarının eline geçmesini önlemek için de."};
+        message lyria4 = {L"Lyria: (Bir an duraksar, sonra başını sallar) Umarım bu uğurda neyi feda etmeye hazır olduğunu biliyorsundur. Çünkü bu yol gittikçe daha tehlikeli hale geliyor."};
+        message lyria5 = {L"\0"};
+        message lyria[10] = {lyria5, lyria4, lyria3, lyria2, lyria1};
+        for (int i = 0; i < 5; ++i) {
+            sendToRightSection(lyria[i]);
+        }
+
+
+    }
+    if (MISSION_COUNTER == 5 ) {
+        message garson1 = {L"Garson: (Sana yaklaşarak) Ozan, onlar olmadan işler daha zor. Ama herkes burada senin ne yapacağını merak ediyor. Bu sefer liderlik sende."};
+        message garson2 = {L"\0"};
+        message garson[10] = {garson2, garson1};
+        for (int i = 0; i < 2; ++i) {
+            sendToRightSection(garson[i]);
+        }
+
+    }
+    if (MISSION_COUNTER == 6) {
+        message lyria1 = {L"(Lyria, masanın başında, yeni bir harita çizer gibi notlar alıyor. Seni fark ettiğinde duraksar ve gözlerini kaldırır.)"};
+        message lyria2 = {L"Lyria: Bugünkü kurtarma operasyonu… her şey bir şekilde yolunda gitti. Ama haydut lideri kaçtı. Bu iş burada bitmedi, değil mi?"};
+        message lyria3 = {L"Sen: Ne yazık ki hayır. Ama bu sadece bir başlangıç."};
+        message lyria4 = {L"Lyria: O zaman daha dikkatli olmalıyız. Çünkü bir sonraki adımımızda neyle karşılaşacağımızı bilmiyoruz."};
+        message lyria5 = {L"\0"};
+        message lyria[10] = {lyria5, lyria4, lyria3, lyria2, lyria1};
+        for (int i = 0; i < 5; ++i) {
+            sendToRightSection(lyria[i]);
+        }
+
+    } // Lyria
+    if (MISSION_COUNTER == 7) {
+        message lyria1 = {L"Lyria: Ozan, bu lir… gerçekten bu kadar değerli mi? Eğer bu kadar insanın hayatını tehlikeye atıyorsa, neden onu yok etmiyoruz?"};
+        message lyria2 = {L"Sen: Bu lir yalnızca bir güç değil, aynı zamanda bir yük. Onu yok etmek, tehlikeyi sona erdirmez. Bu güç kontrol edilmezse, çok daha kötü sonuçlara yol açabilir."};
+        message lyria3 = {L"Lyria: O zaman yapmamız gereken tek şey var: bu savaşı kazanana kadar yanındayız."};
+        message lyria4 = {L"\0"};
+        message lyria[10] = {lyria4, lyria3, lyria2, lyria1};
+        for (int i = 0; i < 4; ++i) {
+            sendToRightSection(lyria[i]);
+        }
+
+    } //Lyria
 
 
 
@@ -119,9 +334,21 @@ void dialoguePerson3() {
         }
     }
     if (MISSION_COUNTER == 1) {
+        message musteri1 = {L"Müşteri: Burada yeni yüzler görmek nadirdir. Sadece hayatta kalmaya mı çalışıyorsun, yoksa gerçekten bir maceracı mısın?"};
+        message musteri2 = {L"Sen: Şimdilik hayatta kalmak benim için yeterince büyük bir macera."};
+        message musteri3 = {L"Müşteri: O zaman dinle, ozan. Bu şehirde kimse hayatta kalmak için yalnızca şansına güvenmez. Eğer bir yol gösterecek birine ihtiyacın varsa, beni bulabilirsin."};
+        message musteri4 = {L"\0"};
+        message musteri[10] = {musteri4, musteri3, musteri2, musteri1};
+        for (int i = 0; i < 4; ++i) {
+            sendToRightSection(musteri[i]);
+        }
+
+
+    }
+    if (MISSION_COUNTER == 2) {
         // Finn
         message finnScene = {L"\n(Finn, heyecanla sana bakıyor, gözlerinde merak dolu bir ifade var.)"};
-        message finn1 = {L"\nFinn: Sen… sen ozan mısın? Gerçekten mi? Şarkı söyler misin?"};
+        message finn1 = {L"\nFinn: Sen...Şarkı söyler misin?"};
         message finn2 = {L"\nSen: Belki sonra. Şu an yorgunum."};
         message finn3 = {L"\nFinn: Peki, bana biraz macerandan bahseder misin? Hep dışarı çıkmak istemişimdir ama annem izin vermez."};
         message finnEnd = {L"\n\0"};
@@ -132,10 +359,70 @@ void dialoguePerson3() {
             sendToRightSection(finnDiyalog[i]);
         }
     }
+    if (MISSION_COUNTER == 3) {
+        message lyria1 = {L"(Lyria, bir masanın başında oturmuş, eski bir parşömeni katlıyor. Seni fark ettiğinde hafifçe başını sallar.)"};
+        message lyria2 = {L"Lyria: Hâlâ hayattayız. Bu bile bir mucize. Ama senin lir… onun hakkında bir şeyler var. Bu kadar insanın peşine düşmesi tesadüf olamaz."};
+        message lyria3 = {L"Sen: Benim için sadece bir enstrüman, ama insanlar onu farklı bir şey gibi görüyor."};
+        message lyria4 = {L"Lyria: (Ciddileşir) Eğer bu lir gerçekten bir güç barındırıyorsa, onu kullanmayı öğrenmelisin. Yoksa hem senin hem de bizim sonumuz olabilir."};
+        message lyria5 = {L"\0"};
+        message lyria[10] = {lyria5, lyria4, lyria3, lyria2, lyria1};
+        for (int i = 0; i < 5; ++i) {
+            sendToRightSection(lyria[i]);
+        }
+
+
+    }
+    if (MISSION_COUNTER == 4) {
+        message finn1 = {L"(Finn, barın köşesinde, küçük bir kutuyla oynuyor. Seni görünce heyecanla yanına gelir.)"};
+        message finn2 = {L"Finn: Ozan! Lir hakkında söylediklerini duydum. Bu kadar güçlü bir şey nasıl bir ozanın elinde olabilir?"};
+        message finn3 = {L"Sen: Finn, bu lirin gücü sandığından daha karmaşık. Ama onu korumak için ne gerekiyorsa yapacağım."};
+        message finn4 = {L"Finn: Eğer bu kadar önemliyse, neden onu saklamıyorsun? Ya da bir yere gömmüyorsun?"};
+        message finn5 = {L"Sen: (Gülümseyerek) Bazen bir şeyi saklamak, onu tehlikeye atmaktan daha büyük bir sorumluluk getirir. Bu liri göremeyen biri bile hissedebilir."};
+        message finn6 = {L"\0"};
+        message finn[10] = {finn6, finn5, finn4, finn3, finn2, finn1};
+        for (int i = 0; i < 6; ++i) {
+            sendToRightSection(finn[i]);
+        }
+
+
+    }
+    if (MISSION_COUNTER == 5 ) {
+        message ozan1 = {L"(Ozan masada yalnız başına oturur, lirini dikkatle inceler. Geçmişindeki olaylar ve sorumlulukları arasında gidip gelir.)"};
+        message ozan2 = {L"Sen: Bu lir… gerçekten tüm bunlara değer mi? Sebinchi, Broski, Lyria… hepsini bu sır yüzünden tehlikeye atıyorum."};
+        message ozan3 = {L"\0"};
+        message ozan[10] = {ozan3, ozan2, ozan1};
+        for (int i = 0; i < 3; ++i) {
+            sendToRightSection(ozan[i]);
+        }
+    }
+    if (MISSION_COUNTER == 6) {
+        message finn1 = {L"(Finn, köşede oturmuş, bir kadeh sıcak çay içiyor. Seni görünce neşeyle el sallar ama yüzünde endişeli bir ifade var.)"};
+        message finn2 = {L"Finn: Ozan! Sebenchi ve diğerlerini kurtardığınız için teşekkür ederim. Ama Eldrion’un söyledikleri beni korkutuyor. Savaşlar gerçekten bu kadar kötü mü?"};
+        message finn3 = {L"Sen: Savaşlar kolay değildir, Finn. Ama bazen doğru olanı yapmak için mücadele etmen gerekir."};
+        message finn4 = {L"Finn: Umarım bir gün sizin gibi cesur olabilirim. Ama şimdilik… burada kalıp size destek olacağım."};
+        message finn5 = {L"\0"};
+        message finn[10] = {finn5, finn4, finn3, finn2, finn1};
+        for (int i = 0; i < 5; ++i) {
+            sendToRightSection(finn[i]);
+        }
+
+    } //Finn
+    if (MISSION_COUNTER == 7) {
+        message finn1 = {L"Finn: Ozan… bu Kael kim? Onu nasıl durduracağız? Sebinchi ve diğerleri güçlü olabilir ama bu çok büyük bir tehdit gibi görünüyor."};
+        message finn2 = {L"Sen: Kael… benim kardeşim. Ama artık onun gözünde yalnızca bir düşmanım. Bu yüzden lir için her şeyi yapmaya hazır."};
+        message finn3 = {L"Finn: (Bir an sessiz kalır, sonra kararlılıkla) O zaman bu savaşı kazanman için elimden geleni yapacağım. Biz bir ekibiz, unutma."};
+        message finn4 = {L"\0"};
+        message finn[10] = {finn4, finn3, finn2, finn1};
+        for (int i = 0; i < 4; ++i) {
+            sendToRightSection(finn[i]);
+        }
+    } //Finn
+
+
 }
 
 void dialoguePerson4() {
-    if (MISSION_COUNTER == 1) {
+    if (MISSION_COUNTER == 2) {
         // 6. Ayyaş
         message drunkScene = {L"\n(6. Ayyaş, köşede dengesizce oturuyor, üzerindeki eski kıyafetlerden alkol kokusu yayılıyor.)"};
         message drunk1 = {L"\nSen: Sen hala burada ne arıyorsun?"};
@@ -149,4 +436,65 @@ void dialoguePerson4() {
             sendToRightSection(drunkDiyalog[i]);
         }
     }
+    if (MISSION_COUNTER == 3) {
+        message finn1 = {L"(Finn, bir masanın yanında durmuş, boş bir kadehi inceliyor. Seni görünce heyecanla yanına gelir.)"};
+        message finn2 = {L"Finn: Ozan! Bir maceradan döndün, değil mi? Bana biraz bahseder misin? Hep dışarı çıkıp sizin gibi olmak istiyorum."};
+        message finn3 = {L"Sen: Bu işler düşündüğün kadar eğlenceli değil, Finn. Hayatta kalmak için her gün yeni bir mücadeleye atılmak zorundasın."};
+        message finn4 = {L"Finn: (Bir an ciddileşir, sonra gülümser) Ama senin gibi bir ozan, bu mücadeleleri birer şarkıya dönüştürebilir. Belki bir gün ben de senin şarkılarında bir yer bulurum."};
+        message finn5 = {L"\0"};
+        message finn[10] = {finn5, finn4, finn3, finn2, finn1};
+        for (int i = 0; i < 5; ++i) {
+            sendToRightSection(finn[i]);
+        }
+
+
+    }
+    if (MISSION_COUNTER == 4) {
+        message hanci1 = {L"(Hancı, tezgâhın arkasında bardakları yıkarken seni bir süre izler. Sonunda, hafifçe gülümseyerek sana seslenir.)"};
+        message hanci2 = {L"Hancı: Ozan, burada kimse sırlarını uzun süre saklayamaz. Ama şunu bil ki, bazen en büyük tehlike sırların değil, sırları korumaya çalışmaktır."};
+        message hanci3 = {L"Sen: Haklısın. Ama bu sırları açığa çıkarmak, daha büyük bir felaketi beraberinde getirebilir."};
+        message hanci4 = {L"Hancı: (Başını sallar) Pekâlâ. Ama bir gün, doğru kişilere güvenmenin zamanı gelecek. O zamana kadar hayatta kalmaya çalış."};
+        message hanci5 = {L"\0"};
+        message hanci[10] = {hanci5, hanci4, hanci3, hanci2, hanci1};
+        for (int i = 0; i < 5; ++i) {
+            sendToRightSection(hanci[i]);
+        }
+
+
+    }
+    if (MISSION_COUNTER == 5 ) {
+        message althara1 = {L"Althara: Ozan, yüzündeki bu ifade... yükün daha da ağırlaşmış gibi görünüyor. Artık bu lirin sırlarını paylaşmanın zamanı gelmedi mi?"};
+        message althara2 = {L"Sen: Bu sır, yalnızca benim sırtımda taşıyabileceğim bir yük. Onu paylaşmak daha fazla insanı tehlikeye atabilir."};
+        message althara3 = {L"Althara: (Derin bir nefes alır ve gülümser) Bazen sırlar, onları sakladıkça daha büyük bir tehlike haline gelir. Belki de sırlarını paylaşmak değil, doğru kişilere güvenmek çözüm olabilir. Ama şunu unutma: sırların ne kadar güçlü olursa, düşmanların da o kadar yakın olur."};
+        message althara4 = {L"\0"};
+        message althara[10] = {althara4, althara3, althara2, althara1};
+        for (int i = 0; i < 4; ++i) {
+            sendToRightSection(althara[i]);
+        }
+    }
+    if (MISSION_COUNTER == 6) {
+        message hanci1 = {L"(Hancı, her zamanki gibi tezgâhın arkasında çalışıyor. Sana doğru eğilir ve alçak bir sesle konuşur.)"};
+        message hanci2 = {L"Hancı: Ozan, bugün kazandınız ama bu iş burada bitmez. Eldrion’un sözlerini hafife alma. Sebenchi geçmişine geri dönebilir, ama senin yolun çok daha farklı bir yere gidiyor."};
+        message hanci3 = {L"Sen: Lirin sırrı, taşıdığım yükü daha da ağırlaştırıyor. Ama başka seçeneğim yok, hancı."};
+        message hanci4 = {L"Hancı: (Derin bir nefes alır) Seçeneklerin her zaman vardır. Ama doğru olanı seçmek, her zaman en zorudur."};
+        message hanci5 = {L"\0"};
+        message hanci[10] = {hanci5, hanci4, hanci3, hanci2, hanci1};
+        for (int i = 0; i < 5; ++i) {
+            sendToRightSection(hanci[i]);
+        }
+
+    } //Hanci
+    if (MISSION_COUNTER == 7) {
+        message althara1 = {L"Althara: Bu lir… bu kadar kaosa değer mi, ozan? Bazen hikayeler, onları yazanları tüketir."};
+        message althara2 = {L"Sen: Althara, bu sadece benim hikayem değil. Eğer bu lir başkalarının eline geçerse, dünya için çok daha kötü bir hikaye yazılır."};
+        message althara3 = {L"Althara: (Yavaşça başını sallar) O zaman bu hikayeyi doğru bir sonla bitirmelisin. Ama unutma, her son bir bedel gerektirir."};
+        message althara4 = {L"\0"};
+        message althara[10] = {althara4, althara3, althara2, althara1};
+        for (int i = 0; i < 4; ++i) {
+            sendToRightSection(althara[i]);
+        }
+
+    } //Althera
+
+
 }
