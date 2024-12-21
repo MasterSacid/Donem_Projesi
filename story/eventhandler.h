@@ -17,7 +17,7 @@
 #include "beginning.h"
 #include "part2.h"
 
-void updateMission(pLocation tavern,int listCounts[],pCharacter chars[][32])    ;
+void updateMission(pLocation tavern,int listCounts[],pCharacter chars[][32]);
 
 void updateCharacters(pLocation tavern, int listCounts[], pCharacter chars[][32]);
 

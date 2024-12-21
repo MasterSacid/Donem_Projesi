@@ -50,6 +50,8 @@ typedef struct character{
 
 typedef struct player{
     character chr;
+    pItem selected_item;
+    pCharacter selected_character;
     int xpPoint;
     float saturation;
     float exhaustion;

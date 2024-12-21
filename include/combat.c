@@ -16,9 +16,31 @@ extern message GAME_MESSAGES[];
 extern int GAME_MESSAGE_COUNT;
 extern COORD SCREEN_SIZE;
 
-menu combat_menu,attack,use_spell,use_item,run_confirm,target_menu;
+menu combat_menu,attack,use_spell,use_item,run_confirm,target_menu,view_enemies,selection_menu;
 
 void initCombatMenus(){
+
+    initMenu(
+        &selection_menu,
+        L"Seçim",
+        L"Seçimini yap",
+        (wchar_t[][64]){},
+        0,
+        NULL,
+        0,
+        &combat_menu
+    );
+
+    initMenu(
+        &view_enemies,
+        L"Düşmanları İncele",
+        L"Kimi inceleyeceksin",
+        (wchar_t[][64]){},
+        0,
+        NULL,
+        0,
+        &combat_menu
+    );
 
     initMenu(
         &target_menu,
@@ -34,9 +56,9 @@ void initCombatMenus(){
     initMenu(
         &attack,
         L"Saldır",
-        L"Nasıl saldıracaksın?",
-        (wchar_t[][64]){L"Silah1",L"Silah2"},
-        2,
+        L"Kime Saldıracaksın",
+        (wchar_t[][64]){},
+        0,
         NULL,
         0,
         &combat_menu
@@ -78,13 +100,17 @@ void initCombatMenus(){
         L"Ne yapmak istediğini seç",
         NULL,
         0,
-        (pMenu[]){&attack,&use_spell,&use_item,&run_confirm},
-        4,
+        (pMenu[]){&view_enemies,&attack,&use_spell,&use_item,&run_confirm},
+        5,
         NULL
     );
 }
 
 void initCombat(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
+    message info={
+        .string=L"Savaş başladı"
+    };
+    sendToRightSection(info);
     char isInitialTurn=1;//İlk tur bool
     int turnOwnerIndex=0;//Tur sahibi index
     int playedTurns[16]={};//Her aşama sıfırlanan turunu oynayanalarını kaydeden liste
@@ -107,14 +133,14 @@ void initCombat(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
                     turnOwnerIndex=-1;
                     greatest=0;
                     //Oyuncu
-                    if(PLAYER.chr.stat.wisdom>greatest && !isIn(j,playedTurns,combatantC)){
+                    if(PLAYER.chr.stat.wisdom>greatest && is_eligible(j,playedTurns,allies,allyC,enemies,enemyC)){
                         greatest=PLAYER.chr.stat.wisdom;
                         turnOwnerIndex=j;
                     }
                     j++;
                     //Dostlar
                     for(;j<=allyC;j++){
-                        if(allies[j-1]->stat.wisdom>greatest && !isIn(j,playedTurns,combatantC)){
+                        if(allies[j-1]->stat.wisdom>greatest && is_eligible(j,playedTurns,allies,allyC,enemies,enemyC)){
                             greatest=allies[j-1]->stat.wisdom;
                             turnOwnerIndex=j;
                         }
@@ -138,9 +164,15 @@ void initCombat(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
                 }else{//Düşmanlar
                     playTurnEnemy(enemies[turnOwnerIndex-allyC-1],allies,allyC,enemies,enemyC);
                 }
+                //Tur oyandıktan sonra savaşın durumu kontrol etme ve döngü değerlerini yeniden hesaplama
+                if(combatant_state_check(allies,&allyC,enemies,&enemyC)==1){
+                    SELECTED_MENU=MAIN_MENU;
+                    return;
+                }
+                combatantC=allyC+enemyC+1;
             }
             isInitialTurn=0;
-        }else{//Sonraki Aşamalar için
+        }else{  //Sonraki Aşamalar için
                 //Her aşamada sıfırla
                 emptyArray(playedTurns,16);
                 for(int a=0;a<combatantC;a++){// Tüm savaşçılar için bir kere tur aç
@@ -150,21 +182,21 @@ void initCombat(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
                     turnOwnerIndex=-1;
                     greatest=0;
                     //Oyuncu
-                    if(PLAYER.chr.stat.dexterity>greatest && !isIn(j,playedTurns,combatantC)){
+                    if(PLAYER.chr.stat.dexterity>greatest && is_eligible(j,playedTurns,allies,allyC,enemies,enemyC)){
                         greatest=PLAYER.chr.stat.dexterity;
                         turnOwnerIndex=j;
                     }
                     j++;
                     //Dostlar
                     for(;j<=allyC;j++){
-                        if(allies[j-1]->stat.dexterity>greatest && !isIn(j,playedTurns,combatantC)){
+                        if(allies[j-1]->stat.dexterity>greatest && is_eligible(j,playedTurns,allies,allyC,enemies,enemyC)){
                             greatest=allies[j-1]->stat.dexterity;
                             turnOwnerIndex=j;
                         }
                     }
                     //Düşmanlar
                     for(;j<=enemyC+allyC;j++){
-                        if(enemies[j-allyC-1]->stat.dexterity>greatest && !isIn(j,playedTurns,combatantC)){
+                        if(enemies[j-allyC-1]->stat.dexterity>greatest && is_eligible(j,playedTurns,allies,allyC,enemies,enemyC)){
                             greatest=enemies[j-allyC-1]->stat.dexterity;
                             turnOwnerIndex=j;
                         }
@@ -181,6 +213,12 @@ void initCombat(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
                 }else{//Düşmanlar
                     playTurnEnemy(enemies[turnOwnerIndex-allyC-1],allies,allyC,enemies,enemyC);
                 }
+                //Tur oyandıktan sonra savaşın durumu kontrol etme ve döngü değerlerini yeniden hesaplama
+                if(combatant_state_check(allies,&allyC,enemies,&enemyC)==1){
+                    SELECTED_MENU=MAIN_MENU;
+                    return;
+                }
+                combatantC=allyC+enemyC+1;
             }
         }
     }
@@ -213,20 +251,52 @@ int playerTurn(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
     SELECTED_MENU=&combat_menu;
     char actionTaken=0;
     while(actionTaken==0){
+        PLAYER.selected_item=NULL;
+        PLAYER.selected_character=NULL;
         userInteraction();
         int totalCount=SELECTED_MENU->itemCount+SELECTED_MENU->childrenCount;
         if(SELECTED_MENU->childrenCount>ITEM_INDEX){//Alt menü seçimi
-            SELECTED_MENU=SELECTED_MENU->children[ITEM_INDEX];
-        }else if(ITEM_INDEX>totalCount-1){//Alt menülerin çıkışı
-            SELECTED_MENU=SELECTED_MENU->parent;
-        }else{//Alt menü seçenekleri
-            if(SELECTED_MENU==&attack){//Saldırı Menüsünün Seçenekleri
-                if(ITEM_INDEX==0){
-                    updateTargets(enemies,enemyC);
+            //Alt menülerden hazır hale gelmesi gerekenler için fonksiyonlar
+            if(SELECTED_MENU==&combat_menu && ITEM_INDEX==0){
+                updateTargets(enemies,enemyC,&view_enemies);
+            }else if(SELECTED_MENU==&combat_menu && ITEM_INDEX==1){
+                if(PLAYER.selected_character==NULL){
+                    updateTargets(enemies,enemyC,&selection_menu);
+                    SELECTED_MENU=&selection_menu;
+                    userInteraction();
+                    if(ITEM_INDEX==1){
+                        SELECTED_MENU=&combat_menu;
+                        continue;
+                    }
+                    PLAYER.selected_character=enemies[ITEM_INDEX];
                 }
-            }else if(SELECTED_MENU==&target_menu){//Hedef menüsü
+                clear();
+                drawUI();
+                if(PLAYER.selected_item==NULL){
+                    SELECTED_MENU=&selection_menu;
+                    update_attack_weapons();
+                    userInteraction();
+                    if(ITEM_INDEX==1){
+                        SELECTED_MENU=&combat_menu;
+                        continue;
+                    }
+                    PLAYER.selected_item=findItemByName(&PLAYER.chr,SELECTED_MENU->menuItems[ITEM_INDEX]);
+                }
                 player_attack(enemies,ITEM_INDEX);
                 actionTaken=1;
+            }else{
+                SELECTED_MENU=SELECTED_MENU->children[ITEM_INDEX];
+            }
+        }else if(ITEM_INDEX>totalCount-1){//Alt menülerin çıkışı
+            SELECTED_MENU=SELECTED_MENU->parent;
+        }else if(ITEM_INDEX>SELECTED_MENU->childrenCount-1){
+
+        }else{//Alt menü seçenekleri
+            if(SELECTED_MENU==&attack){
+            }else if(SELECTED_MENU==&view_enemies){
+                if(ITEM_INDEX==0){
+                    //İnceleme fonksiyonu
+                }
             }else if(SELECTED_MENU==&run_confirm){//Kaçma Menüsü
                 if(ITEM_INDEX==0){
                     if(try_to_run()==0){
@@ -261,7 +331,7 @@ void playTurnEnemy(pCharacter enemy,pCharacter allies[],int allyC,pCharacter ene
     drawUI();
 }
 
-int try_to_run(){
+int try_to_run(){//Kaçmaya çalışma
     message success={
         .shown=0,
         .string=L"Kaçma girişimi başarılı"
@@ -293,45 +363,64 @@ int try_to_run(){
     }
 }
 
-void character_attack(pCharacter actor,pCharacter target){
-    DiceRollConfig dice={
-        .animationSpeed=100,
-        .diceType=10,
-        .position=(COORD){60,0},
-        .rolls=5,
-        .result=0
-    };
-    int diceResult=rollDiceAnimated(STDOUT,dice);
-    float modifier=(actor->stat.strength-10)/2;
-    if(modifier<1){
-        modifier=0;
+void character_attack(pCharacter actor,pCharacter target){//Karakterlerin saldırısını kontrol eden fonksiyon
+    int dodge_check=(rand()%20+1)+(actor->stat.dexterity-target->stat.dexterity);
+    message info={.shown=0};
+    if(dodge_check<6){
+        swprintf(info.string,sizeof(info.string)/sizeof(wchar_t),L"%ls hedefinin(%ls) kaçınması sonucunda hasar veremedi.",actor->name,target->name);
+    }else{
+        DiceRollConfig dice={
+            .animationSpeed=100,
+            .diceType=10,
+            .position=(COORD){60,0},
+            .rolls=5,
+            .result=0
+        };
+        int diceResult=rollDiceAnimated(STDOUT,dice);
+        float modifier=(actor->stat.strength-10)/2;
+        int damage=diceResult+(int)modifier;;
+        if(damage<=0){
+            swprintf(info.string,sizeof(info.string)/sizeof(wchar_t),L"%ls güçsüz bir saldırı gerçekleştirdi ve hedefi bundan etkilenmedi.",actor->name);
+        }else{
+            target->health-=damage;
+            swprintf(info.string,sizeof(info.string)/sizeof(wchar_t),L"%ls, %ls hedefine %d hasar verdi. [ %.0f ]",actor->name,target->name,damage,target->health);
+        }
     }
-    int damage=diceResult+(int)modifier;
-    target->health-=damage;
-    message info={};
-    swprintf(info.string,sizeof(info.string)/sizeof(wchar_t),L"%ls, %ls'e %d hasar verdi.",actor->name,target->name,damage);
     sendToRightSection(info);
 }
 
-void player_attack(pCharacter enemies[],int enemyIndex){
-    DiceRollConfig dice={
-        .animationSpeed=100,
-        .diceType=20,
-        .position=(COORD){60,0},
-        .rolls=5,
-        .result=0
-    };
-    int diceResult=rollDiceAnimated(STDOUT,dice);
+void player_attack(pCharacter enemies[],int enemyIndex){//Oyunucunun saldırısını kontrol eden fonksiyon
+    int dodge_check=(rand()%20+1)+(PLAYER.chr.stat.dexterity-enemies[enemyIndex]->stat.dexterity);
+    message info={.shown=0};
+    if(dodge_check<6){
+        swprintf(info.string,sizeof(info.string)/sizeof(wchar_t),L"Hedefin saldırından kaçındı.");
+    }else{
+        DiceRollConfig dice={
+            .animationSpeed=100,
+            .diceType=20,
+            .position=(COORD){70,0},
+            .rolls=5,
+            .result=0
+        };
+        int diceResult=rollDiceAnimated(STDOUT,dice);
 
-    float modifier=(PLAYER.chr.stat.strength-10)/2;
-    int damage=diceResult+(int)modifier;
-    message info={};
-    swprintf(info.string,sizeof(info.string)/sizeof(wchar_t),L"%ls'e %d hasar verdin.",enemies[enemyIndex]->name,damage);
+        float modifier=(PLAYER.chr.stat.strength-10)/2;
+        modifier+=(PLAYER.selected_item==NULL)?0:getValueByDictName(L"modifier",PLAYER.selected_item->itemValues,PLAYER.selected_item->value);
+
+        int damage=diceResult+(int)modifier;
+        if(damage<=0){
+            damage=0;
+            swprintf(info.string,sizeof(info.string)/sizeof(wchar_t),L"Güçsüz bir saldırı gerçekleştirdin ve hedefin bundan etkilenmedi.");
+        }else{
+            enemies[enemyIndex]->health-=damage;
+            swprintf(info.string,sizeof(info.string)/sizeof(wchar_t),L"%ls'e %d hasar verdin. [ %.0f ]"
+            ,enemies[enemyIndex]->name,damage,enemies[enemyIndex]->health);
+        }
+    }
     sendToRightSection(info);
-    enemies[enemyIndex]->health-=damage;
 }
 
-pCharacter randomTarget(pCharacter characters[],int targetC,char incPlayer){
+pCharacter randomTarget(pCharacter characters[],int targetC,char incPlayer){//Rasgele hedef belirleyen fonksiyon
     int random;
     targetC++;
     if(incPlayer==1){
@@ -347,14 +436,105 @@ pCharacter randomTarget(pCharacter characters[],int targetC,char incPlayer){
     }
 }
 
-void updateTargets(pCharacter enemies[],int enemyC){
+void updateTargets(pCharacter targets[],int targetC,pMenu caller){//Hedef alınması için menüleri güncelleyen fonksiyon
     wchar_t string[32];
-    SELECTED_MENU=&target_menu;
-    target_menu.parent=&attack;
-    target_menu.itemCount=enemyC;
-    for(int i=0;i<enemyC;i++){
+    target_menu.parent=&combat_menu;
+    SELECTED_MENU=caller;
+    caller->itemCount=targetC;
+    for(int i=0;i<targetC;i++){
         wcscpy(string,L"");
-        swprintf(string,sizeof(string)/sizeof(wchar_t),L"%ls(%d)",enemies[i]->name,enemies[i]->health);
-        wcscpy(target_menu.menuItems[i],string);
+        swprintf(string,sizeof(string)/sizeof(wchar_t),L"%ls[ %0.f ]",targets[i]->name,targets[i]->health);
+        wcscpy(caller->menuItems[i],string);
     }
+}
+
+int is_eligible(int i,int list[],pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){//Hamle yapma uygunluğunu kontrol eden fonksiyon
+    if(i==0){
+        if(PLAYER.chr.health>0 && !isIn(i,list,allyC+enemyC+1)){
+            return 1;
+        }
+    }else if(i<=allyC){
+        if(allies[i-1]->health>0 && !isIn(i,list,allyC+enemyC+1)){
+            return 1;
+        }
+    }else if(i<=allyC+enemyC){
+        if(enemies[i-1-allyC]->health>0 && !isIn(i,list,allyC+enemyC+1)){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int combatant_state_check(pCharacter allies[],int* allyC,pCharacter enemies[],int* enemyC){
+    for(int i=0;i<*allyC;i++){
+        if(allies[i]->health<=0){
+            message info;
+            swprintf(info.string,sizeof(wchar_t)*512,L"%ls öldü",allies[i]->name);
+            sendToRightSection(info);
+            allies[i]=NULL;
+            if(i<*allyC-1){
+                for(int j=i;j<*allyC;j++){
+                    allies[j]=allies[j+1];
+                }
+            }
+            *allyC-=1;
+            i--;
+        }
+    };
+    for(int i=0;i<*enemyC;i++){
+        if(enemies[i]->health<=0){
+            message info;
+            int xp=enemies[i]->level*25+rand()%25;
+            int cur=enemies[i]->currency;
+            PLAYER.chr.currency+=cur;
+            PLAYER.xpPoint+=xp;
+            swprintf(info.string,sizeof(wchar_t)*512,L"%ls öldü(Ganimet: %d XP ve %d altın)",enemies[i]->name,xp,cur);
+            sendToRightSection(info);
+            clear();
+            drawUI();
+            enemies[i]=NULL;
+            if(i<*enemyC-1){
+                for(int j=i;j<*enemyC;j++){
+                    enemies[j]=enemies[j+1];
+                }
+            }   
+            *enemyC-=1;
+            i--;
+        }
+    }
+    if(PLAYER.chr.health<=0){
+        message info={
+            .string=L"Öldün."
+        };
+        sendToRightSection(info);
+        return 1;
+    }
+    if(*enemyC<=0){
+        message info={
+            .string=L"Kazandınız."
+        };
+        sendToRightSection(info);
+        return 1;
+    }
+    return 0;
+}
+
+void update_attack_weapons(){
+    int weaponC=0;
+    for(int i=0;i<PLAYER.chr.itemCount;i++){
+        if(wcscmp(PLAYER.chr.items[i]->type,L"weapon")==0){
+            wcscpy(selection_menu.menuItems[weaponC],PLAYER.chr.items[i]->name);
+            weaponC++;
+        }
+    }
+    attack.itemCount=weaponC;
+}
+
+pItem findItemByName(pCharacter chr,wchar_t name[]){
+    for(int i=0;i<chr->itemCount;i++){
+        if(wcscmp(chr->items[i]->name,name)==0){
+            return chr->items[i];
+        }
+    }
+    return NULL;
 }

@@ -275,10 +275,13 @@ int main(void) {
     updatePlayer();
 
     character ally,enemy,ally2;
-    ally2.stat.wisdom=1;
-    ally2.stat.dexterity=1;
+    ally2.stat.wisdom=2;
+    ally2.stat.dexterity=2;
     ally.stat.wisdom=9;
     ally.stat.dexterity=9;
+    ally.health=20;
+    ally2.health=1;
+    enemy.health=50;
     enemy.stat.wisdom=12;
     enemy.stat.dexterity=8;
 
@@ -343,7 +346,7 @@ int main(void) {
 
     clear();
 
-    //initCombat((pCharacter[]){&ally,&ally2},2,(pCharacter[]){&enemy},1);
+    initCombat((pCharacter[]){&ally,&ally2},2,(pCharacter[]){&enemy},1);
 
     while(1){
         updateItems(&item_menu,&food_menu);

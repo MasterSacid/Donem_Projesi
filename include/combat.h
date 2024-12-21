@@ -39,4 +39,12 @@ void player_attack(pCharacter enemies[], int enemyIndex);
 
 pCharacter randomTarget(pCharacter characters[], int targetC, char incPlayer);
 
-void updateTargets(pCharacter enemies[], int enemyC);
+void updateTargets(pCharacter enemies[], int enemyC, pMenu caller);
+
+int is_eligible(int i, int list[], pCharacter allies[], int allyC, pCharacter enemies[], int enemyC);
+
+int combatant_state_check(pCharacter allies[], int *allyC, pCharacter enemies[], int *enemyC);
+
+void update_attack_weapons();
+
+pItem findItemByName(pCharacter chr, wchar_t name[]);
