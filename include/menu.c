@@ -165,7 +165,7 @@ void eat_food(pMenu food_menu,pMenu item_menu){
 void update_skill_menu(pMenu skill_menu){
     swprintf(skill_menu->description,sizeof(wchar_t)*128,L"Artırmak istediğin yetenekleri\nseç. (%d Puanın var)",PLAYER.abilityPoints);
     for(int i=0;i<6;i++){
-        swprintf(&skill_menu->menuItems[i][15],sizeof(wchar_t)*16,L": %d",*(&PLAYER.chr.stat.constition+i));
+        swprintf(&skill_menu->menuItems[i][15],sizeof(wchar_t)*16,L": %d",*(&PLAYER.chr.stat.constitution+i));
     }
 }
 

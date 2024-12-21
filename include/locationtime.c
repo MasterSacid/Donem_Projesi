@@ -11,6 +11,10 @@ extern pMenu LOST_MENU;
 
 void pass_time(int time){
 
+    char send_once_flag=1;
+
+    updatePlayer();
+
     if(PLAYER.chr.health<=0){
         SELECTED_MENU=LOST_MENU;
         return;
@@ -27,17 +31,27 @@ void pass_time(int time){
     for(;time>0;){
         time-=i;
         resource_operation(&PLAYER.mental,i/2400.0,100,0.0);
-        resource_operation(&PLAYER.saturation,-i/3600.0,100.0,0.0);
+        resource_operation(&PLAYER.saturation,-i/1800.0,100.0,0.0);
         resource_operation(&PLAYER.exhaustion,i/800.0,100.0,0.0);
         resource_operation(&PLAYER.hygiene,-i/2400.0,100.0,0.0);
 
         if(PLAYER.chr.health<PLAYER.chr.maxHealth && PLAYER.saturation>30){
-            resource_operation(&PLAYER.saturation,-i/3600.0,100.0,0);
+            resource_operation(&PLAYER.saturation,-i/1800.0,100.0,0);
             resource_operation(&PLAYER.chr.health,i/3600.0,PLAYER.chr.maxHealth,0.0);
         }
 
-        if(PLAYER.saturation<=0){
-            resource_operation(&PLAYER.chr.health,-i/3600.0,100,0);
+        if(send_once_flag){
+            if(PLAYER.saturation<=0){
+                resource_operation(&PLAYER.chr.health,-i/3600.0,100,0);
+                message info={.string=L"Açlıktan ölüyorsun."};
+                sendToRightSection(info);
+            }
+            if(PLAYER.mental<=10){
+                resource_operation(&PLAYER.chr.health,-i/1800.0,100,0);
+                message info={.string=L"Akıl Sağlığını kaybettin. Bilmediğin bir nedenden ötürü sağlığını kaybediyorsun."};
+                sendToRightSection(info);
+            }
+            send_once_flag=0;
         }
     }
 }
@@ -79,17 +93,20 @@ void location_activity_handler(pLocation locations[],pMenu menus[],pShop shops[]
     }
     if(PLAYER.chr.locationAdress==locations[1]){
         if(ITEM_INDEX==0){
-
+            update_shop(shops[0],menus[1],menus[2]);
+            *selected_shop=shops[0];
         }
     }
     if(PLAYER.chr.locationAdress==locations[2]){
         if(ITEM_INDEX==0){
-            
+            update_shop(shops[1],menus[1],menus[2]);
+            *selected_shop=shops[1];
         }
     }
     if(PLAYER.chr.locationAdress==locations[3]){
         if(ITEM_INDEX==0){
-            
+            update_shop(shops[2],menus[1],menus[2]);
+            *selected_shop=shops[2];
         }
     }
 }

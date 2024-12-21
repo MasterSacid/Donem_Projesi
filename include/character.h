@@ -9,7 +9,7 @@ typedef struct dictValue{
 }dictValue,*pDictValue;
 
 typedef struct stats{
-    int constition;
+    int constitution;
     int charisma;
     int dexterity;
     int intelligence;
@@ -81,3 +81,5 @@ int getValueByDictName(wchar_t name[32], dictValue array[], int i);
 void resource_operation(float *resource, float value, float max, float min);
 
 void player_sleep();
+
+void player_use_item(pItem item);
