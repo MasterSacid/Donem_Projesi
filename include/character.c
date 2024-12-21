@@ -48,6 +48,7 @@ void updatePlayer(){
     while(PLAYER.xpPoint>=100){
         PLAYER.xpPoint-=100;
         PLAYER.abilityPoints+=1;
+        PLAYER.chr.level++;
     }
     wcscpy(PLAYER.chr.locationName,PLAYER.chr.locationAdress->name);
 }

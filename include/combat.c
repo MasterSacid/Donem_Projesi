@@ -64,16 +64,7 @@ void initCombatMenus(){
         0,
         &combat_menu
     );
-    initMenu(
-        &use_spell,
-        L"Büyü Kullan",
-        L"Hangi büyüyü kullanacaksın?",
-        (wchar_t[][64]){L"Büyü1",L"Büyü2",L"Büyü3",L"Büyü4"},
-        4,
-        NULL,
-        0,
-        &combat_menu
-    );
+    
     initMenu(
         &use_item,
         L"Eşya Kullan",
