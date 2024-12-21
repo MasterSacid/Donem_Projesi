@@ -5,6 +5,46 @@
 #include "../include/console.h"
 #include "narrative.h"
 #include "part3.h"
+#include "../include/combat.h"
+#include "../include/character.h"
+
+character paidSoldier = {
+    .name = L"Paralı Asker1",
+    .level = 2,
+    .health = 40,
+    .stat = {10,5,5,5,5,5},
+    .currency = 50,
+};
+character paidSoldier1 = {
+    .name = L"Paralı Asker2",
+    .level = 2,
+    .health = 40,
+    .stat = {5,5,5,5,5,5},
+    .currency = 50,
+};
+character sebinchi = {
+    .name = L"Sebinchi",
+  .level = 2,
+  .health = 50,
+  .stat = {20,5,10,5,16,5},
+  .currency = 50,
+};
+character lyria = {
+    .name = L"Kız",
+    .level = 2,
+    .health = 50,
+    .stat = {10,5,10,5,16,5},
+    .currency = 50,
+};
+character broski = {
+    .name = L"oğlan",
+    .level = 2,
+    .health = 50,
+    .stat = {10,5,10,5,16,5},
+    .currency = 50,
+};
+
+
 
 void part3() {
 
@@ -37,7 +77,19 @@ void part3() {
         {{L"\0"}, 10, 1},
     };
 
-    printSequence(dialogues3_part1);
+    //printSequence(dialogues3_part1);
+    initCombat((pCharacter[]){&sebinchi},1,(pCharacter[]){&paidSoldier,&paidSoldier1},2);
+    system("cls");
+    dialog araDialog[]= {
+        {{L"Gelmeye devam ediyorlar!"}, 3000, 1},
+    };
+    paidSoldier.health=40,
+    paidSoldier1.health=40;
+    paidSoldier.currency=10;
+    paidSoldier1.currency=10;
+    printSequence(araDialog);
+    initCombat((pCharacter[]){&sebinchi},1,(pCharacter[]){&paidSoldier,&paidSoldier1},2);
+
 
     // İlk savaşı çağırıyoruz
 
@@ -58,6 +110,8 @@ void part3() {
     printSequence(dialogues3_afterFirstBattle);
 
     // İkinci savaşı çağırıyoruz
+    initCombat((pCharacter[]){&sebinchi},1,(pCharacter[]){&lyria,&broski},2);
+
 
     dialog dialogues3_afterSecondBattle[] = {
         {{L"\nZafer senin! Tam o sırada bir grup haydut çetesi ormandan fırlayarak kampa gelir."}, 1000, 1},

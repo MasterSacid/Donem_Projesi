@@ -441,8 +441,6 @@ int main(void) {
 
     clear();
 
-    initCombat((pCharacter[]){&ally},1,(pCharacter[]){&enemy,&enemy1},2);
-
     initMenu(
         &shop_menu,
         L"",

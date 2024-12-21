@@ -4,11 +4,25 @@
 #include <windows.h>
 #include "../include/console.h"
 #include "narrative.h"
+#include "../include/combat.h"
+#include "../include/character.h"
+
+character aben = {
+    .name = L"Aben",
+    .level = 1,
+    .health = 20,
+    .stat = {5,5,5,5,5,5},
+    .currency = 50,
+};
+character protetcor = {
+    .name = L"Koruma2",
+    .level = 1,
+    .health = 20,
+    .stat = {5,5,5,5,5,5},
+    .currency = 50,
+};
 
 void part2() {
-
-
-
     dialog dialogues1[] = {
         {{L"\nAdam: Sana bir iş teklif ediyorum. Bunun kolay olmadığını baştan söyleyeyim. Ama ödül, karşılaşacağın tehlikeye değebilir."}, 1000, 1},
         {{L"\nOmzundaki çantayı sıkıca kavrayarak adama bakıyorsun. Paraya muhtaç olduğun bir gerçek. Seçeneğin yok."}, 1000, 1},
@@ -54,6 +68,7 @@ void part2() {
     printSequence(dialogues2);
 
     //Savaşma fonksiyonu burada geliyor
+    initCombat(NULL,0,(pCharacter[]){&aben,&protetcor},2);
 
 
     dialog dialogues3[] = {
