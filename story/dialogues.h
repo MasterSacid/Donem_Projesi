@@ -10,3 +10,4 @@ void dialoguePerson0();
 void dialoguePerson1();
 void dialoguePerson2();
 void dialoguePerson3();
+void dialoguePerson4();

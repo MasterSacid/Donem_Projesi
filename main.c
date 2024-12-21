@@ -326,11 +326,45 @@ int main(void) {
     character garson={
         .name=L"Garsons"
     };
-    pCharacter characters[][32]={
-        {&hanci,&ayyas,&evsiz,&garson},
-        {}//DOLDUR
+    character sebinchi ={
+    .name=L"Sebinchi"
     };
-    int listCounts[]={4};
+    character finn = {
+    .name=L"Finn"
+    };
+    character customer = {
+    .name=L"Müşteri"
+    };
+    character merchant = {
+    .name=L"Tüccar"
+    };
+    character althara = {
+    .name=L"Althara"
+    };
+    character drunk = {
+    .name=L"Ayyaş"
+    };
+    character broski = {
+    .name=L"Broki"
+    };
+    character lyria = {
+    .name=L"Lyria"
+    };
+    character yourself = {
+    .name=L"Kendnle konuş"
+    };
+    pCharacter characters[][32]={
+        {&hanci,&ayyas,&evsiz,&garson}, //Bolum 1 sonrası
+        {&hanci,&sebinchi,&finn,&customer}, // bolum 2 sonrası
+        {&sebinchi,&merchant,&althara,&finn,&drunk}, //bolum 3 sonrası
+        {&hanci,&sebinchi,&broski,&lyria,&finn},//Bolum 4 sonrası
+        {&sebinchi,&broski,&lyria,&finn,&hanci}, // bolum 5 sonrası
+        {&hanci,&finn,&garson,&yourself,&althara}, // bolum 6 sonrası
+        {&sebinchi,&broski,&lyria,&finn,&hanci}, // bölüm 7 sonrası
+        {&sebinchi,&broski,&lyria,&finn,&althara}, // bölüm 8 sonrası
+
+    };
+    int listCounts[]={4,4,5,5,5,5,5};
 
 /*
     ANA DÖNGÜ
