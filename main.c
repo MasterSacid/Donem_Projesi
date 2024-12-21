@@ -252,7 +252,7 @@ int main(void) {
     PLAYER.chr.level=1;
     PLAYER.chr.maxHealth=5*PLAYER.chr.stat.constition+(5*PLAYER.chr.stat.constition*(PLAYER.chr.level-1)/25);
     PLAYER.chr.health=30;
-    PLAYER.chr.currency=20;
+    PLAYER.chr.currency=100;
     PLAYER.mental=80.0;
     PLAYER.saturation=80.0;
     PLAYER.exhaustion=0.0;
@@ -284,7 +284,7 @@ int main(void) {
 
     updatePlayer();
 
-    character ally,enemy,ally2;
+    character ally,enemy,enemy1,ally2;
     ally2.stat.wisdom=2;
     ally2.stat.dexterity=2;
     ally.stat.wisdom=9;
@@ -301,13 +301,52 @@ int main(void) {
     enemy.level=1;
     enemy.currency=20;
 
+    enemy1.health=50;
+    enemy1.stat.wisdom=12;
+    enemy1.stat.dexterity=8;
+    enemy1.stat.constition=10;
+    enemy1.stat.charisma=10;
+    enemy1.stat.strength=10;
+    enemy1.stat.intelligence=10;
+    enemy1.level=1;
+    enemy1.currency=20;
+
     wcscpy(ally.name,L"Ally");
     wcscpy(ally2.name,L"ally2");
     wcscpy(enemy.name,L"Foe");
+    wcscpy(enemy1.name,L"Foe2");
 
-    // Eşya Alışveriş Değerleri
+    /*
+        Eşyalar
+    */
 
+    item small_health_pot={
+        .name=L"Küçük can iksiri",
+        .cost=50,
+        .type=L"consumable",
+        .itemValues={L"health",50},
+        .value=1,
+        .description=L"Küçük can iksiri\n15 can doldurur"
+    };
+        item medium_health_pot={
+        .name=L"Orta can iksiri",
+        .cost=100,
+        .type=L"consumable",
+        .itemValues={L"health",50},
+        .value=1,
+        .description=L"Orta can iksiri\n35 can doldurur"
+    };
+        item big_health_pot={
+        .name=L"Büyük can iksiri",
+        .cost=150,
+        .type=L"consumable",
+        .itemValues={L"health",50},
+        .value=1,
+        .description=L"Küçük can iksiri\n75 can doldurur"
+    };
     menu shop_menu;
+
+
 
     shop_menu=(menu){
         .parent=&location_activities
@@ -328,7 +367,9 @@ int main(void) {
         .description=L"Ne alacaksın?"
     };
 
-    array_add_item(&bread,healer_shop.items,&healer_shop.itemC);
+    array_add_item(&small_health_pot,healer_shop.items,&healer_shop.itemC);
+    array_add_item(&medium_health_pot,healer_shop.items,&healer_shop.itemC);
+    array_add_item(&big_health_pot,healer_shop.items,&healer_shop.itemC);
 
     pShop selected_shop=NULL;
 
@@ -400,7 +441,18 @@ int main(void) {
 
     clear();
 
-    //initCombat((pCharacter[]){&ally,&ally2},2,(pCharacter[]){&enemy},1);
+    initCombat((pCharacter[]){&ally},1,(pCharacter[]){&enemy,&enemy1},2);
+
+    initMenu(
+        &shop_menu,
+        L"",
+        L"",
+        NULL,
+        0,
+        (pMenu[]){},
+        0,
+        NULL
+    );
 
     skill_menu.draw_exit=0;
 
@@ -474,20 +526,18 @@ int main(void) {
                         addItem(&PLAYER.chr,selected_shop->selected_item);
                         swprintf(info.string,sizeof(wchar_t)*512,L"%ls satın aldın.",selected_shop->selected_item->name);
                         PLAYER.chr.currency-=selected_shop->selected_item->cost;
-                        array_remove_item(selected_shop->selected_item,selected_shop->items,&selected_shop->itemC);
                     }else{
                         swprintf(info.string,sizeof(wchar_t)*512,L"Bu eşyayı satın almak için %d altına ihtiyacın var",
                         selected_shop->selected_item->cost-PLAYER.chr.currency);
                     }
                     sendToRightSection(info);
-                    selected_shop->itemC--;
                     SELECTED_MENU=&location_activities;
                 }
             }
             if(SELECTED_MENU==&location_activities){
                 //BU FONKSİYONDAKİ SIRALAMALAR ÖNEMLİ
                 location_activity_handler((pLocation[]){&tavern,&healer,&foodShop,&weaponsmith}
-                ,(pMenu[]){&talkToSomeone,&shop_menu}
+                ,(pMenu[]){&talkToSomeone,&shop_menu,&location_activities}
                 ,(pShop[]){&healer_shop,&food_shop,&weapon_shop}
                 ,&selected_shop);
             }

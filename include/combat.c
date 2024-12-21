@@ -64,7 +64,7 @@ void initCombatMenus(){
         0,
         &combat_menu
     );
-    
+
     initMenu(
         &use_item,
         L"Eşya Kullan",
@@ -104,7 +104,6 @@ void initCombat(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
         .string=L"Savaş başladı"
     };
     sendToRightSection(info);
-
     int loot_currency=0;
     int loot_exp;
 
@@ -279,7 +278,7 @@ int playerTurn(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
                     updateTargets(enemies,enemyC,&selection_menu);
                     SELECTED_MENU=&selection_menu;
                     userInteraction();
-                    if(ITEM_INDEX==1){
+                    if(ITEM_INDEX==selection_menu.childrenCount){
                         SELECTED_MENU=&combat_menu;
                         continue;
                     }
@@ -547,7 +546,7 @@ void update_attack_weapons(){
             weaponC++;
         }
     }
-    attack.itemCount=weaponC;
+    selection_menu.itemCount=weaponC;
 }
 
 pItem findItemByName(pCharacter chr,wchar_t name[]){

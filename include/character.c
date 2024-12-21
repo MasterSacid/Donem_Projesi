@@ -86,7 +86,7 @@ void array_remove_item(pItem item,pItem items[],int *arrayC){
             break;
         }
     }
-    arrayC--;
+    *arrayC-=1;
 }
 
 

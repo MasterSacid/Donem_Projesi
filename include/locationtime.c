@@ -80,6 +80,7 @@ void location_activity_handler(pLocation locations[],pMenu menus[],pShop shops[]
                 wcscpy(menus[1]->menuItems[i],shops[0]->items[i]->name);
             }
             SELECTED_MENU=menus[1];
+            menus[1]->parent=menus[2];
         }
     }
     if(PLAYER.chr.locationAdress==locations[2]){
