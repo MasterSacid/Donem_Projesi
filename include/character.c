@@ -9,9 +9,10 @@ struct menu;
 typedef struct menu* pMenu;
 
 extern player PLAYER;
+extern pMenu LOST_MENU,SELECTED_MENU;
 
 void initStats(pStats stats,int con,int cha,int dex,int inl,int str,int wis){
-    stats->constition=con;
+    stats->constitution=con;
     stats->charisma=cha;
     stats->dexterity=dex;
     stats->intelligence=inl;
@@ -37,14 +38,18 @@ pCharacter createNPC(wchar_t name[]){
     wcscpy(characterAdress->name,name);
     initStats(&(characterAdress->stat),0,0,0,0,0,0);
     characterAdress->health=50;
-    characterAdress->maxHealth=50+5*(characterAdress->stat.constition);
+    characterAdress->maxHealth=50+5*(characterAdress->stat.constitution);
     characterAdress->currency=0;
     characterAdress->level=1;
     return characterAdress;
 }
 
 void updatePlayer(){
-    PLAYER.chr.maxHealth=5*PLAYER.chr.stat.constition+(5*PLAYER.chr.stat.constition*(PLAYER.chr.level-1)/25);
+    if(PLAYER.chr.health<=0){
+        SELECTED_MENU=LOST_MENU;
+        return;
+    }
+    PLAYER.chr.maxHealth=5*PLAYER.chr.stat.constitution+(5*PLAYER.chr.stat.constitution*(PLAYER.chr.level-1)/25);
     while(PLAYER.xpPoint>=100){
         PLAYER.xpPoint-=100;
         PLAYER.abilityPoints+=1;
@@ -115,4 +120,18 @@ void player_sleep(){
     message info;
     swprintf(info.string,sizeof(wchar_t)*512,L"Uyudun");
     sendToRightSection(info);
+}
+
+void player_use_item(pItem item){
+    if(wcscmp(item->type,L"food")==0){
+        int saturation=getValueByDictName(L"saturation",item->itemValues,item->value);
+        int health=getValueByDictName(L"health",item->itemValues,item->value);
+        resource_operation(&PLAYER.saturation,saturation,100.0,0.0);
+        resource_operation(&PLAYER.saturation,health,100.0,0.0);
+        pass_time(30*60);
+    }else if(wcscmp(item->type,L"consumable")==0){
+        int health=getValueByDictName(L"health",item->itemValues,item->value);
+        int exhaustion=getValueByDictName(L"exhaustion",item->itemValues,item->value);
+        resource_operation(&PLAYER.saturation,exhaustion,100.0,0.0);
+    }
 }

@@ -263,6 +263,18 @@ int playerTurn(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
         sendToRightSection(info);
         return 1;
     }
+    if(PLAYER.mental<20 && rand()%10>8){
+        message info={.string=L"Ne yaptığını bilmiyorsun"};
+        resource_operation(&PLAYER.exhaustion,-20.0,100,0);
+        sendToRightSection(info);
+        return 1;
+    }else if(PLAYER.mental<20 && rand()%10>8 && allyC>0){
+        message info={.string=L"Kontrolünü kaybederek takım arkadaşına saldırdın."};
+        resource_operation(&PLAYER.exhaustion,-20.0,100,0);
+        sendToRightSection(info);
+        PLAYER.selected_character=allies[rand()%allyC];
+        player_attack();
+    }
     message turnInfo={
         .shown=0,
         .string=L"Oynama sırası sende"
@@ -276,6 +288,20 @@ int playerTurn(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
         userInteraction();
         int totalCount=SELECTED_MENU->itemCount+SELECTED_MENU->childrenCount;
         if(SELECTED_MENU->childrenCount>ITEM_INDEX){//Alt menü seçimi
+            if(SELECTED_MENU==&run_confirm && ITEM_INDEX==0){//Kaçma Menüsü
+                if(try_to_run()==0){
+                    message info={
+                        .shown=0,
+                        .string=L"Savaş Sonlandı"
+                    };
+                    sendToRightSection(info);
+                    clear();
+                    drawUI();
+                    return 0;
+                }else{
+                    return 1;
+                }
+            }
             //Alt menülerden hazır hale gelmesi gerekenler için fonksiyonlar
             if(SELECTED_MENU==&combat_menu && ITEM_INDEX==0){
                 updateTargets(enemies,enemyC,&view_enemies);
@@ -307,6 +333,8 @@ int playerTurn(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
                     PLAYER.selected_item=findItemByName(&PLAYER.chr,SELECTED_MENU->menuItems[ITEM_INDEX]);
                 }
                 player_attack();
+                clear();
+                drawUI();
                 actionTaken=1;
             }else{
                 SELECTED_MENU=SELECTED_MENU->children[ITEM_INDEX];
@@ -317,23 +345,6 @@ int playerTurn(pCharacter allies[],int allyC,pCharacter enemies[],int enemyC){
             if(SELECTED_MENU==&view_enemies){
                 if(ITEM_INDEX<enemyC){
                     view_stats(enemies,ITEM_INDEX);
-                }
-            }
-        }else{//Alt menü seçenekleri
-            if(SELECTED_MENU==&run_confirm){//Kaçma Menüsü
-                if(ITEM_INDEX==0){
-                    if(try_to_run()==0){
-                        message info={
-                            .shown=0,
-                            .string=L"Savaş Sonlandı"
-                        };
-                        sendToRightSection(info);
-                        clear();
-                        drawUI();
-                        return 0;
-                    }else{
-                        return 1;
-                    }
                 }
             }
         }
@@ -418,7 +429,7 @@ void character_attack(pCharacter actor,pCharacter target){//Karakterlerin saldı
 }
 
 void player_attack(){//Oyunucunun saldırısını kontrol eden fonksiyon
-    resource_operation(&PLAYER.exhaustion,-10.0,100,0);
+    resource_operation(&PLAYER.exhaustion,10.0,100,0);
     int dodge_check=(rand()%20+1)+(PLAYER.chr.stat.dexterity-PLAYER.selected_character->stat.dexterity);
     message info={.shown=0};
     if(dodge_check<6){
@@ -531,7 +542,7 @@ int combatant_state_check(pCharacter allies[],int* allyC,pCharacter enemies[],in
             i--;
         }
     }
-    if(PLAYER.chr.health<=0.1){
+    if(PLAYER.chr.health<1){
         message info={
             .string=L"Öldün."
         };
@@ -577,6 +588,6 @@ void view_stats(pCharacter targets[],int targetI){
     wcscpy(view_enemies.menuItems[4],L"Güç            ");
     wcscpy(view_enemies.menuItems[5],L"Bilgelik       ");
     for(int i=0;i<6;i++){
-        swprintf(&view_enemies.menuItems[i][15],sizeof(wchar_t)*16,L": %d",*(&(targets[targetI]->stat.constition)+i));
+        swprintf(&view_enemies.menuItems[i][15],sizeof(wchar_t)*16,L": %d",*(&(targets[targetI]->stat.constitution)+i));
     }
 }

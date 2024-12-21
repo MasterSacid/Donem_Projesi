@@ -1,4 +1,5 @@
 // Bu dosya konsol fonksiyonlarıyla alakalıdır
+#include "../UI/ui.h"
 #include <windows.h>
 #include "console.h"
 #include <wchar.h>
@@ -221,4 +222,6 @@ void sendToRightSection(message newMessage) {
     }
 
     GAME_MESSAGES[0] = newMessage;
+    clear();
+    drawUI();
 }

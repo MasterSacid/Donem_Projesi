@@ -59,11 +59,11 @@ int main(void) {
         &lost,
         L"Yaşamını yitirdin",
         L"... Yolun sonu ...",
-        (wchar_t[][64]){L"Çıkış yap"},
-        1,
+        NULL,
+        0,
         (pMenu[]){},
         0,
-        &main_menu
+        NULL
     );
 
     initMenu(
@@ -261,10 +261,10 @@ int main(void) {
     initStats(&PLAYER.chr.stat,10,10,10,10,10,10);
     printf("%d",PLAYER.chr.stat.charisma);
     PLAYER.chr.level=1;
-    PLAYER.chr.maxHealth=5*PLAYER.chr.stat.constition+(5*PLAYER.chr.stat.constition*(PLAYER.chr.level-1)/25);
-    PLAYER.chr.health=10.0;
+    PLAYER.chr.maxHealth=5*PLAYER.chr.stat.constitution+(5*PLAYER.chr.stat.constitution*(PLAYER.chr.level-1)/25);
+    PLAYER.chr.health=50.0;
     PLAYER.chr.currency=100;
-    PLAYER.mental=80.0;
+    PLAYER.mental=11.0;
     PLAYER.saturation=80.0;
     PLAYER.exhaustion=0.0;
     PLAYER.hygiene=100.0;
@@ -305,7 +305,7 @@ int main(void) {
     enemy.health=50;
     enemy.stat.wisdom=12;
     enemy.stat.dexterity=8;
-    enemy.stat.constition=10;
+    enemy.stat.constitution=10;
     enemy.stat.charisma=10;
     enemy.stat.strength=10;
     enemy.stat.intelligence=10;
@@ -315,7 +315,7 @@ int main(void) {
     enemy1.health=50;
     enemy1.stat.wisdom=12;
     enemy1.stat.dexterity=8;
-    enemy1.stat.constition=10;
+    enemy1.stat.constitution=10;
     enemy1.stat.charisma=10;
     enemy1.stat.strength=10;
     enemy1.stat.intelligence=10;
@@ -376,11 +376,36 @@ int main(void) {
     };
         item big_food={
         .name=L"Maceracının Sandığı",
-        .cost=150,
+        .cost=100,
         .type=L"consumable",
-        .itemValues={L"saturation",100},
+        .itemValues={{L"saturation",100},{L"health",20}},
         .value=1,
         .description=L"Sanırsam bundan 1 gram daha\nfazlasını yiyemem."
+    };
+    //Silah 
+    item short_sword={
+        .name=L"Kısa Kılıç",
+        .cost=400,
+        .type=L"weapon",
+        .itemValues={L"modifier",4},
+        .value=1,
+        .description=L"Kolay savrulan bir kılıç."
+    };
+    item long_sword={
+        .name=L"Uzun kılıç",
+        .cost=800,
+        .type=L"weapon",
+        .itemValues={L"modifier",6},
+        .value=1,
+        .description=L"Sağlam ve keskin bir kılıç."
+    };
+    item battle_axe={
+        .name=L"Savaş Baltası",
+        .cost=2000,
+        .type=L"weapon",
+        .itemValues={L"modifier",8},
+        .value=1,
+        .description=L"Ağır savaş baltası.\nDüşmanlarını ezip geçer"
     };
 
 
@@ -408,6 +433,14 @@ int main(void) {
     array_add_item(&small_health_pot,healer_shop.items,&healer_shop.itemC);
     array_add_item(&medium_health_pot,healer_shop.items,&healer_shop.itemC);
     array_add_item(&big_health_pot,healer_shop.items,&healer_shop.itemC);
+
+    array_add_item(&small_food,food_shop.items,&food_shop.itemC);
+    array_add_item(&medium_food,food_shop.items,&food_shop.itemC);
+    array_add_item(&big_food,food_shop.items,&food_shop.itemC);
+
+    array_add_item(&short_sword,weapon_shop.items,&weapon_shop.itemC);
+    array_add_item(&long_sword,weapon_shop.items,&weapon_shop.itemC);
+    array_add_item(&battle_axe,weapon_shop.items,&weapon_shop.itemC);
 
     pShop selected_shop=NULL;
 
@@ -479,7 +512,7 @@ int main(void) {
 
     clear();
 
-    //initCombat((pCharacter[]){&ally},1,(pCharacter[]){&enemy,&enemy1},2);
+    initCombat((pCharacter[]){&ally},1,(pCharacter[]){&enemy,&enemy1},2);
 
     initMenu(
         &shop_menu,
@@ -504,6 +537,11 @@ int main(void) {
         int totalCount=SELECTED_MENU->childrenCount+SELECTED_MENU->itemCount;
         userInteraction();
 
+        if(SELECTED_MENU==LOST_MENU){
+            if(ITEM_INDEX==0){
+                return 0;
+            }
+        }
         if(SELECTED_MENU->childrenCount>ITEM_INDEX){//Children menülerden seçim
             SELECTED_MENU=SELECTED_MENU->children[ITEM_INDEX];
     
@@ -526,7 +564,7 @@ int main(void) {
             }
             if(SELECTED_MENU==&skill_menu){
                 if(PLAYER.abilityPoints>0 && ITEM_INDEX<6){
-                    *(&PLAYER.chr.stat.constition+ITEM_INDEX)+=1;
+                    *(&PLAYER.chr.stat.constitution+ITEM_INDEX)+=1;
                     temp_skills[ITEM_INDEX]+=1;
                     PLAYER.abilityPoints--;
                     temp_skills[6]++;
@@ -540,7 +578,7 @@ int main(void) {
                         temp_skills[6]=0;
                     }else{
                         for(int i=0;i<6;i++){
-                            *(&PLAYER.chr.stat.constition+i)-=temp_skills[i];
+                            *(&PLAYER.chr.stat.constitution+i)-=temp_skills[i];
                             temp_skills[i]=0;
                         }
                         PLAYER.abilityPoints+=temp_skills[6];
@@ -574,7 +612,8 @@ int main(void) {
             }
             if(SELECTED_MENU==&location_activities){
                 //BU FONKSİYONDAKİ SIRALAMALAR ÖNEMLİ
-                location_activity_handler((pLocation[]){&tavern,&healer,&foodShop,&weaponsmith}
+                location_activity_handler(
+                (pLocation[]){&tavern,&healer,&foodShop,&weaponsmith}
                 ,(pMenu[]){&talkToSomeone,&shop_menu,&location_activities}
                 ,(pShop[]){&healer_shop,&food_shop,&weapon_shop}
                 ,&selected_shop);
